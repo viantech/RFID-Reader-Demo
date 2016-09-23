@@ -63,13 +63,40 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.radioButton5 = new System.Windows.Forms.RadioButton();
+            this.label16 = new System.Windows.Forms.Label();
+            this.trackBar1 = new System.Windows.Forms.TrackBar();
+            this.radioButton6 = new System.Windows.Forms.RadioButton();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.radioButton7 = new System.Windows.Forms.RadioButton();
+            this.label17 = new System.Windows.Forms.Label();
+            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.radioButton9 = new System.Windows.Forms.RadioButton();
+            this.radioButton10 = new System.Windows.Forms.RadioButton();
+            this.label18 = new System.Windows.Forms.Label();
+            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.label19 = new System.Windows.Forms.Label();
+            this.radioButton8 = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
+            this.groupBox5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
+            this.groupBox6.SuspendLayout();
             this.SuspendLayout();
             // 
             // dataGridView1
@@ -139,13 +166,30 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage2.Controls.Add(this.radioButton8);
+            this.tabPage2.Controls.Add(this.label19);
+            this.tabPage2.Controls.Add(this.textBox5);
+            this.tabPage2.Controls.Add(this.label18);
+            this.tabPage2.Controls.Add(this.radioButton10);
+            this.tabPage2.Controls.Add(this.radioButton9);
+            this.tabPage2.Controls.Add(this.groupBox6);
+            this.tabPage2.Controls.Add(this.radioButton6);
+            this.tabPage2.Controls.Add(this.groupBox5);
+            this.tabPage2.Controls.Add(this.checkedListBox1);
+            this.tabPage2.Controls.Add(this.label15);
+            this.tabPage2.Controls.Add(this.textBox3);
+            this.tabPage2.Controls.Add(this.label14);
+            this.tabPage2.Controls.Add(this.textBox2);
+            this.tabPage2.Controls.Add(this.label13);
+            this.tabPage2.Controls.Add(this.textBox1);
+            this.tabPage2.Controls.Add(this.label12);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(854, 264);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Gateway configuration";
-            this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // tabPage3
             // 
@@ -343,9 +387,9 @@
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(14, 22);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(59, 13);
+            this.label6.Size = new System.Drawing.Size(66, 13);
             this.label6.TabIndex = 4;
-            this.label6.Text = "Reader ID:";
+            this.label6.Text = "Gateway ID:";
             // 
             // label7
             // 
@@ -417,6 +461,234 @@
             this.label11.TabIndex = 11;
             this.label11.Text = "Good";
             // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(3, 12);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(66, 13);
+            this.label12.TabIndex = 0;
+            this.label12.Text = "Gateway ID:";
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(173, 12);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(168, 20);
+            this.textBox1.TabIndex = 1;
+            this.textBox1.Text = "Seldatinc_6CECEBAE9E7C";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(3, 41);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(94, 13);
+            this.label13.TabIndex = 2;
+            this.label13.Text = "Hardware Version:";
+            // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(173, 38);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(52, 20);
+            this.textBox2.TabIndex = 3;
+            this.textBox2.Text = "0001";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(3, 65);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(89, 13);
+            this.label14.TabIndex = 4;
+            this.label14.Text = "Software version:";
+            // 
+            // textBox3
+            // 
+            this.textBox3.Location = new System.Drawing.Point(173, 62);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(52, 20);
+            this.textBox3.TabIndex = 5;
+            this.textBox3.Text = "0001";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(3, 91);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(102, 13);
+            this.label15.TabIndex = 6;
+            this.label15.Text = "Connection support:";
+            // 
+            // checkedListBox1
+            // 
+            this.checkedListBox1.FormattingEnabled = true;
+            this.checkedListBox1.Items.AddRange(new object[] {
+            "Zigbee",
+            "Wifi",
+            "Bluetooth",
+            "Ethernet",
+            "RS485"});
+            this.checkedListBox1.Location = new System.Drawing.Point(173, 91);
+            this.checkedListBox1.Name = "checkedListBox1";
+            this.checkedListBox1.Size = new System.Drawing.Size(75, 94);
+            this.checkedListBox1.TabIndex = 7;
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.trackBar1);
+            this.groupBox5.Controls.Add(this.label16);
+            this.groupBox5.Controls.Add(this.radioButton5);
+            this.groupBox5.Location = new System.Drawing.Point(6, 189);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(335, 67);
+            this.groupBox5.TabIndex = 8;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Audio";
+            // 
+            // radioButton5
+            // 
+            this.radioButton5.AutoSize = true;
+            this.radioButton5.Location = new System.Drawing.Point(7, 20);
+            this.radioButton5.Name = "radioButton5";
+            this.radioButton5.Size = new System.Drawing.Size(90, 17);
+            this.radioButton5.TabIndex = 0;
+            this.radioButton5.TabStop = true;
+            this.radioButton5.Text = "Audio support";
+            this.radioButton5.UseVisualStyleBackColor = true;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(124, 22);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(84, 13);
+            this.label16.TabIndex = 1;
+            this.label16.Text = "Speaker volumn";
+            // 
+            // trackBar1
+            // 
+            this.trackBar1.Location = new System.Drawing.Point(215, 20);
+            this.trackBar1.Name = "trackBar1";
+            this.trackBar1.Size = new System.Drawing.Size(104, 45);
+            this.trackBar1.TabIndex = 2;
+            // 
+            // radioButton6
+            // 
+            this.radioButton6.AutoSize = true;
+            this.radioButton6.Location = new System.Drawing.Point(488, 14);
+            this.radioButton6.Name = "radioButton6";
+            this.radioButton6.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.radioButton6.Size = new System.Drawing.Size(136, 17);
+            this.radioButton6.TabIndex = 9;
+            this.radioButton6.TabStop = true;
+            this.radioButton6.Text = "LED 7 segment support";
+            this.radioButton6.UseVisualStyleBackColor = true;
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.textBox4);
+            this.groupBox6.Controls.Add(this.label17);
+            this.groupBox6.Controls.Add(this.radioButton7);
+            this.groupBox6.Location = new System.Drawing.Point(488, 37);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(359, 67);
+            this.groupBox6.TabIndex = 10;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Tag patten";
+            // 
+            // radioButton7
+            // 
+            this.radioButton7.AutoSize = true;
+            this.radioButton7.Location = new System.Drawing.Point(14, 18);
+            this.radioButton7.Name = "radioButton7";
+            this.radioButton7.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.radioButton7.Size = new System.Drawing.Size(125, 17);
+            this.radioButton7.TabIndex = 0;
+            this.radioButton7.TabStop = true;
+            this.radioButton7.Text = "Pallet pattern support";
+            this.radioButton7.UseVisualStyleBackColor = true;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(16, 37);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(86, 13);
+            this.label17.TabIndex = 1;
+            this.label17.Text = "Pallet pattern ID:";
+            // 
+            // textBox4
+            // 
+            this.textBox4.Location = new System.Drawing.Point(110, 34);
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(199, 20);
+            this.textBox4.TabIndex = 2;
+            this.textBox4.Text = "010203040506070809101112";
+            // 
+            // radioButton9
+            // 
+            this.radioButton9.AutoSize = true;
+            this.radioButton9.Location = new System.Drawing.Point(488, 110);
+            this.radioButton9.Name = "radioButton9";
+            this.radioButton9.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.radioButton9.Size = new System.Drawing.Size(84, 17);
+            this.radioButton9.TabIndex = 12;
+            this.radioButton9.TabStop = true;
+            this.radioButton9.Text = "Offline mode";
+            this.radioButton9.UseVisualStyleBackColor = true;
+            // 
+            // radioButton10
+            // 
+            this.radioButton10.AutoSize = true;
+            this.radioButton10.Location = new System.Drawing.Point(487, 133);
+            this.radioButton10.Name = "radioButton10";
+            this.radioButton10.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.radioButton10.Size = new System.Drawing.Size(140, 17);
+            this.radioButton10.TabIndex = 13;
+            this.radioButton10.TabStop = true;
+            this.radioButton10.Text = "RFID API Support LLRP";
+            this.radioButton10.UseVisualStyleBackColor = true;
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(489, 154);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(145, 13);
+            this.label18.TabIndex = 14;
+            this.label18.Text = "Message queue time interval:";
+            // 
+            // textBox5
+            // 
+            this.textBox5.Location = new System.Drawing.Point(644, 151);
+            this.textBox5.Name = "textBox5";
+            this.textBox5.Size = new System.Drawing.Size(61, 20);
+            this.textBox5.TabIndex = 15;
+            this.textBox5.Text = "1000";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(708, 154);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(20, 13);
+            this.label19.TabIndex = 16;
+            this.label19.Text = "ms";
+            // 
+            // radioButton8
+            // 
+            this.radioButton8.AutoSize = true;
+            this.radioButton8.Location = new System.Drawing.Point(487, 174);
+            this.radioButton8.Name = "radioButton8";
+            this.radioButton8.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.radioButton8.Size = new System.Drawing.Size(113, 17);
+            this.radioButton8.TabIndex = 17;
+            this.radioButton8.TabStop = true;
+            this.radioButton8.Text = "Stack light support";
+            this.radioButton8.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -433,6 +705,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
@@ -441,6 +715,11 @@
             this.groupBox3.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox6.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -483,6 +762,29 @@
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.CheckedListBox checkedListBox1;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.TrackBar trackBar1;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.RadioButton radioButton5;
+        private System.Windows.Forms.RadioButton radioButton6;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.RadioButton radioButton7;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.RadioButton radioButton9;
+        private System.Windows.Forms.RadioButton radioButton10;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.TextBox textBox5;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.RadioButton radioButton8;
     }
 }
 
