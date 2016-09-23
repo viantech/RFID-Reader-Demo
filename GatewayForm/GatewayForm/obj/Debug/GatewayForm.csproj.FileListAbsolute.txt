@@ -1,0 +1,9 @@
+c:\users\seldat101\documents\visual studio 2013\Projects\GatewayForm\GatewayForm\bin\Debug\GatewayForm.exe.config
+c:\users\seldat101\documents\visual studio 2013\Projects\GatewayForm\GatewayForm\bin\Debug\GatewayForm.exe
+c:\users\seldat101\documents\visual studio 2013\Projects\GatewayForm\GatewayForm\bin\Debug\GatewayForm.pdb
+c:\users\seldat101\documents\visual studio 2013\Projects\GatewayForm\GatewayForm\obj\Debug\GatewayForm.csprojResolveAssemblyReference.cache
+c:\users\seldat101\documents\visual studio 2013\Projects\GatewayForm\GatewayForm\obj\Debug\GatewayForm.Form1.resources
+c:\users\seldat101\documents\visual studio 2013\Projects\GatewayForm\GatewayForm\obj\Debug\GatewayForm.Properties.Resources.resources
+c:\users\seldat101\documents\visual studio 2013\Projects\GatewayForm\GatewayForm\obj\Debug\GatewayForm.csproj.GenerateResource.Cache
+c:\users\seldat101\documents\visual studio 2013\Projects\GatewayForm\GatewayForm\obj\Debug\GatewayForm.exe
+c:\users\seldat101\documents\visual studio 2013\Projects\GatewayForm\GatewayForm\obj\Debug\GatewayForm.pdb
