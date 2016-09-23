@@ -7,3 +7,12 @@ c:\users\seldat101\documents\visual studio 2013\Projects\GatewayForm\GatewayForm
 c:\users\seldat101\documents\visual studio 2013\Projects\GatewayForm\GatewayForm\obj\Debug\GatewayForm.csproj.GenerateResource.Cache
 c:\users\seldat101\documents\visual studio 2013\Projects\GatewayForm\GatewayForm\obj\Debug\GatewayForm.exe
 c:\users\seldat101\documents\visual studio 2013\Projects\GatewayForm\GatewayForm\obj\Debug\GatewayForm.pdb
+E:\WMS_RFID\SourceCodes\Bitbucket_repo\GatewayForm\GatewayForm\bin\Debug\GatewayForm.exe.config
+E:\WMS_RFID\SourceCodes\Bitbucket_repo\GatewayForm\GatewayForm\obj\Debug\GatewayForm.exe
+E:\WMS_RFID\SourceCodes\Bitbucket_repo\GatewayForm\GatewayForm\obj\Debug\GatewayForm.pdb
+E:\WMS_RFID\SourceCodes\Bitbucket_repo\GatewayForm\GatewayForm\bin\Debug\GatewayForm.exe
+E:\WMS_RFID\SourceCodes\Bitbucket_repo\GatewayForm\GatewayForm\bin\Debug\GatewayForm.pdb
+E:\WMS_RFID\SourceCodes\Bitbucket_repo\GatewayForm\GatewayForm\obj\Debug\GatewayForm.csprojResolveAssemblyReference.cache
+E:\WMS_RFID\SourceCodes\Bitbucket_repo\GatewayForm\GatewayForm\obj\Debug\GatewayForm.Form1.resources
+E:\WMS_RFID\SourceCodes\Bitbucket_repo\GatewayForm\GatewayForm\obj\Debug\GatewayForm.Properties.Resources.resources
+E:\WMS_RFID\SourceCodes\Bitbucket_repo\GatewayForm\GatewayForm\obj\Debug\GatewayForm.csproj.GenerateResource.Cache
