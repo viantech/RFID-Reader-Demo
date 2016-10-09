@@ -37,11 +37,19 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
+<<<<<<< HEAD
             this.GPO4_ckb = new System.Windows.Forms.CheckBox();
             this.GPO0_ckb = new System.Windows.Forms.CheckBox();
             this.GPO3_ckb = new System.Windows.Forms.CheckBox();
             this.GPO1_ckb = new System.Windows.Forms.CheckBox();
             this.GPO2_ckb = new System.Windows.Forms.CheckBox();
+=======
+            this.checkBox5 = new System.Windows.Forms.CheckBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.checkBox4 = new System.Windows.Forms.CheckBox();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.checkBox3 = new System.Windows.Forms.CheckBox();
+>>>>>>> c7334ab05c41e46a3c5b89f896a57b72413d1417
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -81,8 +89,13 @@
             this.Gateway_ID_tx = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+<<<<<<< HEAD
             this.Set_RFID_btn = new System.Windows.Forms.Button();
             this.Get_RFID_btn = new System.Windows.Forms.Button();
+=======
+            this.button6 = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
+>>>>>>> c7334ab05c41e46a3c5b89f896a57b72413d1417
             this.groupBox11 = new System.Windows.Forms.GroupBox();
             this.comboBox5 = new System.Windows.Forms.ComboBox();
             this.label31 = new System.Windows.Forms.Label();
@@ -119,7 +132,13 @@
             this.status_lb = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.label10 = new System.Windows.Forms.Label();
+<<<<<<< HEAD
             this.Log_lb = new System.Windows.Forms.Label();
+=======
+            this.label11 = new System.Windows.Forms.Label();
+            this.button7 = new System.Windows.Forms.Button();
+            this.button8 = new System.Windows.Forms.Button();
+>>>>>>> c7334ab05c41e46a3c5b89f896a57b72413d1417
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -217,18 +236,28 @@
             // 
             // groupBox7
             // 
+<<<<<<< HEAD
             this.groupBox7.Controls.Add(this.GPO4_ckb);
             this.groupBox7.Controls.Add(this.GPO0_ckb);
             this.groupBox7.Controls.Add(this.GPO3_ckb);
             this.groupBox7.Controls.Add(this.GPO1_ckb);
             this.groupBox7.Controls.Add(this.GPO2_ckb);
             this.groupBox7.Location = new System.Drawing.Point(672, 107);
+=======
+            this.groupBox7.Controls.Add(this.checkBox5);
+            this.groupBox7.Controls.Add(this.checkBox1);
+            this.groupBox7.Controls.Add(this.checkBox4);
+            this.groupBox7.Controls.Add(this.checkBox2);
+            this.groupBox7.Controls.Add(this.checkBox3);
+            this.groupBox7.Location = new System.Drawing.Point(586, 107);
+>>>>>>> c7334ab05c41e46a3c5b89f896a57b72413d1417
             this.groupBox7.Name = "groupBox7";
             this.groupBox7.Size = new System.Drawing.Size(265, 65);
             this.groupBox7.TabIndex = 12;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "GPO set";
             // 
+<<<<<<< HEAD
             // GPO4_ckb
             // 
             this.GPO4_ckb.AutoSize = true;
@@ -278,6 +307,57 @@
             this.GPO2_ckb.TabIndex = 10;
             this.GPO2_ckb.Text = "GPO2";
             this.GPO2_ckb.UseVisualStyleBackColor = true;
+=======
+            // checkBox5
+            // 
+            this.checkBox5.AutoSize = true;
+            this.checkBox5.Location = new System.Drawing.Point(93, 42);
+            this.checkBox5.Name = "checkBox5";
+            this.checkBox5.Size = new System.Drawing.Size(55, 17);
+            this.checkBox5.TabIndex = 10;
+            this.checkBox5.Text = "GPO4";
+            this.checkBox5.UseVisualStyleBackColor = true;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(7, 19);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(55, 17);
+            this.checkBox1.TabIndex = 10;
+            this.checkBox1.Text = "GPO0";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
+            // checkBox4
+            // 
+            this.checkBox4.AutoSize = true;
+            this.checkBox4.Location = new System.Drawing.Point(7, 42);
+            this.checkBox4.Name = "checkBox4";
+            this.checkBox4.Size = new System.Drawing.Size(55, 17);
+            this.checkBox4.TabIndex = 10;
+            this.checkBox4.Text = "GPO3";
+            this.checkBox4.UseVisualStyleBackColor = true;
+            // 
+            // checkBox2
+            // 
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Location = new System.Drawing.Point(93, 19);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(55, 17);
+            this.checkBox2.TabIndex = 10;
+            this.checkBox2.Text = "GPO1";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            // 
+            // checkBox3
+            // 
+            this.checkBox3.AutoSize = true;
+            this.checkBox3.Location = new System.Drawing.Point(179, 19);
+            this.checkBox3.Name = "checkBox3";
+            this.checkBox3.Size = new System.Drawing.Size(55, 17);
+            this.checkBox3.TabIndex = 10;
+            this.checkBox3.Text = "GPO2";
+            this.checkBox3.UseVisualStyleBackColor = true;
+>>>>>>> c7334ab05c41e46a3c5b89f896a57b72413d1417
             // 
             // groupBox2
             // 
@@ -409,12 +489,18 @@
             // tabPage2
             // 
             this.tabPage2.BackColor = System.Drawing.SystemColors.Control;
+<<<<<<< HEAD
             this.tabPage2.Controls.Add(this.StackLight_ckb);
             this.tabPage2.Controls.Add(this.RFID_API_ckb);
             this.tabPage2.Controls.Add(this.Offline_ckb);
             this.tabPage2.Controls.Add(this.LED_Support_ckb);
             this.tabPage2.Controls.Add(this.Set_GW_Config_btn);
             this.tabPage2.Controls.Add(this.Get_GW_Config_btn);
+=======
+            this.tabPage2.Controls.Add(this.button7);
+            this.tabPage2.Controls.Add(this.button8);
+            this.tabPage2.Controls.Add(this.radioButton8);
+>>>>>>> c7334ab05c41e46a3c5b89f896a57b72413d1417
             this.tabPage2.Controls.Add(this.label19);
             this.tabPage2.Controls.Add(this.MessageInterval_tx);
             this.tabPage2.Controls.Add(this.label18);
@@ -683,8 +769,13 @@
             // tabPage3
             // 
             this.tabPage3.BackColor = System.Drawing.SystemColors.Control;
+<<<<<<< HEAD
             this.tabPage3.Controls.Add(this.Set_RFID_btn);
             this.tabPage3.Controls.Add(this.Get_RFID_btn);
+=======
+            this.tabPage3.Controls.Add(this.button6);
+            this.tabPage3.Controls.Add(this.button5);
+>>>>>>> c7334ab05c41e46a3c5b89f896a57b72413d1417
             this.tabPage3.Controls.Add(this.groupBox11);
             this.tabPage3.Controls.Add(this.groupBox9);
             this.tabPage3.Controls.Add(this.groupBox8);
@@ -694,6 +785,7 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "RFID configuration";
             // 
+<<<<<<< HEAD
             // Set_RFID_btn
             // 
             this.Set_RFID_btn.Location = new System.Drawing.Point(873, 256);
@@ -786,6 +878,99 @@
             this.label27.TabIndex = 7;
             this.label27.Text = "30";
             // 
+=======
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(714, 232);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(133, 23);
+            this.button6.TabIndex = 4;
+            this.button6.Text = "Set RF configuration";
+            this.button6.UseVisualStyleBackColor = true;
+            // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(570, 232);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(133, 23);
+            this.button5.TabIndex = 4;
+            this.button5.Text = "Get RF configuration";
+            this.button5.UseVisualStyleBackColor = true;
+            // 
+            // groupBox11
+            // 
+            this.groupBox11.Controls.Add(this.comboBox5);
+            this.groupBox11.Controls.Add(this.label31);
+            this.groupBox11.Location = new System.Drawing.Point(4, 125);
+            this.groupBox11.Name = "groupBox11";
+            this.groupBox11.Size = new System.Drawing.Size(311, 41);
+            this.groupBox11.TabIndex = 3;
+            this.groupBox11.TabStop = false;
+            this.groupBox11.Text = "Region";
+            // 
+            // comboBox5
+            // 
+            this.comboBox5.FormattingEnabled = true;
+            this.comboBox5.Items.AddRange(new object[] {
+            "North America/FCC, 26 MHz band",
+            "European Union/ETSI EN 302 208",
+            "Korea KCC",
+            "China",
+            "India",
+            "Japan",
+            "Australia/AIDA LIPD Variation 2011",
+            "New Zealand"});
+            this.comboBox5.Location = new System.Drawing.Point(89, 14);
+            this.comboBox5.Name = "comboBox5";
+            this.comboBox5.Size = new System.Drawing.Size(192, 21);
+            this.comboBox5.TabIndex = 3;
+            this.comboBox5.Text = "North America/FCC, 26 MHz band";
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(7, 17);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(82, 13);
+            this.label31.TabIndex = 7;
+            this.label31.Text = "Region support:";
+            // 
+            // groupBox9
+            // 
+            this.groupBox9.Controls.Add(this.label30);
+            this.groupBox9.Controls.Add(this.label27);
+            this.groupBox9.Controls.Add(this.label29);
+            this.groupBox9.Controls.Add(this.trackBar3);
+            this.groupBox9.Controls.Add(this.label26);
+            this.groupBox9.Controls.Add(this.label28);
+            this.groupBox9.Controls.Add(this.trackBar2);
+            this.groupBox9.Controls.Add(this.label25);
+            this.groupBox9.Location = new System.Drawing.Point(488, 6);
+            this.groupBox9.Name = "groupBox9";
+            this.groupBox9.Size = new System.Drawing.Size(359, 100);
+            this.groupBox9.TabIndex = 1;
+            this.groupBox9.TabStop = false;
+            this.groupBox9.Text = "RF Power";
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(232, 64);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(19, 13);
+            this.label30.TabIndex = 7;
+            this.label30.Text = "30";
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(232, 25);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(19, 13);
+            this.label27.TabIndex = 7;
+            this.label27.Text = "30";
+            // 
+>>>>>>> c7334ab05c41e46a3c5b89f896a57b72413d1417
             // label29
             // 
             this.label29.AutoSize = true;
@@ -863,6 +1048,8 @@
             this.label24.Size = new System.Drawing.Size(18, 13);
             this.label24.TabIndex = 6;
             this.label24.Text = "us";
+<<<<<<< HEAD
+=======
             // 
             // comboBox4
             // 
@@ -900,6 +1087,82 @@
             this.comboBox3.TabIndex = 4;
             this.comboBox3.Text = "FM0";
             // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(128, 45);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(43, 13);
+            this.label22.TabIndex = 3;
+            this.label22.Text = "Coding:";
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(253, 20);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(25, 13);
+            this.label21.TabIndex = 2;
+            this.label21.Text = "Khz";
+>>>>>>> c7334ab05c41e46a3c5b89f896a57b72413d1417
+            // 
+            // comboBox4
+            // 
+<<<<<<< HEAD
+            this.comboBox4.FormattingEnabled = true;
+            this.comboBox4.Items.AddRange(new object[] {
+            "6.25",
+            "12.5",
+            "25"});
+            this.comboBox4.Location = new System.Drawing.Point(174, 67);
+            this.comboBox4.Name = "comboBox4";
+            this.comboBox4.Size = new System.Drawing.Size(73, 21);
+            this.comboBox4.TabIndex = 5;
+            this.comboBox4.Text = "6.25";
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(140, 70);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(28, 13);
+            this.label23.TabIndex = 1;
+            this.label23.Text = "Tari:";
+=======
+            this.comboBox2.FormattingEnabled = true;
+            this.comboBox2.Items.AddRange(new object[] {
+            "40",
+            "250",
+            "300",
+            "320",
+            "640"});
+            this.comboBox2.Location = new System.Drawing.Point(174, 17);
+            this.comboBox2.Name = "comboBox2";
+            this.comboBox2.Size = new System.Drawing.Size(73, 21);
+            this.comboBox2.TabIndex = 1;
+            this.comboBox2.Text = "320";
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(7, 20);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(164, 13);
+            this.label20.TabIndex = 0;
+            this.label20.Text = "Backscatter link frequency (BLF):";
+>>>>>>> c7334ab05c41e46a3c5b89f896a57b72413d1417
+            // 
+            // tabPage4
+            // 
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(854, 264);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "Test command";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+<<<<<<< HEAD
             // label22
             // 
             this.label22.AutoSize = true;
@@ -1110,6 +1373,160 @@
             this.Log_lb.Size = new System.Drawing.Size(33, 13);
             this.Log_lb.TabIndex = 11;
             this.Log_lb.Text = "Good";
+=======
+            // button2
+            // 
+            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button2.Location = new System.Drawing.Point(2, 19);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(91, 33);
+            this.button2.TabIndex = 2;
+            this.button2.Text = "Connect";
+            this.button2.UseVisualStyleBackColor = true;
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.button3);
+            this.groupBox3.Controls.Add(this.comboBox1);
+            this.groupBox3.Controls.Add(this.label5);
+            this.groupBox3.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.groupBox3.Location = new System.Drawing.Point(99, 12);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(386, 55);
+            this.groupBox3.TabIndex = 3;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Connection information";
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(267, 16);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(101, 23);
+            this.button3.TabIndex = 3;
+            this.button3.Text = "View setting";
+            this.button3.UseVisualStyleBackColor = true;
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "Zigbee",
+            "Wifi",
+            "Bluetooth",
+            "Ethernet",
+            "RS485"});
+            this.comboBox1.Location = new System.Drawing.Point(127, 19);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(121, 21);
+            this.comboBox1.TabIndex = 2;
+            this.comboBox1.Text = "Zigbee";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(7, 20);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(84, 13);
+            this.label5.TabIndex = 1;
+            this.label5.Text = "Connection type";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(14, 22);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(66, 13);
+            this.label6.TabIndex = 4;
+            this.label6.Text = "Gateway ID:";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(79, 22);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(138, 13);
+            this.label7.TabIndex = 5;
+            this.label7.Text = "Seldatinc_6CECEBAE9E7C";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(238, 22);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(40, 13);
+            this.label8.TabIndex = 6;
+            this.label8.Text = "Status:";
+            // 
+            // button4
+            // 
+            this.button4.BackColor = System.Drawing.Color.Red;
+            this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button4.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.button4.Location = new System.Drawing.Point(284, 17);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(25, 23);
+            this.button4.TabIndex = 7;
+            this.button4.UseVisualStyleBackColor = false;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(316, 22);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(45, 13);
+            this.label9.TabIndex = 8;
+            this.label9.Text = "Inactive";
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.label7);
+            this.groupBox4.Controls.Add(this.label9);
+            this.groupBox4.Controls.Add(this.label6);
+            this.groupBox4.Controls.Add(this.button4);
+            this.groupBox4.Controls.Add(this.label8);
+            this.groupBox4.Location = new System.Drawing.Point(494, 12);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(366, 55);
+            this.groupBox4.TabIndex = 9;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Reader status";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(589, 366);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(83, 13);
+            this.label10.TabIndex = 10;
+            this.label10.Text = "Gateway status:";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(676, 366);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(33, 13);
+            this.label11.TabIndex = 11;
+            this.label11.Text = "Good";
+            // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(714, 230);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(133, 23);
+            this.button7.TabIndex = 18;
+            this.button7.Text = "Set configuration";
+            this.button7.UseVisualStyleBackColor = true;
+            // 
+            // button8
+            // 
+            this.button8.Location = new System.Drawing.Point(570, 230);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(133, 23);
+            this.button8.TabIndex = 19;
+            this.button8.Text = "Get configuration";
+            this.button8.UseVisualStyleBackColor = true;
+>>>>>>> c7334ab05c41e46a3c5b89f896a57b72413d1417
             // 
             // Form1
             // 
@@ -1234,6 +1651,7 @@
         private System.Windows.Forms.GroupBox groupBox11;
         private System.Windows.Forms.ComboBox comboBox5;
         private System.Windows.Forms.Label label31;
+<<<<<<< HEAD
         private System.Windows.Forms.TextBox Port_textbox;
         private System.Windows.Forms.TextBox IP_textbox;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
@@ -1251,6 +1669,12 @@
         private System.Windows.Forms.CheckBox Offline_ckb;
         private System.Windows.Forms.CheckBox LED_Support_ckb;
         private System.Windows.Forms.RadioButton PalletSupport_rbtn;
+=======
+        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Button button8;
+>>>>>>> c7334ab05c41e46a3c5b89f896a57b72413d1417
     }
 }
 
