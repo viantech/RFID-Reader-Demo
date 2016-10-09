@@ -16,3 +16,11 @@ E:\WMS_RFID\SourceCodes\Bitbucket_repo\GatewayForm\GatewayForm\obj\Debug\Gateway
 E:\WMS_RFID\SourceCodes\Bitbucket_repo\GatewayForm\GatewayForm\obj\Debug\GatewayForm.Form1.resources
 E:\WMS_RFID\SourceCodes\Bitbucket_repo\GatewayForm\GatewayForm\obj\Debug\GatewayForm.Properties.Resources.resources
 E:\WMS_RFID\SourceCodes\Bitbucket_repo\GatewayForm\GatewayForm\obj\Debug\GatewayForm.csproj.GenerateResource.Cache
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Debug\GatewayForm.exe.config
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Debug\GatewayForm.exe
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Debug\GatewayForm.pdb
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\GatewayForm.Form1.resources
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\GatewayForm.Properties.Resources.resources
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\GatewayForm.csproj.GenerateResource.Cache
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\GatewayForm.exe
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\GatewayForm.pdb
