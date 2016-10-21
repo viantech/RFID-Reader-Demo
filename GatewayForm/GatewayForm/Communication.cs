@@ -12,6 +12,7 @@ namespace GatewayForm
         private CM.TYPECONNECT type;
         private SocketClient zigbee;
         private TCP_Client tcp;
+        public bool connect_ok = true;
         //public delegate void ReceivedHandler(string msg);
         public event SocketReceivedHandler TagID_Msg;
         public event SocketReceivedHandler Config_Msg;
@@ -49,19 +50,21 @@ namespace GatewayForm
             switch (type)
             {
                 case CM.TYPECONNECT.HDR_ZIGBEE:
-                    zigbee.Connect(ip, port);
                     zigbee.TagID_Received += new SocketReceivedHandler(passed_event);
                     zigbee.Get_Configuration += new SocketReceivedHandler(passed_config);
                     zigbee.Log_Msg += new SocketReceivedHandler(passed_log);
+                    zigbee.Connect(ip, port);
                     break;
                 case CM.TYPECONNECT.HDR_WIFI:
                     break;
                 case CM.TYPECONNECT.HDR_BLUETOOTH:
                     break;
                 case CM.TYPECONNECT.HDR_ETHERNET:
-                    tcp.InitClient(ip, port);
                     tcp.MessageReceived += new SocketReceivedHandler(passed_event); //chu y
                     tcp.ConfigMessage += new SocketReceivedHandler(passed_config);
+                    tcp.Log_Msg += new SocketReceivedHandler(passed_log);
+                    tcp.InitClient(ip, port);
+                    this.connect_ok = tcp.connect_ok;
                     break;
                 case CM.TYPECONNECT.HDR_RS232:
                     break;
@@ -81,7 +84,7 @@ namespace GatewayForm
                 case CM.TYPECONNECT.HDR_BLUETOOTH:
                     break;
                 case CM.TYPECONNECT.HDR_ETHERNET:
-                    tcp.Dispose();
+                    tcp.Free();
                     break;
                 case CM.TYPECONNECT.HDR_RS232:
                     break;

@@ -52,6 +52,30 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Serial_pop.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Serial_pop.Designer.cs">
+      <DependentUpon>Serial_pop.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tcp_pop.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tcp_pop.Designer.cs">
+      <DependentUpon>Tcp_pop.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Wifi_pop.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Wifi_pop.Designer.cs">
+      <DependentUpon>Wifi_pop.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Zigbee_pop.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Zigbee_pop.Designer.cs">
+      <DependentUpon>Zigbee_pop.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SocketClient.cs" />
@@ -59,6 +83,18 @@
     <Compile Include="Zigbee.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Serial_pop.resx">
+      <DependentUpon>Serial_pop.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tcp_pop.resx">
+      <DependentUpon>Tcp_pop.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wifi_pop.resx">
+      <DependentUpon>Wifi_pop.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Zigbee_pop.resx">
+      <DependentUpon>Zigbee_pop.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

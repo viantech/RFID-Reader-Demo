@@ -81,7 +81,6 @@ namespace GatewayForm
             connectDone.WaitOne();
             Send_ConnectionRequest();
             Receive_Command_Handler(CM.COMMAND.CONNECTION_REQUEST_CMD);
-            //Thread.Sleep(500);
         }
 
         /// <summary>

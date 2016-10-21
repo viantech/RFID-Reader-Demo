@@ -40,7 +40,8 @@ namespace GatewayForm
             STOP_OPERATION_CMD = 0x07,
             GET_PORT_PROPERTIES_CMD = 0x08,
             SET_PORT_PROPERTIES_CMD = 0x09,
-            REQUEST_TAG_ID_CMD = 0x0A
+            REQUEST_TAG_ID_CMD = 0x0A,
+            DIS_CONNECT_CMD = 0X10,
         };
 
         public enum HEADER
@@ -177,10 +178,10 @@ namespace GatewayForm
         {
             FrameFormat fmt = new FrameFormat();
             int datalen_fmt;
-            byte[] meta_sub = meta_subframe;
+            //byte[] meta_sub = meta_subframe;
             /* Frame Format*/
             //Command
-            fmt.command = meta_sub[0];
+            fmt.command = meta_subframe[0];
             if (fmt.command != command_option)
             {
                 //form1.SetLog("Error Command Frame Format");
@@ -188,16 +189,16 @@ namespace GatewayForm
             }
 
             //Length
-            fmt.length = (ushort)(meta_sub[2] + (meta_sub[1] << 8));
-            if (fmt.length != meta_sub.Length)
+            fmt.length = (ushort)(meta_subframe[2] + (meta_subframe[1] << 8));
+            if (fmt.length != meta_subframe.Length)
             {
                 //form1.SetLog("Wrong User Data Length");
                 return null;
             }
 
             //CRC
-            fmt.checksum = meta_sub[fmt.length - 1];
-            if (fmt.checksum != Chcksum(meta_sub, fmt.length - 1))
+            fmt.checksum = meta_subframe[fmt.length - 1];
+            if (fmt.checksum != Chcksum(meta_subframe, fmt.length - 1))
             {
                 //form1.SetLog("Error CRC Data User");
                 return null;
@@ -206,7 +207,7 @@ namespace GatewayForm
             /* Data Frame Format*/
             datalen_fmt = fmt.length - 4;
             fmt.metal_data = new byte[datalen_fmt];
-            Buffer.BlockCopy(meta_sub, 3, fmt.metal_data, 0, datalen_fmt);
+            Buffer.BlockCopy(meta_subframe, 3, fmt.metal_data, 0, datalen_fmt);
             return fmt.metal_data;
         }
 
@@ -249,7 +250,6 @@ namespace GatewayForm
             string info_data;
             if (0x00 == byte_data[0])
             {
-                //MessageBox.Show("ACK. Get info");
                 info_data = Encoding.ASCII.GetString(byte_data.Skip(1).ToArray(), 0, byte_data.Length - 1);
             }
             else

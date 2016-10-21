@@ -14,12 +14,41 @@ namespace GatewayForm
 
     public partial class Form1 : Form
     {
+
+        Communication com_type;
+        Zigbee_pop zigbee_form;
+        Wifi_pop wifi_form;
+        Tcp_pop tcp_form;
+        Serial_pop serial_form;
+        StringBuilder gateway_config = new StringBuilder();
+        string[] GW_Format = new string[16] {
+                 "Seldatinc gateway configuration:\n",
+                 "Gateway serial:{0}\n",
+                 "Hardware version:{0}\n",
+                 "Software version:{0}\n",
+                 "Connection support:{0}\n",
+                 "Connection using:{0}\n",
+                 "Audio support:{0}\n",
+                 "Audio output level:{0}\n",
+                 "Led support:yes\n",
+                 "Pallet pattern support:{0}\n",
+                 "Pallet pattern:{0}\n",
+                 "Offline mode:{0}\n",
+                 "RFID API Support LLRP:{0}\n",
+                 "Message queue time interval:{0}\n",
+                 "Stack light support:{0}\n",
+                 "Stacl light GPIO:{0}"
+        };
         public Form1()
         {
             InitializeComponent();
+            ConnType_cbx.SelectedIndex = 0;
+            zigbee_form = new Zigbee_pop();
+            wifi_form = new Wifi_pop();
+            tcp_form = new Tcp_pop();
+            serial_form = new Serial_pop();
         }
-        
-        Communication com_type;
+
         private void Connect_btn_Click(object sender, EventArgs e)
         {
             switch (ConnType_cbx.SelectedIndex)
@@ -29,19 +58,21 @@ namespace GatewayForm
                     if (Connect_btn.Text == "Connect")
                     {
                         com_type = new Communication(CM.TYPECONNECT.HDR_ZIGBEE);
-                        com_type.Connect(IP_textbox.Text, int.Parse(Port_textbox.Text));
                         com_type.Config_Msg += new SocketReceivedHandler(GetConfig_Handler);
                         com_type.Log_Msg += new SocketReceivedHandler(Log_Handler);
+                        com_type.Connect(zigbee_form.ip_add, int.Parse(zigbee_form.port));
                         Connected_Behavior();
                     }
                     else if (Connect_btn.Text == "Disconnect")
                     {
+                        com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
+                        com_type.Receive_Command_Handler(CM.COMMAND.DIS_CONNECT_CMD);
                         com_type.Close();
                         Disconnect_Behavior();
                     }
                     break;
                 //wifi
-                case 1: MessageBox.Show("qa1");
+                case 1: MessageBox.Show("Still develop");
                     break;
                 //bluetooth
                 case 2:
@@ -51,13 +82,16 @@ namespace GatewayForm
                     if (Connect_btn.Text == "Connect")
                     {
                         com_type = new Communication(CM.TYPECONNECT.HDR_ETHERNET);
-                        com_type.Connect(IP_textbox.Text, int.Parse(Port_textbox.Text));
                         com_type.Config_Msg += new SocketReceivedHandler(GetConfig_Handler);
                         com_type.Log_Msg += new SocketReceivedHandler(Log_Handler);
-                        Connected_Behavior();
+                        com_type.Connect(tcp_form.address, int.Parse(tcp_form.port));
+                        if (com_type.connect_ok)
+                            Connected_Behavior();
                     }
                     else if (Connect_btn.Text == "Disconnect")
                     {
+                        com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
+                        com_type.Receive_Command_Handler(CM.COMMAND.DIS_CONNECT_CMD);
                         com_type.Close();
                         Disconnect_Behavior();
                     }
@@ -88,7 +122,7 @@ namespace GatewayForm
         }
         private void GetConfig_Handler(string config_msg)
         {
-            string [] config_str = config_msg.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] config_str = config_msg.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
             if (config_str[0].Contains("Seldatinc gateway "))
             {
                 //Gateway serial
@@ -149,6 +183,16 @@ namespace GatewayForm
         private void Log_Handler(string log_msg)
         {
             SetControl(Log_lb, log_msg);
+            if (log_msg == "No Connection")
+            {
+                SetControl(status_lb, "Inactive");
+                SetControl(status_btn, "Failed");
+            }
+            else if (log_msg == "Connected")
+            {
+                SetControl(status_lb, "Active");
+                SetControl(status_btn, "True");
+            }
         }
 
         private delegate void SetConfigDelegate(Control control, string config_tx);
@@ -160,46 +204,61 @@ namespace GatewayForm
             }
             else
             {
-                if (control is TextBox || control is Label)
-                    control.Text = config_tx;
-
-                if (control is CheckBox)
+                switch (control.GetType().Name)
                 {
-                    if ("yes" == config_tx)
-                        (control as CheckBox).Checked = true;
-                    else
-                        (control as CheckBox).Checked = false;
+                    case "TextBox":
+                        control.Text = config_tx;
+                        break;
+
+                    case "Label":
+                        control.Text = config_tx;
+                        break;
+
+                    case "CheckBox":
+                        if ("yes" == config_tx)
+                            (control as CheckBox).Checked = true;
+                        else
+                            (control as CheckBox).Checked = false;
+                        break;
+
+                    case "RadioButton":
+                        if ("yes" == config_tx)
+                            (control as RadioButton).Checked = true;
+                        else
+                            (control as RadioButton).Checked = false;
+                        break;
+
+                    case "CheckedListBox":
+                        for (int i = 0; i < (control as CheckedListBox).Items.Count; i++)
+                            ConnectionList_ck.SetItemCheckState(i, CheckState.Checked);
+
+                        if (!config_tx.Contains("Zigbee"))
+                            (control as CheckedListBox).SetItemCheckState(0, CheckState.Unchecked);
+                        if (!config_tx.Contains("Wifi"))
+                            (control as CheckedListBox).SetItemCheckState(1, CheckState.Unchecked);
+                        if (!config_tx.Contains("Bluetooth"))
+                            (control as CheckedListBox).SetItemCheckState(2, CheckState.Unchecked);
+                        if (!config_tx.Contains("Ethernet"))
+                            (control as CheckedListBox).SetItemCheckState(3, CheckState.Unchecked);
+                        if (!config_tx.Contains("RS485"))
+                            (control as CheckedListBox).SetItemCheckState(4, CheckState.Unchecked);
+                        break;
+
+                    case "TrackBar":
+                        (control as TrackBar).Value = 100;
+                        break;
+
+                    case "Button":
+                        if ("Failed" == config_tx)
+                            (control as Button).BackColor = Color.Red;
+                        else
+                            (control as Button).BackColor = Color.Blue;
+                        break;
+
+                    default:
+                        break;
                 }
 
-                if (control is RadioButton)
-                {
-                    if ("yes" == config_tx)
-                        (control as RadioButton).Checked = true;
-                    else
-                        (control as RadioButton).Checked = false;
-                }
-
-                if (control is CheckedListBox)
-                {
-                    for (int i = 0; i < (control as CheckedListBox).Items.Count; i++)
-                        ConnectionList_ck.SetItemCheckState(i, CheckState.Checked);
-
-                    if (!config_tx.Contains("Zigbee"))
-                        (control as CheckedListBox).SetItemCheckState(0, CheckState.Unchecked);
-                    if (!config_tx.Contains("Wifi"))
-                        (control as CheckedListBox).SetItemCheckState(1, CheckState.Unchecked);
-                    if (!config_tx.Contains("Bluetooth"))
-                        (control as CheckedListBox).SetItemCheckState(2, CheckState.Unchecked);
-                    if (!config_tx.Contains("Ethernet"))
-                        (control as CheckedListBox).SetItemCheckState(3, CheckState.Unchecked);
-                    if (!config_tx.Contains("RS485"))
-                        (control as CheckedListBox).SetItemCheckState(4, CheckState.Unchecked);
-                }
-
-                if (control is TrackBar)
-                {
-                    (control as TrackBar).Value = 100;
-                }
             }
         }
         private void Read_handler(string msg)
@@ -220,7 +279,7 @@ namespace GatewayForm
                 table.Rows.Clear();
                 //string[] seperators = new string[] { "EPC:", "ANT:", "RSSI:", "Read Count:", "Date:" };
                 rows = text.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
-                rows = rows.Skip(1).ToArray();
+                rows = rows.Skip(2).ToArray();
 
                 for (int i = 0; i < rows.Length; i++)
                 {
@@ -245,8 +304,8 @@ namespace GatewayForm
             {
                 com_type.TagID_Msg -= new SocketReceivedHandler(Read_handler);
                 com_type.Get_Command_Send(CM.COMMAND.STOP_OPERATION_CMD);
-                com_type.Receive_Command_Handler(CM.COMMAND.STOP_OPERATION_CMD);
                 Start_Operate_btn.Text = "Start inventory";
+                this.dataGridView1.Rows.Clear();
             }
         }
 
@@ -258,8 +317,44 @@ namespace GatewayForm
 
         private void Set_GW_Config_btn_Click(object sender, EventArgs e)
         {
-            string gateway_info = "quang";
-            com_type.Set_Command_Send(CM.COMMAND.SET_CONFIGURATION_CMD, gateway_info);
+            gateway_config.Append(GW_Format[0]);
+            gateway_config.AppendFormat(GW_Format[1], Gateway_ID_tx.Text);
+            gateway_config.AppendFormat(GW_Format[2], HW_Verrsion_tx.Text);
+            gateway_config.AppendFormat(GW_Format[3], SW_Version_tx.Text);
+            string connections = String.Empty;
+            foreach (var item_conn in ConnectionList_ck.CheckedItems)
+                connections += item_conn.ToString() + ",";
+            gateway_config.AppendFormat(GW_Format[4], connections.Remove(connections.Length - 1));
+            gateway_config.AppendFormat(GW_Format[5], ConnType_cbx.SelectedItem.ToString());
+            if (AudioSupport_rbtn.Checked)
+                gateway_config.AppendFormat(GW_Format[6], "yes");
+            else gateway_config.AppendFormat(GW_Format[6], "no");
+            gateway_config.AppendFormat(GW_Format[7] + "dB", AudioVolume_trb.Value.ToString());
+            if (LED_Support_ckb.Checked)
+                gateway_config.AppendFormat(GW_Format[8], "yes");
+            else gateway_config.AppendFormat(GW_Format[8], "no");
+            if (PalletSupport_rbtn.Checked)
+                gateway_config.AppendFormat(GW_Format[9], "yes");
+            else gateway_config.AppendFormat(GW_Format[9], "no");
+            gateway_config.AppendFormat(GW_Format[10], PatternID_tx.Text);
+            if (Offline_ckb.Checked)
+                gateway_config.AppendFormat(GW_Format[11], "yes");
+            else gateway_config.AppendFormat(GW_Format[11], "no");
+            if (RFID_API_ckb.Checked)
+                gateway_config.AppendFormat(GW_Format[12], "yes");
+            else gateway_config.AppendFormat(GW_Format[12], "no");
+            gateway_config.AppendFormat(GW_Format[13], MessageInterval_tx.Text);
+            if (StackLight_ckb.Checked)
+                gateway_config.AppendFormat(GW_Format[14], "yes");
+            else gateway_config.AppendFormat(GW_Format[14], "no");
+            string GPO_sets = String.Empty;
+            foreach (CheckBox GPOs_ckb in groupBox7.Controls)
+            {
+                if (GPOs_ckb.Checked)
+                    GPO_sets += GPOs_ckb.Text.ToLower() + ",";
+            }
+            gateway_config.AppendFormat(GW_Format[15], GPO_sets.Remove(GPO_sets.Length - 1));
+            com_type.Set_Command_Send(CM.COMMAND.SET_CONFIGURATION_CMD, gateway_config.ToString());
             com_type.Receive_Command_Handler(CM.COMMAND.SET_CONFIGURATION_CMD);
         }
 
@@ -286,13 +381,54 @@ namespace GatewayForm
 
         private void ViewConn_btn_Click(object sender, EventArgs e)
         {
-
+            switch (ConnType_cbx.SelectedIndex)
+            {
+                case 0:
+                    zigbee_form.ShowDialog();
+                    break;
+                case 1:
+                    wifi_form.ShowDialog();
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    tcp_form.ShowDialog();
+                    break;
+                case 4:
+                    serial_form.ShowDialog();
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void Get_RFID_btn_Click(object sender, EventArgs e)
         {
             com_type.Get_Command_Send(CM.COMMAND.GET_RFID_CONFIGURATION_CMD);
             com_type.Receive_Command_Handler(CM.COMMAND.GET_RFID_CONFIGURATION_CMD);
+        }
+
+        private void ConnType_cbx_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (ConnType_cbx.SelectedIndex)
+            {
+                case 0:
+                    zigbee_form.ShowDialog();
+                    break;
+                case 1:
+                    wifi_form.ShowDialog();
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    tcp_form.ShowDialog();
+                    break;
+                case 4:
+                    serial_form.ShowDialog();
+                    break;
+                default:
+                    break;
+            }
         }
 
 
