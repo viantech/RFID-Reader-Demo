@@ -84,11 +84,13 @@
             this.Set_RFID_btn = new System.Windows.Forms.Button();
             this.Get_RFID_btn = new System.Windows.Forms.Button();
             this.groupBox11 = new System.Windows.Forms.GroupBox();
-            this.comboBox5 = new System.Windows.Forms.ComboBox();
+            this.region_lst = new System.Windows.Forms.ComboBox();
             this.label31 = new System.Windows.Forms.Label();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
-            this.label30 = new System.Windows.Forms.Label();
-            this.label27 = new System.Windows.Forms.Label();
+            this.set_power_btn = new System.Windows.Forms.Button();
+            this.get_power_btn = new System.Windows.Forms.Button();
+            this.write_power_lb = new System.Windows.Forms.Label();
+            this.read_power_lb = new System.Windows.Forms.Label();
             this.label29 = new System.Windows.Forms.Label();
             this.trackBar3 = new System.Windows.Forms.TrackBar();
             this.label26 = new System.Windows.Forms.Label();
@@ -118,6 +120,11 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.label10 = new System.Windows.Forms.Label();
             this.Log_lb = new System.Windows.Forms.Label();
+            this.Audio_val = new System.Windows.Forms.Label();
+            this.get_protocol_btn = new System.Windows.Forms.Button();
+            this.set_protocol_btn = new System.Windows.Forms.Button();
+            this.get_region_btn = new System.Windows.Forms.Button();
+            this.set_region_btn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -564,6 +571,7 @@
             // 
             // groupBox5
             // 
+            this.groupBox5.Controls.Add(this.Audio_val);
             this.groupBox5.Controls.Add(this.AudioVolume_trb);
             this.groupBox5.Controls.Add(this.label16);
             this.groupBox5.Controls.Add(this.AudioSupport_rbtn);
@@ -576,11 +584,15 @@
             // 
             // AudioVolume_trb
             // 
+            this.AudioVolume_trb.LargeChange = 10;
             this.AudioVolume_trb.Location = new System.Drawing.Point(215, 20);
             this.AudioVolume_trb.Maximum = 100;
             this.AudioVolume_trb.Name = "AudioVolume_trb";
             this.AudioVolume_trb.Size = new System.Drawing.Size(104, 45);
-            this.AudioVolume_trb.TabIndex = 2;
+            this.AudioVolume_trb.SmallChange = 5;
+            this.AudioVolume_trb.TabIndex = 10;
+            this.AudioVolume_trb.TickFrequency = 10;
+            this.AudioVolume_trb.Scroll += new System.EventHandler(this.AudioVolume_trb_Scroll);
             // 
             // label16
             // 
@@ -713,19 +725,21 @@
             // 
             // groupBox11
             // 
-            this.groupBox11.Controls.Add(this.comboBox5);
+            this.groupBox11.Controls.Add(this.set_region_btn);
+            this.groupBox11.Controls.Add(this.get_region_btn);
+            this.groupBox11.Controls.Add(this.region_lst);
             this.groupBox11.Controls.Add(this.label31);
             this.groupBox11.Location = new System.Drawing.Point(4, 125);
             this.groupBox11.Name = "groupBox11";
-            this.groupBox11.Size = new System.Drawing.Size(311, 41);
+            this.groupBox11.Size = new System.Drawing.Size(387, 59);
             this.groupBox11.TabIndex = 3;
             this.groupBox11.TabStop = false;
             this.groupBox11.Text = "Region";
             // 
-            // comboBox5
+            // region_lst
             // 
-            this.comboBox5.FormattingEnabled = true;
-            this.comboBox5.Items.AddRange(new object[] {
+            this.region_lst.FormattingEnabled = true;
+            this.region_lst.Items.AddRange(new object[] {
             "North America/FCC, 26 MHz band",
             "European Union/ETSI EN 302 208",
             "Korea KCC",
@@ -734,11 +748,11 @@
             "Japan",
             "Australia/AIDA LIPD Variation 2011",
             "New Zealand"});
-            this.comboBox5.Location = new System.Drawing.Point(89, 14);
-            this.comboBox5.Name = "comboBox5";
-            this.comboBox5.Size = new System.Drawing.Size(192, 21);
-            this.comboBox5.TabIndex = 3;
-            this.comboBox5.Text = "North America/FCC, 26 MHz band";
+            this.region_lst.Location = new System.Drawing.Point(89, 14);
+            this.region_lst.Name = "region_lst";
+            this.region_lst.Size = new System.Drawing.Size(192, 21);
+            this.region_lst.TabIndex = 3;
+            this.region_lst.Text = "North America/FCC, 26 MHz band";
             // 
             // label31
             // 
@@ -751,8 +765,10 @@
             // 
             // groupBox9
             // 
-            this.groupBox9.Controls.Add(this.label30);
-            this.groupBox9.Controls.Add(this.label27);
+            this.groupBox9.Controls.Add(this.set_power_btn);
+            this.groupBox9.Controls.Add(this.get_power_btn);
+            this.groupBox9.Controls.Add(this.write_power_lb);
+            this.groupBox9.Controls.Add(this.read_power_lb);
             this.groupBox9.Controls.Add(this.label29);
             this.groupBox9.Controls.Add(this.trackBar3);
             this.groupBox9.Controls.Add(this.label26);
@@ -761,33 +777,53 @@
             this.groupBox9.Controls.Add(this.label25);
             this.groupBox9.Location = new System.Drawing.Point(488, 6);
             this.groupBox9.Name = "groupBox9";
-            this.groupBox9.Size = new System.Drawing.Size(359, 100);
+            this.groupBox9.Size = new System.Drawing.Size(359, 117);
             this.groupBox9.TabIndex = 1;
             this.groupBox9.TabStop = false;
             this.groupBox9.Text = "RF Power";
             // 
-            // label30
+            // set_power_btn
             // 
-            this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(232, 64);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(19, 13);
-            this.label30.TabIndex = 7;
-            this.label30.Text = "30";
+            this.set_power_btn.Location = new System.Drawing.Point(276, 57);
+            this.set_power_btn.Name = "set_power_btn";
+            this.set_power_btn.Size = new System.Drawing.Size(75, 23);
+            this.set_power_btn.TabIndex = 9;
+            this.set_power_btn.Text = "Set";
+            this.set_power_btn.UseVisualStyleBackColor = true;
+            this.set_power_btn.Click += new System.EventHandler(this.set_power_btn_Click);
             // 
-            // label27
+            // get_power_btn
             // 
-            this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(232, 25);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(19, 13);
-            this.label27.TabIndex = 7;
-            this.label27.Text = "30";
+            this.get_power_btn.Location = new System.Drawing.Point(276, 18);
+            this.get_power_btn.Name = "get_power_btn";
+            this.get_power_btn.Size = new System.Drawing.Size(75, 23);
+            this.get_power_btn.TabIndex = 8;
+            this.get_power_btn.Text = "Get";
+            this.get_power_btn.UseVisualStyleBackColor = true;
+            this.get_power_btn.Click += new System.EventHandler(this.get_power_btn_Click);
+            // 
+            // write_power_lb
+            // 
+            this.write_power_lb.AutoSize = true;
+            this.write_power_lb.Location = new System.Drawing.Point(204, 62);
+            this.write_power_lb.Name = "write_power_lb";
+            this.write_power_lb.Size = new System.Drawing.Size(13, 13);
+            this.write_power_lb.TabIndex = 7;
+            this.write_power_lb.Text = "5";
+            // 
+            // read_power_lb
+            // 
+            this.read_power_lb.AutoSize = true;
+            this.read_power_lb.Location = new System.Drawing.Point(204, 23);
+            this.read_power_lb.Name = "read_power_lb";
+            this.read_power_lb.Size = new System.Drawing.Size(13, 13);
+            this.read_power_lb.TabIndex = 7;
+            this.read_power_lb.Text = "5";
             // 
             // label29
             // 
             this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(253, 64);
+            this.label29.Location = new System.Drawing.Point(223, 62);
             this.label29.Name = "label29";
             this.label29.Size = new System.Drawing.Size(28, 13);
             this.label29.TabIndex = 7;
@@ -795,18 +831,22 @@
             // 
             // trackBar3
             // 
-            this.trackBar3.Location = new System.Drawing.Point(131, 62);
+            this.trackBar3.LargeChange = 10;
+            this.trackBar3.Location = new System.Drawing.Point(79, 62);
             this.trackBar3.Maximum = 30;
+            this.trackBar3.Minimum = 5;
             this.trackBar3.Name = "trackBar3";
-            this.trackBar3.Size = new System.Drawing.Size(104, 45);
+            this.trackBar3.Size = new System.Drawing.Size(119, 45);
             this.trackBar3.SmallChange = 5;
-            this.trackBar3.TabIndex = 3;
+            this.trackBar3.TabIndex = 5;
             this.trackBar3.TickFrequency = 5;
+            this.trackBar3.Value = 5;
+            this.trackBar3.Scroll += new System.EventHandler(this.trackBar3_Scroll);
             // 
             // label26
             // 
             this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(253, 25);
+            this.label26.Location = new System.Drawing.Point(223, 23);
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(28, 13);
             this.label26.TabIndex = 7;
@@ -823,13 +863,17 @@
             // 
             // trackBar2
             // 
-            this.trackBar2.Location = new System.Drawing.Point(131, 23);
+            this.trackBar2.LargeChange = 10;
+            this.trackBar2.Location = new System.Drawing.Point(79, 18);
             this.trackBar2.Maximum = 30;
+            this.trackBar2.Minimum = 5;
             this.trackBar2.Name = "trackBar2";
-            this.trackBar2.Size = new System.Drawing.Size(104, 45);
+            this.trackBar2.Size = new System.Drawing.Size(119, 45);
             this.trackBar2.SmallChange = 5;
-            this.trackBar2.TabIndex = 3;
+            this.trackBar2.TabIndex = 5;
             this.trackBar2.TickFrequency = 5;
+            this.trackBar2.Value = 5;
+            this.trackBar2.Scroll += new System.EventHandler(this.trackBar2_Scroll);
             // 
             // label25
             // 
@@ -842,6 +886,8 @@
             // 
             // groupBox8
             // 
+            this.groupBox8.Controls.Add(this.set_protocol_btn);
+            this.groupBox8.Controls.Add(this.get_protocol_btn);
             this.groupBox8.Controls.Add(this.label24);
             this.groupBox8.Controls.Add(this.comboBox4);
             this.groupBox8.Controls.Add(this.label23);
@@ -852,7 +898,7 @@
             this.groupBox8.Controls.Add(this.label20);
             this.groupBox8.Location = new System.Drawing.Point(4, 4);
             this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(311, 102);
+            this.groupBox8.Size = new System.Drawing.Size(387, 102);
             this.groupBox8.TabIndex = 0;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Protocol";
@@ -1096,6 +1142,53 @@
             this.Log_lb.TabIndex = 11;
             this.Log_lb.Text = "Good";
             // 
+            // Audio_val
+            // 
+            this.Audio_val.AutoSize = true;
+            this.Audio_val.Location = new System.Drawing.Point(258, 51);
+            this.Audio_val.Name = "Audio_val";
+            this.Audio_val.Size = new System.Drawing.Size(13, 13);
+            this.Audio_val.TabIndex = 3;
+            this.Audio_val.Text = "0";
+            // 
+            // get_protocol_btn
+            // 
+            this.get_protocol_btn.Location = new System.Drawing.Point(306, 17);
+            this.get_protocol_btn.Name = "get_protocol_btn";
+            this.get_protocol_btn.Size = new System.Drawing.Size(75, 23);
+            this.get_protocol_btn.TabIndex = 7;
+            this.get_protocol_btn.Text = "Get";
+            this.get_protocol_btn.UseVisualStyleBackColor = true;
+            // 
+            // set_protocol_btn
+            // 
+            this.set_protocol_btn.Location = new System.Drawing.Point(306, 59);
+            this.set_protocol_btn.Name = "set_protocol_btn";
+            this.set_protocol_btn.Size = new System.Drawing.Size(75, 23);
+            this.set_protocol_btn.TabIndex = 7;
+            this.set_protocol_btn.Text = "Set";
+            this.set_protocol_btn.UseVisualStyleBackColor = true;
+            // 
+            // get_region_btn
+            // 
+            this.get_region_btn.Location = new System.Drawing.Point(306, 7);
+            this.get_region_btn.Name = "get_region_btn";
+            this.get_region_btn.Size = new System.Drawing.Size(75, 23);
+            this.get_region_btn.TabIndex = 8;
+            this.get_region_btn.Text = "Get";
+            this.get_region_btn.UseVisualStyleBackColor = true;
+            this.get_region_btn.Click += new System.EventHandler(this.get_region_btn_Click);
+            // 
+            // set_region_btn
+            // 
+            this.set_region_btn.Location = new System.Drawing.Point(306, 36);
+            this.set_region_btn.Name = "set_region_btn";
+            this.set_region_btn.Size = new System.Drawing.Size(75, 23);
+            this.set_region_btn.TabIndex = 9;
+            this.set_region_btn.Text = "Set";
+            this.set_region_btn.UseVisualStyleBackColor = true;
+            this.set_region_btn.Click += new System.EventHandler(this.set_region_btn_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1211,13 +1304,13 @@
         private System.Windows.Forms.Label label26;
         private System.Windows.Forms.TrackBar trackBar2;
         private System.Windows.Forms.Label label25;
-        private System.Windows.Forms.Label label27;
-        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.Label read_power_lb;
+        private System.Windows.Forms.Label write_power_lb;
         private System.Windows.Forms.Label label29;
         private System.Windows.Forms.TrackBar trackBar3;
         private System.Windows.Forms.Label label28;
         private System.Windows.Forms.GroupBox groupBox11;
-        private System.Windows.Forms.ComboBox comboBox5;
+        private System.Windows.Forms.ComboBox region_lst;
         private System.Windows.Forms.Label label31;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
@@ -1234,6 +1327,13 @@
         private System.Windows.Forms.CheckBox Offline_ckb;
         private System.Windows.Forms.CheckBox LED_Support_ckb;
         private System.Windows.Forms.RadioButton PalletSupport_rbtn;
+        private System.Windows.Forms.Button set_power_btn;
+        private System.Windows.Forms.Button get_power_btn;
+        private System.Windows.Forms.Label Audio_val;
+        private System.Windows.Forms.Button set_region_btn;
+        private System.Windows.Forms.Button get_region_btn;
+        private System.Windows.Forms.Button set_protocol_btn;
+        private System.Windows.Forms.Button get_protocol_btn;
     }
 }
 

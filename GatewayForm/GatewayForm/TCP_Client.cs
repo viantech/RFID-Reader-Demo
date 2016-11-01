@@ -49,7 +49,7 @@ namespace GatewayForm
         private ManualResetEvent receiveDone = new ManualResetEvent(false);
         //Ping connection
         //private System.Timers.Timer pingTimer = new System.Timers.Timer() { Interval = 10000 };
-
+        private ManualResetEvent waiter = new ManualResetEvent(false);
         // Event Handler
         public event SocketReceivedHandler MessageReceived;
         public event SocketReceivedHandler ConfigMessage;
@@ -69,9 +69,16 @@ namespace GatewayForm
 
         private void Log_Raise(string log_str)
         {
-            var logmsg = Log_Msg;
+            SocketReceivedHandler logmsg = Log_Msg;
             if (logmsg != null)
                 logmsg(log_str);
+        }
+
+        private void Cmd_Raise(string cmd_str)
+        {
+            SocketReceivedHandler cmd_msg = ConfigMessage;
+            if (cmd_msg != null)
+                cmd_msg(cmd_str);
         }
 
         #region Connect
@@ -135,7 +142,7 @@ namespace GatewayForm
 
                 // Create a TCP/IP socket.
                 tcp_client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                tcp_client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
+                tcp_client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
                 // Connect to the remote endpoint.
                 tcp_client.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), tcp_client);
                 connectDone.WaitOne();
@@ -213,6 +220,26 @@ namespace GatewayForm
                 {
                     if (tcp_client != null && tcp_client.Connected)
                     {
+                        StateTCPClient state = new StateTCPClient();
+                        state.workSocket = tcp_client;
+                        alive = false;
+
+                        // Begin receiving the data from the remote device.
+                        tcp_client.BeginReceive(state.buffer, 0, StateTCPClient.BufferSize, 0,
+                            new AsyncCallback(Keep_Alive_Callback), state);
+                        waiter.WaitOne(900);
+                        waiter.Reset();
+                        if (alive == false)
+                        {
+                            Log_Raise("No Connection");
+                            //pingTimer.Interval = 5000;
+                            return false;
+                        }
+                        else
+                        {
+                            return true;
+                            //pingTimer.Interval = 10000;
+                        }
                         // Detect if client disconnected
                         /*if (tcp_client.Poll(0, SelectMode.SelectRead))
                         {
@@ -227,8 +254,6 @@ namespace GatewayForm
                                 return true;
                             }
                         }*/
-
-                        return true;
                     }
                     else
                     {
@@ -239,6 +264,38 @@ namespace GatewayForm
                 {
                     return false;
                 }
+            }
+        }
+
+        private void Keep_Alive_Callback(IAsyncResult ar)
+        {
+            try
+            {
+                StateTCPClient state = (StateTCPClient)ar.AsyncState;
+                Socket client = state.workSocket;
+                // Read data from the remote device.
+                int bytesRead = client.EndReceive(ar);
+
+                if (bytesRead > 0)
+                {
+                    byte[] meta_sub = CM.Decode_SubFrame(state.buffer, bytesRead);
+                    byte asaack = CM.Decode_Frame_ACK((byte)CM.COMMAND.STOP_OPERATION_CMD, meta_sub);
+                    if (0x00 == asaack)
+                    {
+                        alive = true;
+                        if (!this.IsConnected)
+                            Log_Raise("Re-Connect.");
+                        receiveDone.Set();
+                    }
+                    else
+                    {
+                        Log_Raise("Error");
+                    }
+                }
+            }
+            catch (SocketException e)
+            {
+                MessageBox.Show(e.ToString());
             }
         }
 
@@ -435,25 +492,24 @@ namespace GatewayForm
                 // from the asynchronous state object.
                 StateTCPClient state = (StateTCPClient)ar.AsyncState;
                 Socket client = state.workSocket;
-
+                int wait = 0;
+                while (client.Available <= 0)
+                {
+                    wait++;
+                    if (wait > 500)
+                        throw new System.InvalidOperationException("Timeout");
+                }
                 // Read data from the remote device.
                 int bytesRead = client.EndReceive(ar);
 
-                if (bytesRead > 0)
-                {
-                    byte[] meta_sub = CM.Decode_SubFrame(state.buffer, bytesRead);
-                    Array.Resize(ref result_data_byte, result_data_byte.Length + meta_sub.Length);
-                    Buffer.BlockCopy(meta_sub, 0, result_data_byte, result_data_byte.Length - meta_sub.Length, meta_sub.Length);
-                    if (0x01 == state.buffer[bytesRead - 2])
-                    {
-                        receiveDone.Set();
-                    }
-                    else
-                    {
-                        client.BeginReceive(state.buffer, 0, StateTCPClient.BufferSize, 0,
-                        new AsyncCallback(Receive_Command_Callback), state);
-                    }
-                }
+                byte[] meta_sub = CM.Decode_SubFrame(state.buffer, bytesRead);
+                Array.Resize(ref result_data_byte, result_data_byte.Length + meta_sub.Length);
+                Buffer.BlockCopy(meta_sub, 0, result_data_byte, result_data_byte.Length - meta_sub.Length, meta_sub.Length);
+                if (0x01 == state.buffer[bytesRead - 2])
+                    receiveDone.Set();
+                else
+                    client.BeginReceive(state.buffer, 0, StateTCPClient.BufferSize, 0,
+                    new AsyncCallback(Receive_Command_Callback), state);
             }
             catch (IOException e)
             {
@@ -485,9 +541,8 @@ namespace GatewayForm
             receiveDone.Reset();
 
             // After received all packet
-            byte info_ack;
+            byte info_ack = new byte();
             string data_response = null;
-            SocketReceivedHandler command_rev;
             switch (command_type)
             {
                 /* connection request */
@@ -497,9 +552,7 @@ namespace GatewayForm
                 /* configuration */
                 case CM.COMMAND.GET_CONFIGURATION_CMD:
                     data_response = CM.Get_Data(CM.Decode_Frame((byte)CM.COMMAND.GET_CONFIGURATION_CMD, result_data_byte));
-                    command_rev = ConfigMessage;
-                    if (command_rev != null)
-                        command_rev(data_response);
+                    Cmd_Raise(data_response);
                     break;
                 case CM.COMMAND.SET_CONFIGURATION_CMD:
                     info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_CONFIGURATION_CMD, result_data_byte);
@@ -511,9 +564,7 @@ namespace GatewayForm
                 /* RFID configuration */
                 case CM.COMMAND.GET_RFID_CONFIGURATION_CMD:
                     data_response = CM.Get_Data(CM.Decode_Frame((byte)CM.COMMAND.GET_RFID_CONFIGURATION_CMD, result_data_byte));
-                    command_rev = ConfigMessage;
-                    if (command_rev != null)
-                        command_rev(data_response);
+                    Cmd_Raise(data_response);
                     MessageBox.Show(data_response);
                     break;
                 case CM.COMMAND.SET_RFID_CONFIGURATION_CMD:
@@ -526,9 +577,7 @@ namespace GatewayForm
                 /* Port Properties */
                 case CM.COMMAND.GET_PORT_PROPERTIES_CMD:
                     data_response = CM.Get_Data(CM.Decode_Frame((byte)CM.COMMAND.GET_PORT_PROPERTIES_CMD, result_data_byte));
-                    command_rev = ConfigMessage;
-                    if (command_rev != null)
-                        command_rev(data_response);
+                    Cmd_Raise(data_response);
                     MessageBox.Show(data_response);
                     break;
                 case CM.COMMAND.SET_PORT_PROPERTIES_CMD:
@@ -551,14 +600,30 @@ namespace GatewayForm
                     else
                         MessageBox.Show("Failed start operation");
                     break;
-                /* stop operate 
-                case CM.COMMAND.STOP_OPERATION_CMD:
-                    info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.STOP_OPERATION_CMD, result_data_byte);
+                    //Power RFID
+                case CM.COMMAND.GET_POWER_CMD:
+                    data_response = CM.Get_Data(CM.Decode_Frame((byte)CM.COMMAND.GET_POWER_CMD, result_data_byte));
+                    Cmd_Raise("Power RFID\n" + data_response + "\n");
+                    break;
+                case CM.COMMAND.SET_POWER_CMD:
+                    info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_POWER_CMD, result_data_byte);
                     if (0x00 == info_ack)
-                        Log_Raise("Stop operate");
+                        Log_Raise("Set Power successfull");
                     else
-                        MessageBox.Show("Failed stop operate");
-                    break;*/
+                        Log_Raise("Failed set power");
+                    break;
+                    //Region Configuration
+                case CM.COMMAND.GET_REGION_CMD:
+                    data_response = CM.Get_Data(CM.Decode_Frame((byte)CM.COMMAND.GET_POWER_CMD, result_data_byte));
+                    Cmd_Raise("Region RFID\n" + data_response + "\n");
+                    break;
+                case CM.COMMAND.SET_REGION_CMD:
+                    info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_POWER_CMD, result_data_byte);
+                    if (0x00 == info_ack)
+                        Log_Raise("Set Power successfull");
+                    else
+                        Log_Raise("Failed set power");
+                    break;
                 default:
                     break;
             }
@@ -574,45 +639,46 @@ namespace GatewayForm
                 Socket client = state.workSocket;
 
                 // Read data from the remote device.
-                Thread.Sleep(1);
+                int wait = 0;
+                while (client.Available <= 0)
+                {
+                    wait++;
+                    if (wait > 500)
+                        throw new System.InvalidOperationException("Timeout");
+                }
                 int bytesRead = client.EndReceive(ar);
 
-                if (bytesRead > 0)
-                {
-                    byte[] meta_sub = CM.Decode_SubFrame(state.buffer, bytesRead);
-                    Array.Resize(ref result_data_byte, result_data_byte.Length + meta_sub.Length);
-                    Buffer.BlockCopy(meta_sub, 0, result_data_byte, result_data_byte.Length - meta_sub.Length, meta_sub.Length);
+                byte[] meta_sub = CM.Decode_SubFrame(state.buffer, bytesRead);
+                Array.Resize(ref result_data_byte, result_data_byte.Length + meta_sub.Length);
+                Buffer.BlockCopy(meta_sub, 0, result_data_byte, result_data_byte.Length - meta_sub.Length, meta_sub.Length);
 
-                    if (0x01 != state.buffer[bytesRead - 2])
+                if (0x01 != state.buffer[bytesRead - 2])
+                    client.BeginReceive(state.buffer, 0, StateTCPClient.BufferSize, 0,
+                    new AsyncCallback(Receive_Data_Callback), state);
+                else
+                {
+                    if (!start_enable)
                     {
-                        client.BeginReceive(state.buffer, 0, StateTCPClient.BufferSize, 0,
-                        new AsyncCallback(Receive_Data_Callback), state);
+                        byte stop_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.STOP_OPERATION_CMD, result_data_byte);
+                        if (0x00 == stop_ack)
+                        {
+                            Log_Raise("Stop operate");
+                            //pingTimer.Start();
+                        }
+                        else
+                            MessageBox.Show("Failed stop operate");
+                        result_data_byte = new byte[0];
                     }
                     else
                     {
-                        if (!start_enable)
-                        {
-                            byte stop_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.STOP_OPERATION_CMD, result_data_byte);
-                            if (0x00 == stop_ack)
-                            {
-                                Log_Raise("Stop operate");
-                                //pingTimer.Start();
-                            }
-                            else
-                                MessageBox.Show("Failed stop operate");
-                            result_data_byte = new byte[0];
-                        }
-                        else
-                        {
-                            /* TAG ID */
-                            var messageReceived = MessageReceived;
-                            byte[] byte_user = CM.Decode_Frame((byte)CM.COMMAND.REQUEST_TAG_ID_CMD, result_data_byte);
-                            
-                            if (messageReceived != null)
-                                messageReceived(Encoding.ASCII.GetString(byte_user, 0, byte_user.Length));
-                            result_data_byte = new byte[0];
-                            Receive_Data_Handler();
-                        }
+                        /* TAG ID */
+                        var messageReceived = MessageReceived;
+                        byte[] byte_user = CM.Decode_Frame((byte)CM.COMMAND.REQUEST_TAG_ID_CMD, result_data_byte);
+
+                        if (messageReceived != null)
+                            messageReceived(Encoding.ASCII.GetString(byte_user, 0, byte_user.Length));
+                        result_data_byte = new byte[0];
+                        Receive_Data_Handler();
                     }
                 }
             }
@@ -657,7 +723,7 @@ namespace GatewayForm
         ~TCP_Client()
         {
             // Release the socket.
-            
+
         }
 
     }

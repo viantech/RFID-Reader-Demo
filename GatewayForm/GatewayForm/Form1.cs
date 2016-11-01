@@ -126,21 +126,21 @@ namespace GatewayForm
             if (config_str[0].Contains("Seldatinc gateway "))
             {
                 //Gateway serial
-                SetControl(Gateway_ID_lb, config_str[1].Substring(config_str[1].IndexOf(":") + 1));
-                SetControl(Gateway_ID_tx, config_str[1].Substring(config_str[1].IndexOf(":") + 1));
+                SetControl(Gateway_ID_lb, config_str[1].Substring(config_str[1].IndexOf("=") + 1));
+                SetControl(Gateway_ID_tx, config_str[1].Substring(config_str[1].IndexOf("=") + 1));
                 //Hardware version
-                SetControl(HW_Verrsion_tx, config_str[2].Substring(config_str[2].IndexOf(":") + 1));
+                SetControl(HW_Verrsion_tx, config_str[2].Substring(config_str[2].IndexOf("=") + 1));
                 //Software version
-                SetControl(SW_Version_tx, config_str[3].Substring(config_str[3].IndexOf(":") + 1));
+                SetControl(SW_Version_tx, config_str[3].Substring(config_str[3].IndexOf("=") + 1));
                 //Connection support
-                SetControl(ConnectionList_ck, config_str[4].Substring(config_str[4].IndexOf(":") + 1));
+                SetControl(ConnectionList_ck, config_str[4].Substring(config_str[4].IndexOf("=") + 1));
                 //Audio support
-                SetControl(AudioSupport_rbtn, config_str[6].Substring(config_str[6].IndexOf(":") + 1));
-                SetControl(AudioVolume_trb, config_str[7].Substring(config_str[7].IndexOf(":") + 1));
+                SetControl(AudioSupport_rbtn, config_str[6].Substring(config_str[6].IndexOf("=") + 1));
+                SetControl(AudioVolume_trb, config_str[7].Substring(config_str[7].IndexOf("=") + 1));
                 //Pallet ID
-                SetControl(PatternID_tx, config_str[10].Substring(config_str[10].IndexOf(":") + 1));
+                SetControl(PatternID_tx, config_str[10].Substring(config_str[10].IndexOf("=") + 1));
                 //Message queue time interval
-                SetControl(MessageInterval_tx, config_str[13].Substring(config_str[13].IndexOf(":") + 1));
+                SetControl(MessageInterval_tx, config_str[13].Substring(config_str[13].IndexOf("=") + 1));
                 //Stack Light Support
                 if (config_str[14].Contains("yes"))
                     SetControl(StackLight_ckb, "yes");
@@ -177,6 +177,14 @@ namespace GatewayForm
                 if (config_str[12].Contains("yes"))
                     SetControl(RFID_API_ckb, "yes");
                 else SetControl(RFID_API_ckb, "no");
+            }
+            else if (config_str[0].Contains("Power RFID"))
+            {
+                SetControl(trackBar2, config_str[1].Substring(config_str[1].IndexOf("=") + 1));
+            }
+            else if (config_str[0].Contains("Region RFID"))
+            {
+                SetControl(region_lst, config_str[1].Substring(config_str[1].IndexOf("=") + 1));
             }
         }
 
@@ -245,7 +253,14 @@ namespace GatewayForm
                         break;
 
                     case "TrackBar":
-                        (control as TrackBar).Value = 100;
+                        if ((control as TrackBar).Name == "trackBar2")
+                        {
+                            (control as TrackBar).Value = int.Parse(config_tx) / 100;
+                        }
+                        else if ((control as TrackBar).Name == "AudioVolume_trb")
+                        {
+                            (control as TrackBar).Value = int.Parse(config_tx);
+                        }
                         break;
 
                     case "Button":
@@ -254,7 +269,9 @@ namespace GatewayForm
                         else
                             (control as Button).BackColor = Color.Blue;
                         break;
-
+                    case "ComboBox":
+                        (control as ComboBox).SelectedIndex = int.Parse(config_tx);
+                        break;
                     default:
                         break;
                 }
@@ -431,6 +448,46 @@ namespace GatewayForm
             }
         }
 
+        private void trackBar2_Scroll(object sender, EventArgs e)
+        {
+            read_power_lb.Text = trackBar2.Value.ToString();
+        }
+
+        private void trackBar3_Scroll(object sender, EventArgs e)
+        {
+            write_power_lb.Text = trackBar3.Value.ToString();
+        }
+
+        private void AudioVolume_trb_Scroll(object sender, EventArgs e)
+        {
+            Audio_val.Text = AudioVolume_trb.Value.ToString();
+        }
+
+        private void get_power_btn_Click(object sender, EventArgs e)
+        {
+            com_type.Get_Command_Send(CM.COMMAND.GET_POWER_CMD);
+            com_type.Receive_Command_Handler(CM.COMMAND.GET_POWER_CMD);
+        }
+
+        private void set_power_btn_Click(object sender, EventArgs e)
+        {
+            string powerconfig = "/reader/radio/readPower = " + 100 * trackBar2.Value;
+            com_type.Set_Command_Send(CM.COMMAND.SET_POWER_CMD, powerconfig);
+            com_type.Receive_Command_Handler(CM.COMMAND.SET_POWER_CMD);
+        }
+
+        private void get_region_btn_Click(object sender, EventArgs e)
+        {
+            com_type.Get_Command_Send(CM.COMMAND.GET_REGION_CMD);
+            com_type.Receive_Command_Handler(CM.COMMAND.GET_REGION_CMD);
+        }
+
+        private void set_region_btn_Click(object sender, EventArgs e)
+        {
+            string regionconfig = "/reader/region/hopTable = 0" + region_lst.SelectedIndex.ToString();
+            com_type.Set_Command_Send(CM.COMMAND.SET_POWER_CMD, regionconfig);
+            com_type.Receive_Command_Handler(CM.COMMAND.SET_POWER_CMD);
+        }
 
     }
 }
