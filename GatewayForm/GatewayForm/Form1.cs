@@ -259,7 +259,7 @@ namespace GatewayForm
                         }
                         else if ((control as TrackBar).Name == "AudioVolume_trb")
                         {
-                            (control as TrackBar).Value = int.Parse(config_tx);
+                            (control as TrackBar).Value = int.Parse(config_tx.Remove(config_tx.Length - 2));
                         }
                         break;
 
@@ -296,7 +296,7 @@ namespace GatewayForm
                 table.Rows.Clear();
                 //string[] seperators = new string[] { "EPC:", "ANT:", "RSSI:", "Read Count:", "Date:" };
                 rows = text.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
-                rows = rows.Skip(2).ToArray();
+                rows = rows.Skip(5).ToArray();
 
                 for (int i = 0; i < rows.Length; i++)
                 {

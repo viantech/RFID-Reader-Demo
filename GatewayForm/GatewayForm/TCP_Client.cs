@@ -492,24 +492,21 @@ namespace GatewayForm
                 // from the asynchronous state object.
                 StateTCPClient state = (StateTCPClient)ar.AsyncState;
                 Socket client = state.workSocket;
-                int wait = 0;
-                while (client.Available <= 0)
-                {
-                    wait++;
-                    if (wait > 500)
-                        throw new System.InvalidOperationException("Timeout");
-                }
+                //Thread.Sleep(1);
+                
                 // Read data from the remote device.
                 int bytesRead = client.EndReceive(ar);
-
-                byte[] meta_sub = CM.Decode_SubFrame(state.buffer, bytesRead);
-                Array.Resize(ref result_data_byte, result_data_byte.Length + meta_sub.Length);
-                Buffer.BlockCopy(meta_sub, 0, result_data_byte, result_data_byte.Length - meta_sub.Length, meta_sub.Length);
-                if (0x01 == state.buffer[bytesRead - 2])
-                    receiveDone.Set();
-                else
-                    client.BeginReceive(state.buffer, 0, StateTCPClient.BufferSize, 0,
-                    new AsyncCallback(Receive_Command_Callback), state);
+                if (bytesRead > 0)
+                {
+                    byte[] meta_sub = CM.Decode_SubFrame(state.buffer, bytesRead);
+                    Array.Resize(ref result_data_byte, result_data_byte.Length + meta_sub.Length);
+                    Buffer.BlockCopy(meta_sub, 0, result_data_byte, result_data_byte.Length - meta_sub.Length, meta_sub.Length);
+                    if (0x01 == state.buffer[bytesRead - 2])
+                        receiveDone.Set();
+                    else
+                        client.BeginReceive(state.buffer, 0, StateTCPClient.BufferSize, 0,
+                        new AsyncCallback(Receive_Command_Callback), state);
+                }
             }
             catch (IOException e)
             {
@@ -639,46 +636,42 @@ namespace GatewayForm
                 Socket client = state.workSocket;
 
                 // Read data from the remote device.
-                int wait = 0;
-                while (client.Available <= 0)
-                {
-                    wait++;
-                    if (wait > 500)
-                        throw new System.InvalidOperationException("Timeout");
-                }
+                Thread.Sleep(1);
                 int bytesRead = client.EndReceive(ar);
-
-                byte[] meta_sub = CM.Decode_SubFrame(state.buffer, bytesRead);
-                Array.Resize(ref result_data_byte, result_data_byte.Length + meta_sub.Length);
-                Buffer.BlockCopy(meta_sub, 0, result_data_byte, result_data_byte.Length - meta_sub.Length, meta_sub.Length);
-
-                if (0x01 != state.buffer[bytesRead - 2])
-                    client.BeginReceive(state.buffer, 0, StateTCPClient.BufferSize, 0,
-                    new AsyncCallback(Receive_Data_Callback), state);
-                else
+                if (bytesRead > 0)
                 {
-                    if (!start_enable)
-                    {
-                        byte stop_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.STOP_OPERATION_CMD, result_data_byte);
-                        if (0x00 == stop_ack)
-                        {
-                            Log_Raise("Stop operate");
-                            //pingTimer.Start();
-                        }
-                        else
-                            MessageBox.Show("Failed stop operate");
-                        result_data_byte = new byte[0];
-                    }
+                    byte[] meta_sub = CM.Decode_SubFrame(state.buffer, bytesRead);
+                    Array.Resize(ref result_data_byte, result_data_byte.Length + meta_sub.Length);
+                    Buffer.BlockCopy(meta_sub, 0, result_data_byte, result_data_byte.Length - meta_sub.Length, meta_sub.Length);
+
+                    if (0x01 != state.buffer[bytesRead - 2])
+                        client.BeginReceive(state.buffer, 0, StateTCPClient.BufferSize, 0,
+                        new AsyncCallback(Receive_Data_Callback), state);
                     else
                     {
-                        /* TAG ID */
-                        var messageReceived = MessageReceived;
-                        byte[] byte_user = CM.Decode_Frame((byte)CM.COMMAND.REQUEST_TAG_ID_CMD, result_data_byte);
+                        if (!start_enable)
+                        {
+                            byte stop_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.STOP_OPERATION_CMD, result_data_byte);
+                            if (0x00 == stop_ack)
+                            {
+                                Log_Raise("Stop operate");
+                                //pingTimer.Start();
+                            }
+                            else
+                                MessageBox.Show("Failed stop operate");
+                            result_data_byte = new byte[0];
+                        }
+                        else
+                        {
+                            /* TAG ID */
+                            var messageReceived = MessageReceived;
+                            byte[] byte_user = CM.Decode_Frame((byte)CM.COMMAND.REQUEST_TAG_ID_CMD, result_data_byte);
 
-                        if (messageReceived != null)
-                            messageReceived(Encoding.ASCII.GetString(byte_user, 0, byte_user.Length));
-                        result_data_byte = new byte[0];
-                        Receive_Data_Handler();
+                            if (messageReceived != null)
+                                messageReceived(Encoding.ASCII.GetString(byte_user, 0, byte_user.Length));
+                            result_data_byte = new byte[0];
+                            Receive_Data_Handler();
+                        }
                     }
                 }
             }
