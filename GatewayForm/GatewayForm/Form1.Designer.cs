@@ -125,6 +125,10 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.label10 = new System.Windows.Forms.Label();
             this.Log_lb = new System.Windows.Forms.Label();
+            this.power_mode_cbx = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.get_power_mode_btn = new System.Windows.Forms.Button();
+            this.set_power_mode_btn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -749,7 +753,7 @@
             // 
             this.set_region_btn.Location = new System.Drawing.Point(306, 36);
             this.set_region_btn.Name = "set_region_btn";
-            this.set_region_btn.Size = new System.Drawing.Size(75, 23);
+            this.set_region_btn.Size = new System.Drawing.Size(65, 23);
             this.set_region_btn.TabIndex = 9;
             this.set_region_btn.Text = "Set";
             this.set_region_btn.UseVisualStyleBackColor = true;
@@ -759,7 +763,7 @@
             // 
             this.get_region_btn.Location = new System.Drawing.Point(306, 7);
             this.get_region_btn.Name = "get_region_btn";
-            this.get_region_btn.Size = new System.Drawing.Size(75, 23);
+            this.get_region_btn.Size = new System.Drawing.Size(65, 23);
             this.get_region_btn.TabIndex = 8;
             this.get_region_btn.Text = "Get";
             this.get_region_btn.UseVisualStyleBackColor = true;
@@ -769,14 +773,21 @@
             // 
             this.region_lst.FormattingEnabled = true;
             this.region_lst.Items.AddRange(new object[] {
+            "Unspecified region",
             "North America/FCC, 26 MHz band",
             "European Union/ETSI EN 302 208",
             "Korea KCC",
-            "China",
             "India",
             "Japan",
+            " People\'s Republic of China",
+            "European Union 2",
+            "European Union 3",
+            "Korea 2",
+            "People\'s Republic of China 2 (840MHZ)",
             "Australia/AIDA LIPD Variation 2011",
-            "New Zealand"});
+            "New Zealand",
+            "Reduced FCC ",
+            "5MHZ FCC"});
             this.region_lst.Location = new System.Drawing.Point(89, 14);
             this.region_lst.Name = "region_lst";
             this.region_lst.Size = new System.Drawing.Size(192, 21);
@@ -794,6 +805,9 @@
             // 
             // groupBox9
             // 
+            this.groupBox9.Controls.Add(this.set_power_mode_btn);
+            this.groupBox9.Controls.Add(this.get_power_mode_btn);
+            this.groupBox9.Controls.Add(this.power_mode_cbx);
             this.groupBox9.Controls.Add(this.set_power_btn);
             this.groupBox9.Controls.Add(this.get_power_btn);
             this.groupBox9.Controls.Add(this.write_power_lb);
@@ -801,21 +815,22 @@
             this.groupBox9.Controls.Add(this.label29);
             this.groupBox9.Controls.Add(this.trackBar3);
             this.groupBox9.Controls.Add(this.label26);
+            this.groupBox9.Controls.Add(this.label4);
             this.groupBox9.Controls.Add(this.label28);
             this.groupBox9.Controls.Add(this.trackBar2);
             this.groupBox9.Controls.Add(this.label25);
             this.groupBox9.Location = new System.Drawing.Point(488, 6);
             this.groupBox9.Name = "groupBox9";
-            this.groupBox9.Size = new System.Drawing.Size(359, 117);
+            this.groupBox9.Size = new System.Drawing.Size(402, 137);
             this.groupBox9.TabIndex = 1;
             this.groupBox9.TabStop = false;
             this.groupBox9.Text = "RF Power";
             // 
             // set_power_btn
             // 
-            this.set_power_btn.Location = new System.Drawing.Point(278, 88);
+            this.set_power_btn.Location = new System.Drawing.Point(333, 19);
             this.set_power_btn.Name = "set_power_btn";
-            this.set_power_btn.Size = new System.Drawing.Size(75, 23);
+            this.set_power_btn.Size = new System.Drawing.Size(59, 23);
             this.set_power_btn.TabIndex = 9;
             this.set_power_btn.Text = "Set";
             this.set_power_btn.UseVisualStyleBackColor = true;
@@ -823,9 +838,9 @@
             // 
             // get_power_btn
             // 
-            this.get_power_btn.Location = new System.Drawing.Point(187, 88);
+            this.get_power_btn.Location = new System.Drawing.Point(261, 18);
             this.get_power_btn.Name = "get_power_btn";
-            this.get_power_btn.Size = new System.Drawing.Size(75, 23);
+            this.get_power_btn.Size = new System.Drawing.Size(59, 23);
             this.get_power_btn.TabIndex = 8;
             this.get_power_btn.Text = "Get";
             this.get_power_btn.UseVisualStyleBackColor = true;
@@ -936,7 +951,7 @@
             // 
             this.set_protocol_btn.Location = new System.Drawing.Point(306, 59);
             this.set_protocol_btn.Name = "set_protocol_btn";
-            this.set_protocol_btn.Size = new System.Drawing.Size(75, 23);
+            this.set_protocol_btn.Size = new System.Drawing.Size(65, 23);
             this.set_protocol_btn.TabIndex = 7;
             this.set_protocol_btn.Text = "Set";
             this.set_protocol_btn.UseVisualStyleBackColor = true;
@@ -945,7 +960,7 @@
             // 
             this.get_protocol_btn.Location = new System.Drawing.Point(306, 17);
             this.get_protocol_btn.Name = "get_protocol_btn";
-            this.get_protocol_btn.Size = new System.Drawing.Size(75, 23);
+            this.get_protocol_btn.Size = new System.Drawing.Size(65, 23);
             this.get_protocol_btn.TabIndex = 7;
             this.get_protocol_btn.Text = "Get";
             this.get_protocol_btn.UseVisualStyleBackColor = true;
@@ -1189,6 +1204,50 @@
             this.Log_lb.TabIndex = 11;
             this.Log_lb.Text = "Good";
             // 
+            // power_mode_cbx
+            // 
+            this.power_mode_cbx.FormattingEnabled = true;
+            this.power_mode_cbx.Items.AddRange(new object[] {
+            "MINIMUM",
+            "MINIMUM SAVING",
+            "MEDIUM SAVING",
+            "MAXIUM SAVING",
+            "SLEEP MODE"});
+            this.power_mode_cbx.Location = new System.Drawing.Point(83, 102);
+            this.power_mode_cbx.Name = "power_mode_cbx";
+            this.power_mode_cbx.Size = new System.Drawing.Size(134, 21);
+            this.power_mode_cbx.TabIndex = 10;
+            this.power_mode_cbx.Text = "MINIMUM";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(6, 105);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(70, 13);
+            this.label4.TabIndex = 0;
+            this.label4.Text = "Power Mode:";
+            // 
+            // get_power_mode_btn
+            // 
+            this.get_power_mode_btn.Location = new System.Drawing.Point(261, 107);
+            this.get_power_mode_btn.Name = "get_power_mode_btn";
+            this.get_power_mode_btn.Size = new System.Drawing.Size(59, 24);
+            this.get_power_mode_btn.TabIndex = 11;
+            this.get_power_mode_btn.Text = "Get";
+            this.get_power_mode_btn.UseVisualStyleBackColor = true;
+            this.get_power_mode_btn.Click += new System.EventHandler(this.get_power_mode_btn_Click);
+            // 
+            // set_power_mode_btn
+            // 
+            this.set_power_mode_btn.Location = new System.Drawing.Point(333, 107);
+            this.set_power_mode_btn.Name = "set_power_mode_btn";
+            this.set_power_mode_btn.Size = new System.Drawing.Size(59, 24);
+            this.set_power_mode_btn.TabIndex = 11;
+            this.set_power_mode_btn.Text = "Set";
+            this.set_power_mode_btn.UseVisualStyleBackColor = true;
+            this.set_power_mode_btn.Click += new System.EventHandler(this.set_power_mode_btn_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1334,6 +1393,10 @@
         private System.Windows.Forms.Button get_region_btn;
         private System.Windows.Forms.Button set_protocol_btn;
         private System.Windows.Forms.Button get_protocol_btn;
+        private System.Windows.Forms.ComboBox power_mode_cbx;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button set_power_mode_btn;
+        private System.Windows.Forms.Button get_power_mode_btn;
     }
 }
 

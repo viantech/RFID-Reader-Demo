@@ -46,6 +46,8 @@ namespace GatewayForm
             GET_POWER_CMD = 0x0E,
             SET_REGION_CMD = 0x0F,
             GET_REGION_CMD = 0x10,
+            SET_POWER_MODE_CMD = 0x11,
+            GET_POWER_MODE_CMD = 0x12,
         };
 
         public enum HEADER
@@ -238,7 +240,7 @@ namespace GatewayForm
 
             //CRC
             fmt.checksum = meta_sub[4];
-            if (fmt.checksum != Chcksum(meta_sub, fmt.length - 1))
+            if (fmt.checksum != Chcksum(meta_sub, 4))
             {
                 //form1.SetLog("Error CRC Data User");
                 return 0;

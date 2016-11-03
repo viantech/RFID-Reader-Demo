@@ -184,8 +184,14 @@ namespace GatewayForm
             }
             else if (config_str[0].Contains("Region RFID"))
             {
-                SetControl(region_lst, config_str[1].Substring(config_str[1].IndexOf("=") + 1));
+                SetControl(region_lst, config_str[1]);
             }
+            else if (config_str[0].Contains("Power Mode RFID"))
+            {
+                SetControl(power_mode_cbx, config_str[1]);
+            }
+            else
+                Log_Handler("Get command not defined");
         }
 
         private void Log_Handler(string log_msg)
@@ -270,7 +276,9 @@ namespace GatewayForm
                             (control as Button).BackColor = Color.Blue;
                         break;
                     case "ComboBox":
+                        //if (control.Name == "region_lst")
                         (control as ComboBox).SelectedIndex = int.Parse(config_tx);
+                        //else if (control.Name == "power_mode_cbx")
                         break;
                     default:
                         break;
@@ -461,8 +469,11 @@ namespace GatewayForm
 
         private void set_power_btn_Click(object sender, EventArgs e)
         {
-            string powerconfig = "0" + trackBar2.Value;
-            com_type.Set_Command_Send(CM.COMMAND.SET_POWER_CMD, powerconfig);
+            //string powerconfig = "0" + trackBar2.Value;
+            byte[] power_bytes = new byte[2];
+            power_bytes[0] = (byte)0;
+            power_bytes[1] = (byte)trackBar2.Value;
+            com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_POWER_CMD, power_bytes);
             com_type.Receive_Command_Handler(CM.COMMAND.SET_POWER_CMD);
         }
 
@@ -474,9 +485,10 @@ namespace GatewayForm
 
         private void set_region_btn_Click(object sender, EventArgs e)
         {
-            string regionconfig = "/reader/region/hopTable = 0" + region_lst.SelectedIndex.ToString();
-            com_type.Set_Command_Send(CM.COMMAND.SET_POWER_CMD, regionconfig);
-            com_type.Receive_Command_Handler(CM.COMMAND.SET_POWER_CMD);
+            byte[] region_byte = new byte[1];
+            region_byte[0] = (byte)region_lst.SelectedIndex;
+            com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_REGION_CMD, region_byte);
+            com_type.Receive_Command_Handler(CM.COMMAND.SET_REGION_CMD);
         }
 
         private void trackBar2_ValueChanged(object sender, EventArgs e)
@@ -492,6 +504,20 @@ namespace GatewayForm
         private void AudioVolume_trb_ValueChanged(object sender, EventArgs e)
         {
             Audio_val.Text = AudioVolume_trb.Value.ToString();
+        }
+
+        private void get_power_mode_btn_Click(object sender, EventArgs e)
+        {
+            com_type.Get_Command_Send(CM.COMMAND.GET_POWER_MODE_CMD);
+            com_type.Receive_Command_Handler(CM.COMMAND.GET_POWER_MODE_CMD);
+        }
+
+        private void set_power_mode_btn_Click(object sender, EventArgs e)
+        {
+            byte[] pw_mode_byte = new byte[1];
+            pw_mode_byte[0] = (byte)power_mode_cbx.SelectedIndex;
+            com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_POWER_MODE_CMD, pw_mode_byte);
+            com_type.Receive_Command_Handler(CM.COMMAND.SET_POWER_MODE_CMD);
         }
 
     }

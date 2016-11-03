@@ -399,7 +399,7 @@ namespace GatewayForm
             SendFrame(byte_get_cmd);
         }
         /// <summary>
-        /// Get Power Configuration data.
+        /// Send Get Power Configuration Command.
         /// </summary>
         /// <param name="command"></param>
         public void Get_Command_Power(CM.COMMAND command, byte power_mode)
@@ -419,19 +419,16 @@ namespace GatewayForm
             byte[] byte_get_cmd = CM.Encode_SubFrame(sub_fmt_get);
             SendFrame(byte_get_cmd);
         }
+        /// <summary>
+        /// Send Set Config data
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="user_data"></param>
         public void Set_Command_Send(CM.COMMAND command, String user_data)
         {
             CM.FrameFormat fmt_set = new CM.FrameFormat();
             fmt_set.command = (byte)command;
-            byte[] user_byte;
-            if (command == CM.COMMAND.SET_POWER_CMD)
-            {
-                user_byte = new byte[2];
-                user_byte[0] = (byte)int.Parse(user_data.Substring(0,1));
-                user_byte[1] = (byte)int.Parse(user_data.Substring(1,user_data.Length - 1));
-            }
-            else
-                user_byte = Encoding.ASCII.GetBytes(user_data);
+            byte[] user_byte = Encoding.ASCII.GetBytes(user_data);
             fmt_set.length = (ushort)((ushort)CM.LENGTH.FRAME_NON_DATA + user_byte.Length);
             fmt_set.metal_data = user_byte;
 
@@ -440,6 +437,17 @@ namespace GatewayForm
             Send_Packets(sub_fmt_byte);
         }
 
+        public void Set_Command_Send_Bytes(CM.COMMAND command, byte[] user_bytes)
+        {
+            CM.FrameFormat fmt_set = new CM.FrameFormat();
+            fmt_set.command = (byte)command;
+            fmt_set.length = (ushort)((ushort)CM.LENGTH.FRAME_NON_DATA + user_bytes.Length);
+            fmt_set.metal_data = user_bytes;
+
+            /* Byte data of Frame Format*/
+            byte[] sub_fmt_byte = CM.Encode_Frame(fmt_set);
+            Send_Packets(sub_fmt_byte);
+        }
         private void Send_Packets(byte[] frame_data_byte)
         {
             UInt16 num_packet, last_packet_byte, len_transmit;
@@ -482,8 +490,8 @@ namespace GatewayForm
         {
             if (0x00 == byte_receive[0])
             {
-                Log_Raise("Ready");
-                MessageBox.Show("Accepted!");
+                Log_Raise("Accepted!");
+                //MessageBox.Show("Accepted!");
             }
             else
             {
@@ -630,25 +638,45 @@ namespace GatewayForm
                     byte[] power_bits = CM.Decode_Frame((byte)CM.COMMAND.GET_POWER_CMD, result_data_byte);
                     if (0x00 == power_bits[0])
                         Cmd_Raise("Power RFID\n" + power_bits[1].ToString() + "\n");
+                    else
+                        Log_Msg("Fail get power");
                     break;
                 case CM.COMMAND.SET_POWER_CMD:
                     info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_POWER_CMD, result_data_byte);
                     if (0x00 == info_ack)
-                        Log_Raise("Set Power successfull");
+                        Log_Raise("Set Power done");
                     else
                         Log_Raise("Failed set power");
                     break;
                     //Region Configuration
                 case CM.COMMAND.GET_REGION_CMD:
-                    data_response = CM.Get_Data(CM.Decode_Frame((byte)CM.COMMAND.GET_POWER_CMD, result_data_byte));
-                    Cmd_Raise("Region RFID\n" + data_response + "\n");
+                    byte[] region_bits = CM.Decode_Frame((byte)CM.COMMAND.GET_REGION_CMD, result_data_byte);
+                    if (0x00 == region_bits[0])
+                        Cmd_Raise("Region RFID\n" + region_bits[1].ToString() + "\n");
+                    else
+                        Log_Msg("Fail get region");
                     break;
                 case CM.COMMAND.SET_REGION_CMD:
-                    info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_POWER_CMD, result_data_byte);
+                    info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_REGION_CMD, result_data_byte);
                     if (0x00 == info_ack)
-                        Log_Raise("Set Power successfull");
+                        Log_Raise("Set Region done");
                     else
-                        Log_Raise("Failed set power");
+                        Log_Raise("Failed set region");
+                    break;
+                //Power Mode Configuration
+                case CM.COMMAND.GET_POWER_MODE_CMD:
+                    byte[] pw_mode_bits = CM.Decode_Frame((byte)CM.COMMAND.GET_REGION_CMD, result_data_byte);
+                    if (0x00 == pw_mode_bits[0])
+                        Cmd_Raise("Power Mode RFID\n" + pw_mode_bits[1].ToString() + "\n");
+                    else
+                        Log_Msg("Fail get power mode");
+                    break;
+                case CM.COMMAND.SET_POWER_MODE_CMD:
+                    info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_REGION_CMD, result_data_byte);
+                    if (0x00 == info_ack)
+                        Log_Raise("Set Power Mode done");
+                    else
+                        Log_Raise("Failed set power mode");
                     break;
                 default:
                     break;

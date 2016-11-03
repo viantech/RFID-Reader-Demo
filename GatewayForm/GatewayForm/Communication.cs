@@ -155,6 +155,26 @@ namespace GatewayForm
                     break;
             }
         }
+        public void Set_Command_Send_Bytes(CM.COMMAND command_type, byte[] user_bytes)
+        {
+            switch (type)
+            {
+                case CM.TYPECONNECT.HDR_ZIGBEE:
+                    //zigbee.Set_Command_Send(command_type, user_bytes);
+                    break;
+                case CM.TYPECONNECT.HDR_WIFI:
+                    break;
+                case CM.TYPECONNECT.HDR_BLUETOOTH:
+                    break;
+                case CM.TYPECONNECT.HDR_ETHERNET:
+                    tcp.Set_Command_Send_Bytes(command_type, user_bytes);
+                    break;
+                case CM.TYPECONNECT.HDR_RS232:
+                    break;
+                default:
+                    break;
+            }
+        }
 
         public void Receive_Command_Handler(CM.COMMAND command_type)
         {
