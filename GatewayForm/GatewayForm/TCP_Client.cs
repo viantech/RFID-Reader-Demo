@@ -398,12 +398,40 @@ namespace GatewayForm
             byte[] byte_get_cmd = CM.Encode_SubFrame(sub_fmt_get);
             SendFrame(byte_get_cmd);
         }
+        /// <summary>
+        /// Get Power Configuration data.
+        /// </summary>
+        /// <param name="command"></param>
+        public void Get_Command_Power(CM.COMMAND command, byte power_mode)
+        {
+            CM.SubFrameFormat sub_fmt_get = new CM.SubFrameFormat();
+            CM.FrameFormat fmt_get = new CM.FrameFormat();
+            fmt_get.command = (byte)command;
+            fmt_get.length = (ushort)CM.LENGTH.FRAME_NON_DATA + 1;
+            fmt_get.metal_data = new byte[1];
+            fmt_get.metal_data[0] = power_mode;
 
+            sub_fmt_get.metal_data = CM.Encode_Frame(fmt_get);
+            sub_fmt_get.header = (byte)CM.HEADER.PACKET_HDR;
+            sub_fmt_get.length = (ushort)CM.LENGTH.SUB_FRAME_NON_DATA + 1;
+            sub_fmt_get.truncate = 0x01;
+
+            byte[] byte_get_cmd = CM.Encode_SubFrame(sub_fmt_get);
+            SendFrame(byte_get_cmd);
+        }
         public void Set_Command_Send(CM.COMMAND command, String user_data)
         {
             CM.FrameFormat fmt_set = new CM.FrameFormat();
             fmt_set.command = (byte)command;
-            byte[] user_byte = Encoding.ASCII.GetBytes(user_data);
+            byte[] user_byte;
+            if (command == CM.COMMAND.SET_POWER_CMD)
+            {
+                user_byte = new byte[2];
+                user_byte[0] = (byte)int.Parse(user_data.Substring(0,1));
+                user_byte[1] = (byte)int.Parse(user_data.Substring(1,user_data.Length - 1));
+            }
+            else
+                user_byte = Encoding.ASCII.GetBytes(user_data);
             fmt_set.length = (ushort)((ushort)CM.LENGTH.FRAME_NON_DATA + user_byte.Length);
             fmt_set.metal_data = user_byte;
 
@@ -599,8 +627,9 @@ namespace GatewayForm
                     break;
                     //Power RFID
                 case CM.COMMAND.GET_POWER_CMD:
-                    data_response = CM.Get_Data(CM.Decode_Frame((byte)CM.COMMAND.GET_POWER_CMD, result_data_byte));
-                    Cmd_Raise("Power RFID\n" + data_response + "\n");
+                    byte[] power_bits = CM.Decode_Frame((byte)CM.COMMAND.GET_POWER_CMD, result_data_byte);
+                    if (0x00 == power_bits[0])
+                        Cmd_Raise("Power RFID\n" + power_bits[1].ToString() + "\n");
                     break;
                 case CM.COMMAND.SET_POWER_CMD:
                     info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_POWER_CMD, result_data_byte);

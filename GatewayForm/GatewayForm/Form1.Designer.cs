@@ -69,6 +69,7 @@
             this.PatternID_tx = new System.Windows.Forms.TextBox();
             this.label17 = new System.Windows.Forms.Label();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.Audio_val = new System.Windows.Forms.Label();
             this.AudioVolume_trb = new System.Windows.Forms.TrackBar();
             this.label16 = new System.Windows.Forms.Label();
             this.AudioSupport_rbtn = new System.Windows.Forms.RadioButton();
@@ -84,6 +85,8 @@
             this.Set_RFID_btn = new System.Windows.Forms.Button();
             this.Get_RFID_btn = new System.Windows.Forms.Button();
             this.groupBox11 = new System.Windows.Forms.GroupBox();
+            this.set_region_btn = new System.Windows.Forms.Button();
+            this.get_region_btn = new System.Windows.Forms.Button();
             this.region_lst = new System.Windows.Forms.ComboBox();
             this.label31 = new System.Windows.Forms.Label();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
@@ -98,6 +101,8 @@
             this.trackBar2 = new System.Windows.Forms.TrackBar();
             this.label25 = new System.Windows.Forms.Label();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.set_protocol_btn = new System.Windows.Forms.Button();
+            this.get_protocol_btn = new System.Windows.Forms.Button();
             this.label24 = new System.Windows.Forms.Label();
             this.comboBox4 = new System.Windows.Forms.ComboBox();
             this.label23 = new System.Windows.Forms.Label();
@@ -120,11 +125,6 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.label10 = new System.Windows.Forms.Label();
             this.Log_lb = new System.Windows.Forms.Label();
-            this.Audio_val = new System.Windows.Forms.Label();
-            this.get_protocol_btn = new System.Windows.Forms.Button();
-            this.set_protocol_btn = new System.Windows.Forms.Button();
-            this.get_region_btn = new System.Windows.Forms.Button();
-            this.set_region_btn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -582,6 +582,15 @@
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Audio";
             // 
+            // Audio_val
+            // 
+            this.Audio_val.AutoSize = true;
+            this.Audio_val.Location = new System.Drawing.Point(258, 51);
+            this.Audio_val.Name = "Audio_val";
+            this.Audio_val.Size = new System.Drawing.Size(13, 13);
+            this.Audio_val.TabIndex = 3;
+            this.Audio_val.Text = "0";
+            // 
             // AudioVolume_trb
             // 
             this.AudioVolume_trb.LargeChange = 10;
@@ -592,7 +601,7 @@
             this.AudioVolume_trb.SmallChange = 5;
             this.AudioVolume_trb.TabIndex = 10;
             this.AudioVolume_trb.TickFrequency = 10;
-            this.AudioVolume_trb.Scroll += new System.EventHandler(this.AudioVolume_trb_Scroll);
+            this.AudioVolume_trb.ValueChanged += new System.EventHandler(this.AudioVolume_trb_ValueChanged);
             // 
             // label16
             // 
@@ -736,6 +745,26 @@
             this.groupBox11.TabStop = false;
             this.groupBox11.Text = "Region";
             // 
+            // set_region_btn
+            // 
+            this.set_region_btn.Location = new System.Drawing.Point(306, 36);
+            this.set_region_btn.Name = "set_region_btn";
+            this.set_region_btn.Size = new System.Drawing.Size(75, 23);
+            this.set_region_btn.TabIndex = 9;
+            this.set_region_btn.Text = "Set";
+            this.set_region_btn.UseVisualStyleBackColor = true;
+            this.set_region_btn.Click += new System.EventHandler(this.set_region_btn_Click);
+            // 
+            // get_region_btn
+            // 
+            this.get_region_btn.Location = new System.Drawing.Point(306, 7);
+            this.get_region_btn.Name = "get_region_btn";
+            this.get_region_btn.Size = new System.Drawing.Size(75, 23);
+            this.get_region_btn.TabIndex = 8;
+            this.get_region_btn.Text = "Get";
+            this.get_region_btn.UseVisualStyleBackColor = true;
+            this.get_region_btn.Click += new System.EventHandler(this.get_region_btn_Click);
+            // 
             // region_lst
             // 
             this.region_lst.FormattingEnabled = true;
@@ -784,7 +813,7 @@
             // 
             // set_power_btn
             // 
-            this.set_power_btn.Location = new System.Drawing.Point(276, 57);
+            this.set_power_btn.Location = new System.Drawing.Point(278, 88);
             this.set_power_btn.Name = "set_power_btn";
             this.set_power_btn.Size = new System.Drawing.Size(75, 23);
             this.set_power_btn.TabIndex = 9;
@@ -794,7 +823,7 @@
             // 
             // get_power_btn
             // 
-            this.get_power_btn.Location = new System.Drawing.Point(276, 18);
+            this.get_power_btn.Location = new System.Drawing.Point(187, 88);
             this.get_power_btn.Name = "get_power_btn";
             this.get_power_btn.Size = new System.Drawing.Size(75, 23);
             this.get_power_btn.TabIndex = 8;
@@ -841,7 +870,7 @@
             this.trackBar3.TabIndex = 5;
             this.trackBar3.TickFrequency = 5;
             this.trackBar3.Value = 5;
-            this.trackBar3.Scroll += new System.EventHandler(this.trackBar3_Scroll);
+            this.trackBar3.ValueChanged += new System.EventHandler(this.trackBar3_ValueChanged);
             // 
             // label26
             // 
@@ -865,7 +894,7 @@
             // 
             this.trackBar2.LargeChange = 10;
             this.trackBar2.Location = new System.Drawing.Point(79, 18);
-            this.trackBar2.Maximum = 30;
+            this.trackBar2.Maximum = 40;
             this.trackBar2.Minimum = 5;
             this.trackBar2.Name = "trackBar2";
             this.trackBar2.Size = new System.Drawing.Size(119, 45);
@@ -873,7 +902,7 @@
             this.trackBar2.TabIndex = 5;
             this.trackBar2.TickFrequency = 5;
             this.trackBar2.Value = 5;
-            this.trackBar2.Scroll += new System.EventHandler(this.trackBar2_Scroll);
+            this.trackBar2.ValueChanged += new System.EventHandler(this.trackBar2_ValueChanged);
             // 
             // label25
             // 
@@ -902,6 +931,24 @@
             this.groupBox8.TabIndex = 0;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Protocol";
+            // 
+            // set_protocol_btn
+            // 
+            this.set_protocol_btn.Location = new System.Drawing.Point(306, 59);
+            this.set_protocol_btn.Name = "set_protocol_btn";
+            this.set_protocol_btn.Size = new System.Drawing.Size(75, 23);
+            this.set_protocol_btn.TabIndex = 7;
+            this.set_protocol_btn.Text = "Set";
+            this.set_protocol_btn.UseVisualStyleBackColor = true;
+            // 
+            // get_protocol_btn
+            // 
+            this.get_protocol_btn.Location = new System.Drawing.Point(306, 17);
+            this.get_protocol_btn.Name = "get_protocol_btn";
+            this.get_protocol_btn.Size = new System.Drawing.Size(75, 23);
+            this.get_protocol_btn.TabIndex = 7;
+            this.get_protocol_btn.Text = "Get";
+            this.get_protocol_btn.UseVisualStyleBackColor = true;
             // 
             // label24
             // 
@@ -1141,53 +1188,6 @@
             this.Log_lb.Size = new System.Drawing.Size(33, 13);
             this.Log_lb.TabIndex = 11;
             this.Log_lb.Text = "Good";
-            // 
-            // Audio_val
-            // 
-            this.Audio_val.AutoSize = true;
-            this.Audio_val.Location = new System.Drawing.Point(258, 51);
-            this.Audio_val.Name = "Audio_val";
-            this.Audio_val.Size = new System.Drawing.Size(13, 13);
-            this.Audio_val.TabIndex = 3;
-            this.Audio_val.Text = "0";
-            // 
-            // get_protocol_btn
-            // 
-            this.get_protocol_btn.Location = new System.Drawing.Point(306, 17);
-            this.get_protocol_btn.Name = "get_protocol_btn";
-            this.get_protocol_btn.Size = new System.Drawing.Size(75, 23);
-            this.get_protocol_btn.TabIndex = 7;
-            this.get_protocol_btn.Text = "Get";
-            this.get_protocol_btn.UseVisualStyleBackColor = true;
-            // 
-            // set_protocol_btn
-            // 
-            this.set_protocol_btn.Location = new System.Drawing.Point(306, 59);
-            this.set_protocol_btn.Name = "set_protocol_btn";
-            this.set_protocol_btn.Size = new System.Drawing.Size(75, 23);
-            this.set_protocol_btn.TabIndex = 7;
-            this.set_protocol_btn.Text = "Set";
-            this.set_protocol_btn.UseVisualStyleBackColor = true;
-            // 
-            // get_region_btn
-            // 
-            this.get_region_btn.Location = new System.Drawing.Point(306, 7);
-            this.get_region_btn.Name = "get_region_btn";
-            this.get_region_btn.Size = new System.Drawing.Size(75, 23);
-            this.get_region_btn.TabIndex = 8;
-            this.get_region_btn.Text = "Get";
-            this.get_region_btn.UseVisualStyleBackColor = true;
-            this.get_region_btn.Click += new System.EventHandler(this.get_region_btn_Click);
-            // 
-            // set_region_btn
-            // 
-            this.set_region_btn.Location = new System.Drawing.Point(306, 36);
-            this.set_region_btn.Name = "set_region_btn";
-            this.set_region_btn.Size = new System.Drawing.Size(75, 23);
-            this.set_region_btn.TabIndex = 9;
-            this.set_region_btn.Text = "Set";
-            this.set_region_btn.UseVisualStyleBackColor = true;
-            this.set_region_btn.Click += new System.EventHandler(this.set_region_btn_Click);
             // 
             // Form1
             // 

@@ -180,7 +180,7 @@ namespace GatewayForm
             }
             else if (config_str[0].Contains("Power RFID"))
             {
-                SetControl(trackBar2, config_str[1].Substring(config_str[1].IndexOf("=") + 1));
+                SetControl(trackBar2, config_str[1]);
             }
             else if (config_str[0].Contains("Region RFID"))
             {
@@ -255,7 +255,7 @@ namespace GatewayForm
                     case "TrackBar":
                         if ((control as TrackBar).Name == "trackBar2")
                         {
-                            (control as TrackBar).Value = int.Parse(config_tx) / 100;
+                            (control as TrackBar).Value = int.Parse(config_tx);
                         }
                         else if ((control as TrackBar).Name == "AudioVolume_trb")
                         {
@@ -448,30 +448,20 @@ namespace GatewayForm
             }
         }
 
-        private void trackBar2_Scroll(object sender, EventArgs e)
-        {
-            read_power_lb.Text = trackBar2.Value.ToString();
-        }
-
-        private void trackBar3_Scroll(object sender, EventArgs e)
-        {
-            write_power_lb.Text = trackBar3.Value.ToString();
-        }
-
         private void AudioVolume_trb_Scroll(object sender, EventArgs e)
         {
-            Audio_val.Text = AudioVolume_trb.Value.ToString();
+            
         }
 
         private void get_power_btn_Click(object sender, EventArgs e)
         {
-            com_type.Get_Command_Send(CM.COMMAND.GET_POWER_CMD);
+            com_type.Get_Command_Power(CM.COMMAND.GET_POWER_CMD, 0);
             com_type.Receive_Command_Handler(CM.COMMAND.GET_POWER_CMD);
         }
 
         private void set_power_btn_Click(object sender, EventArgs e)
         {
-            string powerconfig = "/reader/radio/readPower = " + 100 * trackBar2.Value;
+            string powerconfig = "0" + trackBar2.Value;
             com_type.Set_Command_Send(CM.COMMAND.SET_POWER_CMD, powerconfig);
             com_type.Receive_Command_Handler(CM.COMMAND.SET_POWER_CMD);
         }
@@ -487,6 +477,21 @@ namespace GatewayForm
             string regionconfig = "/reader/region/hopTable = 0" + region_lst.SelectedIndex.ToString();
             com_type.Set_Command_Send(CM.COMMAND.SET_POWER_CMD, regionconfig);
             com_type.Receive_Command_Handler(CM.COMMAND.SET_POWER_CMD);
+        }
+
+        private void trackBar2_ValueChanged(object sender, EventArgs e)
+        {
+            read_power_lb.Text = trackBar2.Value.ToString();
+        }
+
+        private void trackBar3_ValueChanged(object sender, EventArgs e)
+        {
+            write_power_lb.Text = trackBar3.Value.ToString();
+        }
+
+        private void AudioVolume_trb_ValueChanged(object sender, EventArgs e)
+        {
+            Audio_val.Text = AudioVolume_trb.Value.ToString();
         }
 
     }

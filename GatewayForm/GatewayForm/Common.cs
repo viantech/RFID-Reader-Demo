@@ -42,10 +42,10 @@ namespace GatewayForm
             SET_PORT_PROPERTIES_CMD = 0x09,
             REQUEST_TAG_ID_CMD = 0x0A,
             DIS_CONNECT_CMD = 0x10,
-            SET_POWER_CMD = 0x30,
-            GET_POWER_CMD = 0x31,
-            SET_REGION_CMD = 0x40,
-            GET_REGION_CMD = 0x41,
+            SET_POWER_CMD = 0x0D,
+            GET_POWER_CMD = 0x0E,
+            SET_REGION_CMD = 0x0F,
+            GET_REGION_CMD = 0x10,
         };
 
         public enum HEADER

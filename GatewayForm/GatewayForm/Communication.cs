@@ -114,6 +114,27 @@ namespace GatewayForm
             }
         }
 
+        public void Get_Command_Power(CM.COMMAND command_type, byte option_mode)
+        {
+            switch (type)
+            {
+                case CM.TYPECONNECT.HDR_ZIGBEE:
+                    //zigbee.Get_Command_Send(command_type);
+                    break;
+                case CM.TYPECONNECT.HDR_WIFI:
+                    break;
+                case CM.TYPECONNECT.HDR_BLUETOOTH:
+                    break;
+                case CM.TYPECONNECT.HDR_ETHERNET:
+                    tcp.Get_Command_Power(command_type, option_mode);
+                    break;
+                case CM.TYPECONNECT.HDR_RS232:
+                    break;
+                default:
+                    break;
+            }
+        }
+
         public void Set_Command_Send(CM.COMMAND command_type, String user_str)
         {
             switch (type)
