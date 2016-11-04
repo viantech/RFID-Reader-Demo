@@ -65,14 +65,12 @@
             this.MessageInterval_tx = new System.Windows.Forms.TextBox();
             this.label18 = new System.Windows.Forms.Label();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.PalletSupport_rbtn = new System.Windows.Forms.RadioButton();
             this.PatternID_tx = new System.Windows.Forms.TextBox();
             this.label17 = new System.Windows.Forms.Label();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.Audio_val = new System.Windows.Forms.Label();
             this.AudioVolume_trb = new System.Windows.Forms.TrackBar();
             this.label16 = new System.Windows.Forms.Label();
-            this.AudioSupport_rbtn = new System.Windows.Forms.RadioButton();
             this.ConnectionList_ck = new System.Windows.Forms.CheckedListBox();
             this.label15 = new System.Windows.Forms.Label();
             this.SW_Version_tx = new System.Windows.Forms.TextBox();
@@ -90,6 +88,9 @@
             this.region_lst = new System.Windows.Forms.ComboBox();
             this.label31 = new System.Windows.Forms.Label();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
+            this.set_power_mode_btn = new System.Windows.Forms.Button();
+            this.get_power_mode_btn = new System.Windows.Forms.Button();
+            this.power_mode_cbx = new System.Windows.Forms.ComboBox();
             this.set_power_btn = new System.Windows.Forms.Button();
             this.get_power_btn = new System.Windows.Forms.Button();
             this.write_power_lb = new System.Windows.Forms.Label();
@@ -97,6 +98,7 @@
             this.label29 = new System.Windows.Forms.Label();
             this.trackBar3 = new System.Windows.Forms.TrackBar();
             this.label26 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             this.label28 = new System.Windows.Forms.Label();
             this.trackBar2 = new System.Windows.Forms.TrackBar();
             this.label25 = new System.Windows.Forms.Label();
@@ -125,10 +127,8 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.label10 = new System.Windows.Forms.Label();
             this.Log_lb = new System.Windows.Forms.Label();
-            this.power_mode_cbx = new System.Windows.Forms.ComboBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.get_power_mode_btn = new System.Windows.Forms.Button();
-            this.set_power_mode_btn = new System.Windows.Forms.Button();
+            this.PalletSupport_cbx = new System.Windows.Forms.CheckBox();
+            this.AudioSupport_cbx = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -487,7 +487,7 @@
             // Set_GW_Config_btn
             // 
             this.Set_GW_Config_btn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Set_GW_Config_btn.Location = new System.Drawing.Point(787, 258);
+            this.Set_GW_Config_btn.Location = new System.Drawing.Point(774, 258);
             this.Set_GW_Config_btn.Name = "Set_GW_Config_btn";
             this.Set_GW_Config_btn.Size = new System.Drawing.Size(75, 23);
             this.Set_GW_Config_btn.TabIndex = 19;
@@ -499,7 +499,7 @@
             // 
             this.Get_GW_Config_btn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Get_GW_Config_btn.Location = new System.Drawing.Point(643, 258);
+            this.Get_GW_Config_btn.Location = new System.Drawing.Point(672, 258);
             this.Get_GW_Config_btn.Name = "Get_GW_Config_btn";
             this.Get_GW_Config_btn.Size = new System.Drawing.Size(75, 23);
             this.Get_GW_Config_btn.TabIndex = 18;
@@ -535,7 +535,7 @@
             // 
             // groupBox6
             // 
-            this.groupBox6.Controls.Add(this.PalletSupport_rbtn);
+            this.groupBox6.Controls.Add(this.PalletSupport_cbx);
             this.groupBox6.Controls.Add(this.PatternID_tx);
             this.groupBox6.Controls.Add(this.label17);
             this.groupBox6.Location = new System.Drawing.Point(478, 106);
@@ -544,17 +544,6 @@
             this.groupBox6.TabIndex = 10;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Tag patten";
-            // 
-            // PalletSupport_rbtn
-            // 
-            this.PalletSupport_rbtn.AutoSize = true;
-            this.PalletSupport_rbtn.Location = new System.Drawing.Point(14, 21);
-            this.PalletSupport_rbtn.Name = "PalletSupport_rbtn";
-            this.PalletSupport_rbtn.Size = new System.Drawing.Size(128, 17);
-            this.PalletSupport_rbtn.TabIndex = 27;
-            this.PalletSupport_rbtn.TabStop = true;
-            this.PalletSupport_rbtn.Text = "Pallet Pattern Support";
-            this.PalletSupport_rbtn.UseVisualStyleBackColor = true;
             // 
             // PatternID_tx
             // 
@@ -575,10 +564,10 @@
             // 
             // groupBox5
             // 
+            this.groupBox5.Controls.Add(this.AudioSupport_cbx);
             this.groupBox5.Controls.Add(this.Audio_val);
             this.groupBox5.Controls.Add(this.AudioVolume_trb);
             this.groupBox5.Controls.Add(this.label16);
-            this.groupBox5.Controls.Add(this.AudioSupport_rbtn);
             this.groupBox5.Location = new System.Drawing.Point(6, 189);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(335, 67);
@@ -616,17 +605,6 @@
             this.label16.TabIndex = 1;
             this.label16.Text = "Speaker volumn";
             // 
-            // AudioSupport_rbtn
-            // 
-            this.AudioSupport_rbtn.AutoSize = true;
-            this.AudioSupport_rbtn.Location = new System.Drawing.Point(7, 20);
-            this.AudioSupport_rbtn.Name = "AudioSupport_rbtn";
-            this.AudioSupport_rbtn.Size = new System.Drawing.Size(90, 17);
-            this.AudioSupport_rbtn.TabIndex = 0;
-            this.AudioSupport_rbtn.TabStop = true;
-            this.AudioSupport_rbtn.Text = "Audio support";
-            this.AudioSupport_rbtn.UseVisualStyleBackColor = true;
-            // 
             // ConnectionList_ck
             // 
             this.ConnectionList_ck.BackColor = System.Drawing.SystemColors.Control;
@@ -656,6 +634,7 @@
             // 
             this.SW_Version_tx.Location = new System.Drawing.Point(173, 62);
             this.SW_Version_tx.Name = "SW_Version_tx";
+            this.SW_Version_tx.ReadOnly = true;
             this.SW_Version_tx.Size = new System.Drawing.Size(52, 20);
             this.SW_Version_tx.TabIndex = 5;
             this.SW_Version_tx.Text = "0001";
@@ -673,6 +652,7 @@
             // 
             this.HW_Verrsion_tx.Location = new System.Drawing.Point(173, 38);
             this.HW_Verrsion_tx.Name = "HW_Verrsion_tx";
+            this.HW_Verrsion_tx.ReadOnly = true;
             this.HW_Verrsion_tx.Size = new System.Drawing.Size(52, 20);
             this.HW_Verrsion_tx.TabIndex = 3;
             this.HW_Verrsion_tx.Text = "0001";
@@ -690,6 +670,7 @@
             // 
             this.Gateway_ID_tx.Location = new System.Drawing.Point(173, 12);
             this.Gateway_ID_tx.Name = "Gateway_ID_tx";
+            this.Gateway_ID_tx.ReadOnly = true;
             this.Gateway_ID_tx.Size = new System.Drawing.Size(168, 20);
             this.Gateway_ID_tx.TabIndex = 1;
             this.Gateway_ID_tx.Text = "Seldatinc_6CECEBAE9E7C";
@@ -719,7 +700,7 @@
             // 
             // Set_RFID_btn
             // 
-            this.Set_RFID_btn.Location = new System.Drawing.Point(805, 256);
+            this.Set_RFID_btn.Location = new System.Drawing.Point(787, 256);
             this.Set_RFID_btn.Name = "Set_RFID_btn";
             this.Set_RFID_btn.Size = new System.Drawing.Size(75, 23);
             this.Set_RFID_btn.TabIndex = 5;
@@ -728,7 +709,7 @@
             // 
             // Get_RFID_btn
             // 
-            this.Get_RFID_btn.Location = new System.Drawing.Point(683, 256);
+            this.Get_RFID_btn.Location = new System.Drawing.Point(695, 256);
             this.Get_RFID_btn.Name = "Get_RFID_btn";
             this.Get_RFID_btn.Size = new System.Drawing.Size(75, 23);
             this.Get_RFID_btn.TabIndex = 4;
@@ -779,9 +760,9 @@
             "Korea KCC",
             "India",
             "Japan",
-            " People\'s Republic of China",
+            "People\'s Republic of China",
             "European Union 2",
-            "European Union 3",
+            "Australia 3",
             "Korea 2",
             "People\'s Republic of China 2 (840MHZ)",
             "Australia/AIDA LIPD Variation 2011",
@@ -825,6 +806,41 @@
             this.groupBox9.TabIndex = 1;
             this.groupBox9.TabStop = false;
             this.groupBox9.Text = "RF Power";
+            // 
+            // set_power_mode_btn
+            // 
+            this.set_power_mode_btn.Location = new System.Drawing.Point(333, 107);
+            this.set_power_mode_btn.Name = "set_power_mode_btn";
+            this.set_power_mode_btn.Size = new System.Drawing.Size(59, 24);
+            this.set_power_mode_btn.TabIndex = 11;
+            this.set_power_mode_btn.Text = "Set";
+            this.set_power_mode_btn.UseVisualStyleBackColor = true;
+            this.set_power_mode_btn.Click += new System.EventHandler(this.set_power_mode_btn_Click);
+            // 
+            // get_power_mode_btn
+            // 
+            this.get_power_mode_btn.Location = new System.Drawing.Point(261, 107);
+            this.get_power_mode_btn.Name = "get_power_mode_btn";
+            this.get_power_mode_btn.Size = new System.Drawing.Size(59, 24);
+            this.get_power_mode_btn.TabIndex = 11;
+            this.get_power_mode_btn.Text = "Get";
+            this.get_power_mode_btn.UseVisualStyleBackColor = true;
+            this.get_power_mode_btn.Click += new System.EventHandler(this.get_power_mode_btn_Click);
+            // 
+            // power_mode_cbx
+            // 
+            this.power_mode_cbx.FormattingEnabled = true;
+            this.power_mode_cbx.Items.AddRange(new object[] {
+            "MINIMUM",
+            "MINIMUM SAVING",
+            "MEDIUM SAVING",
+            "MAXIUM SAVING",
+            "SLEEP MODE"});
+            this.power_mode_cbx.Location = new System.Drawing.Point(83, 102);
+            this.power_mode_cbx.Name = "power_mode_cbx";
+            this.power_mode_cbx.Size = new System.Drawing.Size(134, 21);
+            this.power_mode_cbx.TabIndex = 10;
+            this.power_mode_cbx.Text = "MINIMUM";
             // 
             // set_power_btn
             // 
@@ -895,6 +911,15 @@
             this.label26.Size = new System.Drawing.Size(28, 13);
             this.label26.TabIndex = 7;
             this.label26.Text = "dBm";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(6, 105);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(70, 13);
+            this.label4.TabIndex = 0;
+            this.label4.Text = "Power Mode:";
             // 
             // label28
             // 
@@ -1200,53 +1225,35 @@
             this.Log_lb.AutoSize = true;
             this.Log_lb.Location = new System.Drawing.Point(767, 413);
             this.Log_lb.Name = "Log_lb";
-            this.Log_lb.Size = new System.Drawing.Size(33, 13);
+            this.Log_lb.Size = new System.Drawing.Size(24, 13);
             this.Log_lb.TabIndex = 11;
-            this.Log_lb.Text = "Good";
+            this.Log_lb.Text = "Idle";
             // 
-            // power_mode_cbx
+            // PalletSupport_cbx
             // 
-            this.power_mode_cbx.FormattingEnabled = true;
-            this.power_mode_cbx.Items.AddRange(new object[] {
-            "MINIMUM",
-            "MINIMUM SAVING",
-            "MEDIUM SAVING",
-            "MAXIUM SAVING",
-            "SLEEP MODE"});
-            this.power_mode_cbx.Location = new System.Drawing.Point(83, 102);
-            this.power_mode_cbx.Name = "power_mode_cbx";
-            this.power_mode_cbx.Size = new System.Drawing.Size(134, 21);
-            this.power_mode_cbx.TabIndex = 10;
-            this.power_mode_cbx.Text = "MINIMUM";
+            this.PalletSupport_cbx.AutoSize = true;
+            this.PalletSupport_cbx.Checked = true;
+            this.PalletSupport_cbx.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.PalletSupport_cbx.Location = new System.Drawing.Point(19, 19);
+            this.PalletSupport_cbx.Name = "PalletSupport_cbx";
+            this.PalletSupport_cbx.Size = new System.Drawing.Size(129, 17);
+            this.PalletSupport_cbx.TabIndex = 28;
+            this.PalletSupport_cbx.Text = "Pallet Pattern Support";
+            this.PalletSupport_cbx.UseVisualStyleBackColor = true;
+            this.PalletSupport_cbx.CheckedChanged += new System.EventHandler(this.PalletSupport_cbx_CheckedChanged);
             // 
-            // label4
+            // AudioSupport_cbx
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 105);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(70, 13);
-            this.label4.TabIndex = 0;
-            this.label4.Text = "Power Mode:";
-            // 
-            // get_power_mode_btn
-            // 
-            this.get_power_mode_btn.Location = new System.Drawing.Point(261, 107);
-            this.get_power_mode_btn.Name = "get_power_mode_btn";
-            this.get_power_mode_btn.Size = new System.Drawing.Size(59, 24);
-            this.get_power_mode_btn.TabIndex = 11;
-            this.get_power_mode_btn.Text = "Get";
-            this.get_power_mode_btn.UseVisualStyleBackColor = true;
-            this.get_power_mode_btn.Click += new System.EventHandler(this.get_power_mode_btn_Click);
-            // 
-            // set_power_mode_btn
-            // 
-            this.set_power_mode_btn.Location = new System.Drawing.Point(333, 107);
-            this.set_power_mode_btn.Name = "set_power_mode_btn";
-            this.set_power_mode_btn.Size = new System.Drawing.Size(59, 24);
-            this.set_power_mode_btn.TabIndex = 11;
-            this.set_power_mode_btn.Text = "Set";
-            this.set_power_mode_btn.UseVisualStyleBackColor = true;
-            this.set_power_mode_btn.Click += new System.EventHandler(this.set_power_mode_btn_Click);
+            this.AudioSupport_cbx.AutoSize = true;
+            this.AudioSupport_cbx.Checked = true;
+            this.AudioSupport_cbx.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.AudioSupport_cbx.Location = new System.Drawing.Point(6, 22);
+            this.AudioSupport_cbx.Name = "AudioSupport_cbx";
+            this.AudioSupport_cbx.Size = new System.Drawing.Size(93, 17);
+            this.AudioSupport_cbx.TabIndex = 11;
+            this.AudioSupport_cbx.Text = "Audio Support";
+            this.AudioSupport_cbx.UseVisualStyleBackColor = true;
+            this.AudioSupport_cbx.CheckedChanged += new System.EventHandler(this.AudioSupport_cbx_CheckedChanged);
             // 
             // Form1
             // 
@@ -1337,7 +1344,6 @@
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.TrackBar AudioVolume_trb;
         private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.RadioButton AudioSupport_rbtn;
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.TextBox PatternID_tx;
@@ -1385,7 +1391,6 @@
         private System.Windows.Forms.CheckBox RFID_API_ckb;
         private System.Windows.Forms.CheckBox Offline_ckb;
         private System.Windows.Forms.CheckBox LED_Support_ckb;
-        private System.Windows.Forms.RadioButton PalletSupport_rbtn;
         private System.Windows.Forms.Button set_power_btn;
         private System.Windows.Forms.Button get_power_btn;
         private System.Windows.Forms.Label Audio_val;
@@ -1397,6 +1402,8 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button set_power_mode_btn;
         private System.Windows.Forms.Button get_power_mode_btn;
+        private System.Windows.Forms.CheckBox PalletSupport_cbx;
+        private System.Windows.Forms.CheckBox AudioSupport_cbx;
     }
 }
 

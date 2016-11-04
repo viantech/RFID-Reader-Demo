@@ -590,7 +590,11 @@ namespace GatewayForm
                 case CM.COMMAND.SET_CONFIGURATION_CMD:
                     info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_CONFIGURATION_CMD, result_data_byte);
                     if (0x00 == info_ack)
-                        Log_Raise("Set Config success");
+                    {
+                        Log_Raise("Set GW Config done");
+                        Thread.Sleep(500);
+                        Log_Raise("Ready");
+                    }
                     else
                         Log_Raise("Failed set Config");
                     break;
@@ -603,7 +607,11 @@ namespace GatewayForm
                 case CM.COMMAND.SET_RFID_CONFIGURATION_CMD:
                     info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_RFID_CONFIGURATION_CMD, result_data_byte);
                     if (0x00 == info_ack)
-                        Log_Raise("Set RFID successfull");
+                    {
+                        Log_Raise("Set RFID done");
+                        Thread.Sleep(500);
+                        Log_Raise("Ready");
+                    }
                     else
                         Log_Raise("Failed set RFID");
                     break;
@@ -644,7 +652,11 @@ namespace GatewayForm
                 case CM.COMMAND.SET_POWER_CMD:
                     info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_POWER_CMD, result_data_byte);
                     if (0x00 == info_ack)
+                    {
                         Log_Raise("Set Power done");
+                        Thread.Sleep(500);
+                        Log_Raise("Ready");
+                    }
                     else
                         Log_Raise("Failed set power");
                     break;
@@ -659,22 +671,30 @@ namespace GatewayForm
                 case CM.COMMAND.SET_REGION_CMD:
                     info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_REGION_CMD, result_data_byte);
                     if (0x00 == info_ack)
+                    {
                         Log_Raise("Set Region done");
+                        Thread.Sleep(500);
+                        Log_Raise("Ready");
+                    }
                     else
                         Log_Raise("Failed set region");
                     break;
                 //Power Mode Configuration
                 case CM.COMMAND.GET_POWER_MODE_CMD:
-                    byte[] pw_mode_bits = CM.Decode_Frame((byte)CM.COMMAND.GET_REGION_CMD, result_data_byte);
+                    byte[] pw_mode_bits = CM.Decode_Frame((byte)CM.COMMAND.GET_POWER_MODE_CMD, result_data_byte);
                     if (0x00 == pw_mode_bits[0])
                         Cmd_Raise("Power Mode RFID\n" + pw_mode_bits[1].ToString() + "\n");
                     else
                         Log_Msg("Fail get power mode");
                     break;
                 case CM.COMMAND.SET_POWER_MODE_CMD:
-                    info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_REGION_CMD, result_data_byte);
+                    info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_POWER_MODE_CMD, result_data_byte);
                     if (0x00 == info_ack)
+                    {
                         Log_Raise("Set Power Mode done");
+                        Thread.Sleep(500);
+                        Log_Raise("Ready");
+                    }
                     else
                         Log_Raise("Failed set power mode");
                     break;

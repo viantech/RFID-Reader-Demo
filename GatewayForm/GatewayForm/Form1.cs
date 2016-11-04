@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CM = GatewayForm.Common;
+using System.Threading;
 
 namespace GatewayForm
 {
@@ -135,7 +136,7 @@ namespace GatewayForm
                 //Connection support
                 SetControl(ConnectionList_ck, config_str[4].Substring(config_str[4].IndexOf("=") + 1));
                 //Audio support
-                SetControl(AudioSupport_rbtn, config_str[6].Substring(config_str[6].IndexOf("=") + 1));
+                SetControl(AudioSupport_cbx, config_str[6].Substring(config_str[6].IndexOf("=") + 1));
                 SetControl(AudioVolume_trb, config_str[7].Substring(config_str[7].IndexOf("=") + 1));
                 //Pallet ID
                 SetControl(PatternID_tx, config_str[10].Substring(config_str[10].IndexOf("=") + 1));
@@ -167,8 +168,8 @@ namespace GatewayForm
                 else SetControl(LED_Support_ckb, "no");
                 //Pallet support
                 if (config_str[9].Contains("yes"))
-                    SetControl(PalletSupport_rbtn, "yes");
-                else SetControl(PalletSupport_rbtn, "no");
+                    SetControl(PalletSupport_cbx, "yes");
+                else SetControl(PalletSupport_cbx, "no");
                 //Offline mode
                 if (config_str[11].Contains("yes"))
                     SetControl(Offline_ckb, "yes");
@@ -181,14 +182,23 @@ namespace GatewayForm
             else if (config_str[0].Contains("Power RFID"))
             {
                 SetControl(trackBar2, config_str[1]);
+                Log_Handler("Get Power done");
+                Thread.Sleep(500);
+                Log_Handler("Ready");
             }
             else if (config_str[0].Contains("Region RFID"))
             {
                 SetControl(region_lst, config_str[1]);
+                Log_Handler("Get Region done");
+                Thread.Sleep(500);
+                Log_Handler("Ready");
             }
             else if (config_str[0].Contains("Power Mode RFID"))
             {
                 SetControl(power_mode_cbx, config_str[1]);
+                Log_Handler("Get Power Mode done");
+                Thread.Sleep(500);
+                Log_Handler("Ready");
             }
             else
                 Log_Handler("Get command not defined");
@@ -351,14 +361,14 @@ namespace GatewayForm
                 connections += item_conn.ToString() + ",";
             gateway_config.AppendFormat(GW_Format[4], connections.Remove(connections.Length - 1));
             gateway_config.AppendFormat(GW_Format[5], ConnType_cbx.SelectedItem.ToString());
-            if (AudioSupport_rbtn.Checked)
+            if (AudioSupport_cbx.Checked)
                 gateway_config.AppendFormat(GW_Format[6], "yes");
             else gateway_config.AppendFormat(GW_Format[6], "no");
             gateway_config.AppendFormat(GW_Format[7], AudioVolume_trb.Value.ToString());
             if (LED_Support_ckb.Checked)
                 gateway_config.AppendFormat(GW_Format[8], "yes");
             else gateway_config.AppendFormat(GW_Format[8], "no");
-            if (PalletSupport_rbtn.Checked)
+            if (PalletSupport_cbx.Checked)
                 gateway_config.AppendFormat(GW_Format[9], "yes");
             else gateway_config.AppendFormat(GW_Format[9], "no");
             gateway_config.AppendFormat(GW_Format[10], PatternID_tx.Text);
@@ -381,6 +391,7 @@ namespace GatewayForm
             gateway_config.AppendFormat(GW_Format[15], GPO_sets.Remove(GPO_sets.Length - 1));
             com_type.Set_Command_Send(CM.COMMAND.SET_CONFIGURATION_CMD, gateway_config.ToString());
             com_type.Receive_Command_Handler(CM.COMMAND.SET_CONFIGURATION_CMD);
+            gateway_config.Clear();
         }
 
         private void dataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
@@ -518,6 +529,22 @@ namespace GatewayForm
             pw_mode_byte[0] = (byte)power_mode_cbx.SelectedIndex;
             com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_POWER_MODE_CMD, pw_mode_byte);
             com_type.Receive_Command_Handler(CM.COMMAND.SET_POWER_MODE_CMD);
+        }
+
+        private void AudioSupport_cbx_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!AudioSupport_cbx.Checked)
+                AudioVolume_trb.Enabled = false;
+            else
+                AudioVolume_trb.Enabled = true;
+        }
+
+        private void PalletSupport_cbx_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!PalletSupport_cbx.Checked)
+                PatternID_tx.Enabled = false;
+            else
+                PatternID_tx.Enabled = true;
         }
 
     }

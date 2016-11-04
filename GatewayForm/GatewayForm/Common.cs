@@ -41,7 +41,7 @@ namespace GatewayForm
             GET_PORT_PROPERTIES_CMD = 0x08,
             SET_PORT_PROPERTIES_CMD = 0x09,
             REQUEST_TAG_ID_CMD = 0x0A,
-            DIS_CONNECT_CMD = 0x10,
+            DIS_CONNECT_CMD = 0x0B,
             SET_POWER_CMD = 0x0D,
             GET_POWER_CMD = 0x0E,
             SET_REGION_CMD = 0x0F,
