@@ -590,11 +590,7 @@ namespace GatewayForm
                 case CM.COMMAND.SET_CONFIGURATION_CMD:
                     info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_CONFIGURATION_CMD, result_data_byte);
                     if (0x00 == info_ack)
-                    {
                         Log_Raise("Set GW Config done");
-                        Thread.Sleep(500);
-                        Log_Raise("Ready");
-                    }
                     else
                         Log_Raise("Failed set Config");
                     break;
@@ -607,11 +603,7 @@ namespace GatewayForm
                 case CM.COMMAND.SET_RFID_CONFIGURATION_CMD:
                     info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_RFID_CONFIGURATION_CMD, result_data_byte);
                     if (0x00 == info_ack)
-                    {
                         Log_Raise("Set RFID done");
-                        Thread.Sleep(500);
-                        Log_Raise("Ready");
-                    }
                     else
                         Log_Raise("Failed set RFID");
                     break;
@@ -624,7 +616,7 @@ namespace GatewayForm
                 case CM.COMMAND.SET_PORT_PROPERTIES_CMD:
                     info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_PORT_PROPERTIES_CMD, result_data_byte);
                     if (0x00 == info_ack)
-                        Log_Raise("Set connection successfull");
+                        Log_Raise("Set connection done");
                     else
                         Log_Raise("Failed set connection");
                     break;
@@ -652,13 +644,9 @@ namespace GatewayForm
                 case CM.COMMAND.SET_POWER_CMD:
                     info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_POWER_CMD, result_data_byte);
                     if (0x00 == info_ack)
-                    {
                         Log_Raise("Set Power done");
-                        Thread.Sleep(500);
-                        Log_Raise("Ready");
-                    }
                     else
-                        Log_Raise("Failed set power");
+                        Log_Raise("Failed Set Power");
                     break;
                     //Region Configuration
                 case CM.COMMAND.GET_REGION_CMD:
@@ -671,11 +659,7 @@ namespace GatewayForm
                 case CM.COMMAND.SET_REGION_CMD:
                     info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_REGION_CMD, result_data_byte);
                     if (0x00 == info_ack)
-                    {
                         Log_Raise("Set Region done");
-                        Thread.Sleep(500);
-                        Log_Raise("Ready");
-                    }
                     else
                         Log_Raise("Failed set region");
                     break;
@@ -690,11 +674,7 @@ namespace GatewayForm
                 case CM.COMMAND.SET_POWER_MODE_CMD:
                     info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_POWER_MODE_CMD, result_data_byte);
                     if (0x00 == info_ack)
-                    {
                         Log_Raise("Set Power Mode done");
-                        Thread.Sleep(500);
-                        Log_Raise("Ready");
-                    }
                     else
                         Log_Raise("Failed set power mode");
                     break;

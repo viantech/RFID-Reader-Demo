@@ -183,22 +183,16 @@ namespace GatewayForm
             {
                 SetControl(trackBar2, config_str[1]);
                 Log_Handler("Get Power done");
-                Thread.Sleep(500);
-                Log_Handler("Ready");
             }
             else if (config_str[0].Contains("Region RFID"))
             {
                 SetControl(region_lst, config_str[1]);
                 Log_Handler("Get Region done");
-                Thread.Sleep(500);
-                Log_Handler("Ready");
             }
             else if (config_str[0].Contains("Power Mode RFID"))
             {
                 SetControl(power_mode_cbx, config_str[1]);
                 Log_Handler("Get Power Mode done");
-                Thread.Sleep(500);
-                Log_Handler("Ready");
             }
             else
                 Log_Handler("Get command not defined");
@@ -217,6 +211,8 @@ namespace GatewayForm
                 SetControl(status_lb, "Active");
                 SetControl(status_btn, "True");
             }
+            Thread.Sleep(1000);
+            SetControl(Log_lb, "Ready");
         }
 
         private delegate void SetConfigDelegate(Control control, string config_tx);
