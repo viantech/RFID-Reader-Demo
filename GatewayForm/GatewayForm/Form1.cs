@@ -22,22 +22,22 @@ namespace GatewayForm
         Serial_pop serial_form;
         StringBuilder gateway_config = new StringBuilder();
         string[] GW_Format = new string[16] {
-                 "Seldatinc gateway configuration:\n",
-                 "Gateway serial:{0}\n",
-                 "Hardware version:{0}\n",
-                 "Software version:{0}\n",
-                 "Connection support:{0}\n",
-                 "Connection using:{0}\n",
-                 "Audio support:{0}\n",
-                 "Audio output level:{0}\n",
-                 "Led support:yes\n",
-                 "Pallet pattern support:{0}\n",
-                 "Pallet pattern:{0}\n",
-                 "Offline mode:{0}\n",
-                 "RFID API Support LLRP:{0}\n",
-                 "Message queue time interval:{0}\n",
-                 "Stack light support:{0}\n",
-                 "Stacl light GPIO:{0}"
+                 "Seldatinc gateway configuration=\n",
+                 "Gateway serial={0}\n",
+                 "Hardware version={0}\n",
+                 "Software version={0}\n",
+                 "Connection support={0}\n",
+                 "Connection using={0}\n",
+                 "Audio support={0}\n",
+                 "Audio output level={0}\n",
+                 "Led support={0}\n",
+                 "Pallet pattern support={0}\n",
+                 "Pallet pattern={0}\n",
+                 "Offline mode={0}\n",
+                 "RFID API Support LLRP={0}\n",
+                 "Message queue time interval={0}\n",
+                 "Stack light support={0}\n",
+                 "Stack light GPIO={0}"
         };
         public Form1()
         {
