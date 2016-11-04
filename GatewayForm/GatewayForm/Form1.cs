@@ -29,7 +29,7 @@ namespace GatewayForm
                  "Connection support={0}\n",
                  "Connection using={0}\n",
                  "Audio support={0}\n",
-                 "Audio output level={0}\n",
+                 "Audio output level={0}dB\n",
                  "Led support={0}\n",
                  "Pallet pattern support={0}\n",
                  "Pallet pattern={0}\n",
@@ -354,7 +354,7 @@ namespace GatewayForm
             if (AudioSupport_rbtn.Checked)
                 gateway_config.AppendFormat(GW_Format[6], "yes");
             else gateway_config.AppendFormat(GW_Format[6], "no");
-            gateway_config.AppendFormat(GW_Format[7] + "dB", AudioVolume_trb.Value.ToString());
+            gateway_config.AppendFormat(GW_Format[7], AudioVolume_trb.Value.ToString());
             if (LED_Support_ckb.Checked)
                 gateway_config.AppendFormat(GW_Format[8], "yes");
             else gateway_config.AppendFormat(GW_Format[8], "no");
