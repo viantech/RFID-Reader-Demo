@@ -68,12 +68,32 @@ namespace GatewayForm
                     {
                         com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
                         com_type.Receive_Command_Handler(CM.COMMAND.DIS_CONNECT_CMD);
+                        com_type.Config_Msg -= new SocketReceivedHandler(GetConfig_Handler);
+                        com_type.Log_Msg -= new SocketReceivedHandler(Log_Handler);
                         com_type.Close();
                         Disconnect_Behavior();
                     }
                     break;
                 //wifi
-                case 1: MessageBox.Show("Still develop");
+                case 1: 
+                    if (Connect_btn.Text == "Connect")
+                    {
+                        com_type = new Communication(CM.TYPECONNECT.HDR_WIFI);
+                        com_type.Config_Msg += new SocketReceivedHandler(GetConfig_Handler);
+                        com_type.Log_Msg += new SocketReceivedHandler(Log_Handler);
+                        com_type.Connect(wifi_form.address, int.Parse(wifi_form.port));
+                        if (com_type.connect_ok)
+                            Connected_Behavior();
+                    }
+                    else if (Connect_btn.Text == "Disconnect")
+                    {
+                        com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
+                        com_type.Receive_Command_Handler(CM.COMMAND.DIS_CONNECT_CMD);
+                        com_type.Config_Msg -= new SocketReceivedHandler(GetConfig_Handler);
+                        com_type.Log_Msg -= new SocketReceivedHandler(Log_Handler);
+                        com_type.Close();
+                        Disconnect_Behavior();
+                    }
                     break;
                 //bluetooth
                 case 2:
@@ -93,6 +113,8 @@ namespace GatewayForm
                     {
                         com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
                         com_type.Receive_Command_Handler(CM.COMMAND.DIS_CONNECT_CMD);
+                        com_type.Config_Msg -= new SocketReceivedHandler(GetConfig_Handler);
+                        com_type.Log_Msg -= new SocketReceivedHandler(Log_Handler);
                         com_type.Close();
                         Disconnect_Behavior();
                     }
@@ -124,7 +146,9 @@ namespace GatewayForm
         private void GetConfig_Handler(string config_msg)
         {
             string[] config_str = config_msg.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
-            if (config_str[0].Contains("Seldatinc gateway "))
+            if (config_str[0] == "NAK")
+                Log_Handler("Failed Get Config");
+            else if (config_str[0] == "Seldatinc gateway configuration=")
             {
                 //Gateway serial
                 SetControl(Gateway_ID_lb, config_str[1].Substring(config_str[1].IndexOf("=") + 1));
@@ -179,20 +203,29 @@ namespace GatewayForm
                     SetControl(RFID_API_ckb, "yes");
                 else SetControl(RFID_API_ckb, "no");
             }
-            else if (config_str[0].Contains("Power RFID"))
+            else if (config_str[0] == "Power RFID")
             {
                 SetControl(trackBar2, config_str[1]);
                 Log_Handler("Get Power done");
             }
-            else if (config_str[0].Contains("Region RFID"))
+            else if (config_str[0] == "Region RFID")
             {
                 SetControl(region_lst, config_str[1]);
                 Log_Handler("Get Region done");
             }
-            else if (config_str[0].Contains("Power Mode RFID"))
+            else if (config_str[0] == "Power Mode RFID")
             {
                 SetControl(power_mode_cbx, config_str[1]);
                 Log_Handler("Get Power Mode done");
+            }
+            else if (config_str[0].Contains(" ={"))
+            {
+                MessageBox.Show(config_msg);
+                com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
+                com_type.Receive_Command_Handler(CM.COMMAND.DIS_CONNECT_CMD);
+                com_type.Close();
+                Disconnect_Behavior();
+                ConnType_cbx.SelectedIndex = Change_conntype_cbx.SelectedIndex;
             }
             else
                 Log_Handler("Get command not defined");
@@ -211,8 +244,6 @@ namespace GatewayForm
                 SetControl(status_lb, "Active");
                 SetControl(status_btn, "True");
             }
-            Thread.Sleep(1000);
-            SetControl(Log_lb, "Ready");
         }
 
         private delegate void SetConfigDelegate(Control control, string config_tx);
@@ -337,6 +368,7 @@ namespace GatewayForm
                 com_type.Get_Command_Send(CM.COMMAND.STOP_OPERATION_CMD);
                 Start_Operate_btn.Text = "Start inventory";
                 this.dataGridView1.Rows.Clear();
+                this.No_Tag_lb.Text = "0";
             }
         }
 
@@ -541,6 +573,14 @@ namespace GatewayForm
                 PatternID_tx.Enabled = false;
             else
                 PatternID_tx.Enabled = true;
+        }
+
+        private void set_newconn_btn_Click(object sender, EventArgs e)
+        {
+            byte[] conn_type_byte = new byte[1];
+            conn_type_byte[0] = (byte)Change_conntype_cbx.SelectedIndex;
+            com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_CONN_TYPE_CMD, conn_type_byte);
+            com_type.Receive_Command_Handler(CM.COMMAND.SET_CONN_TYPE_CMD);
         }
 
     }

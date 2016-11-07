@@ -48,6 +48,7 @@ namespace GatewayForm
             GET_REGION_CMD = 0x10,
             SET_POWER_MODE_CMD = 0x11,
             GET_POWER_MODE_CMD = 0x12,
+            SET_CONN_TYPE_CMD = 0x13,
         };
 
         public enum HEADER
@@ -260,7 +261,7 @@ namespace GatewayForm
             }
             else
             {
-                info_data = "NAK";
+                info_data = "NAK\n";
             }
             return info_data;
         }

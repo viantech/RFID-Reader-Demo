@@ -87,10 +87,10 @@ namespace GatewayForm
         {
             try
             {
-                byte[] icmp_test = Encoding.ASCII.GetBytes("xxxx");
-
                 #region Ping ICMP
-                /*PingOptions options = new PingOptions(64, true);
+                /*
+                byte[] icmp_test = Encoding.ASCII.GetBytes("xxxx");
+                PingOptions options = new PingOptions(64, true);
                 Ping pingsender = new Ping();
                 options.DontFragment = true;
                 pingsender.PingCompleted += (pingSource, rev) =>
@@ -678,6 +678,11 @@ namespace GatewayForm
                     else
                         Log_Raise("Failed set power mode");
                     break;
+                    // Change Connection Type
+                case CM.COMMAND.SET_CONN_TYPE_CMD:
+                    data_response = CM.Get_Data(CM.Decode_Frame((byte)CM.COMMAND.SET_CONN_TYPE_CMD, result_data_byte));
+                    Cmd_Raise(data_response);
+                    break;
                 default:
                     break;
             }
@@ -763,6 +768,9 @@ namespace GatewayForm
         /// </summary>
         public void Free()
         {
+            sendDone.Close();
+            receiveDone.Close();
+            connectDone.Close();
             tcp_client.Shutdown(SocketShutdown.Both);
             tcp_client.Disconnect(true);
             tcp_client.Close();

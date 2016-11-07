@@ -32,6 +32,7 @@ namespace GatewayForm
                     zigbee = new SocketClient();
                     break;
                 case CM.TYPECONNECT.HDR_WIFI:
+                    tcp = new TCP_Client();
                     break;
                 case CM.TYPECONNECT.HDR_BLUETOOTH:
                     break;
@@ -56,6 +57,11 @@ namespace GatewayForm
                     zigbee.Connect(ip, port);
                     break;
                 case CM.TYPECONNECT.HDR_WIFI:
+                    tcp.MessageReceived += new SocketReceivedHandler(passed_event); //chu y
+                    tcp.ConfigMessage += new SocketReceivedHandler(passed_config);
+                    tcp.Log_Msg += new SocketReceivedHandler(passed_log);
+                    tcp.InitClient(ip, port);
+                    this.connect_ok = tcp.connect_ok;
                     break;
                 case CM.TYPECONNECT.HDR_BLUETOOTH:
                     break;
@@ -78,13 +84,23 @@ namespace GatewayForm
             {
                 case CM.TYPECONNECT.HDR_ZIGBEE:
                     zigbee = null;
+                    zigbee.TagID_Received -= new SocketReceivedHandler(passed_event); //chu y
+                    zigbee.Get_Configuration -= new SocketReceivedHandler(passed_config);
+                    zigbee.Log_Msg -= new SocketReceivedHandler(passed_log);
                     break;
                 case CM.TYPECONNECT.HDR_WIFI:
+                    tcp.Free();
+                    tcp.MessageReceived -= new SocketReceivedHandler(passed_event); //chu y
+                    tcp.ConfigMessage -= new SocketReceivedHandler(passed_config);
+                    tcp.Log_Msg -= new SocketReceivedHandler(passed_log);
                     break;
                 case CM.TYPECONNECT.HDR_BLUETOOTH:
                     break;
                 case CM.TYPECONNECT.HDR_ETHERNET:
                     tcp.Free();
+                    tcp.MessageReceived -= new SocketReceivedHandler(passed_event); //chu y
+                    tcp.ConfigMessage -= new SocketReceivedHandler(passed_config);
+                    tcp.Log_Msg -= new SocketReceivedHandler(passed_log);
                     break;
                 case CM.TYPECONNECT.HDR_RS232:
                     break;
@@ -101,6 +117,7 @@ namespace GatewayForm
                     zigbee.Get_Command_Send(command_type);
                     break;
                 case CM.TYPECONNECT.HDR_WIFI:
+                    tcp.Get_Command_Send(command_type);
                     break;
                 case CM.TYPECONNECT.HDR_BLUETOOTH:
                     break;
@@ -122,6 +139,7 @@ namespace GatewayForm
                     //zigbee.Get_Command_Send(command_type);
                     break;
                 case CM.TYPECONNECT.HDR_WIFI:
+                    tcp.Get_Command_Power(command_type, option_mode);
                     break;
                 case CM.TYPECONNECT.HDR_BLUETOOTH:
                     break;
@@ -143,6 +161,7 @@ namespace GatewayForm
                     zigbee.Set_Command_Send(command_type, user_str);
                     break;
                 case CM.TYPECONNECT.HDR_WIFI:
+                    tcp.Set_Command_Send(command_type, user_str);
                     break;
                 case CM.TYPECONNECT.HDR_BLUETOOTH:
                     break;
@@ -163,6 +182,7 @@ namespace GatewayForm
                     //zigbee.Set_Command_Send(command_type, user_bytes);
                     break;
                 case CM.TYPECONNECT.HDR_WIFI:
+                    tcp.Set_Command_Send_Bytes(command_type, user_bytes);
                     break;
                 case CM.TYPECONNECT.HDR_BLUETOOTH:
                     break;
@@ -184,6 +204,7 @@ namespace GatewayForm
                     zigbee.ReadAsync(command_type);
                     break;
                 case CM.TYPECONNECT.HDR_WIFI:
+                    tcp.Receive_Command_Handler(command_type);
                     break;
                 case CM.TYPECONNECT.HDR_BLUETOOTH:
                     break;

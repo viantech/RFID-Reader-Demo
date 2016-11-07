@@ -29,11 +29,11 @@ namespace GatewayForm
         private static byte[] zigbee_header_byte = Encoding.ASCII.GetBytes("AT+UCAST:000D6F00059B7D98=");
         private static byte[] zigbee_binary = Encoding.ASCII.GetBytes("AT+UCASTB:");
         private static byte[] addr_node = Encoding.ASCII.GetBytes("000D6F00059B7D98");
-        private static byte[] seq_header = Encoding.ASCII.GetBytes("SEQ");
+        /*private static byte[] seq_header = Encoding.ASCII.GetBytes("SEQ");
         private static byte[] ack_header = Encoding.ASCII.GetBytes("ACK");
         private static byte[] nack_header = Encoding.ASCII.GetBytes("NACK");
+        private static byte[] error_header = Encoding.ASCII.GetBytes("ERROR");*/
         private static byte[] ucast_header = Encoding.ASCII.GetBytes("UCAST");
-        private static byte[] error_header = Encoding.ASCII.GetBytes("ERROR");
         private byte[] result_byte_frame = new byte[0];
         private byte[] raw_read_byte = new byte[0];
         private string respose;
@@ -41,7 +41,7 @@ namespace GatewayForm
         private volatile bool start_enable = false;
         private TcpClient client;
         private NetworkStream stream;
-        private Socket client_socket;
+        //private Socket client_socket;
 
         public event SocketReceivedHandler TagID_Received;
         public event SocketReceivedHandler Get_Configuration;
@@ -60,7 +60,7 @@ namespace GatewayForm
             {
                 client = new TcpClient(ip, port);
                 stream = client.GetStream();
-                client_socket = client.Client;
+                //client_socket = client.Client;
             }
             catch (Exception e)
             {
@@ -78,7 +78,6 @@ namespace GatewayForm
                 using (TcpClient tcpClient = (TcpClient)ar.AsyncState)
                 {
                     tcpClient.EndConnect(ar);
-                    var nstream = tcpClient.GetStream();
                     // Signal that the connection has been made.
                     connectDone.Set();
                 }

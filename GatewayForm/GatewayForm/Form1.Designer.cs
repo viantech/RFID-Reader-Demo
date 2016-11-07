@@ -55,6 +55,11 @@
             this.ANT1_Rbtn = new System.Windows.Forms.RadioButton();
             this.Start_Operate_btn = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.groupBox10 = new System.Windows.Forms.GroupBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.conn_property_btn = new System.Windows.Forms.Button();
+            this.Change_conntype_cbx = new System.Windows.Forms.ComboBox();
+            this.set_newconn_btn = new System.Windows.Forms.Button();
             this.StackLight_ckb = new System.Windows.Forms.CheckBox();
             this.RFID_API_ckb = new System.Windows.Forms.CheckBox();
             this.Offline_ckb = new System.Windows.Forms.CheckBox();
@@ -65,9 +70,11 @@
             this.MessageInterval_tx = new System.Windows.Forms.TextBox();
             this.label18 = new System.Windows.Forms.Label();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.PalletSupport_cbx = new System.Windows.Forms.CheckBox();
             this.PatternID_tx = new System.Windows.Forms.TextBox();
             this.label17 = new System.Windows.Forms.Label();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.AudioSupport_cbx = new System.Windows.Forms.CheckBox();
             this.Audio_val = new System.Windows.Forms.Label();
             this.AudioVolume_trb = new System.Windows.Forms.TrackBar();
             this.label16 = new System.Windows.Forms.Label();
@@ -127,8 +134,7 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.label10 = new System.Windows.Forms.Label();
             this.Log_lb = new System.Windows.Forms.Label();
-            this.PalletSupport_cbx = new System.Windows.Forms.CheckBox();
-            this.AudioSupport_cbx = new System.Windows.Forms.CheckBox();
+            this.label9 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -136,6 +142,7 @@
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.groupBox10.SuspendLayout();
             this.groupBox6.SuspendLayout();
             this.groupBox5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.AudioVolume_trb)).BeginInit();
@@ -314,7 +321,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(136, 38);
+            this.label3.Location = new System.Drawing.Point(162, 47);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(27, 13);
             this.label3.TabIndex = 8;
@@ -323,9 +330,10 @@
             // No_Tag_lb
             // 
             this.No_Tag_lb.AutoSize = true;
-            this.No_Tag_lb.Location = new System.Drawing.Point(96, 38);
+            this.No_Tag_lb.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.No_Tag_lb.Location = new System.Drawing.Point(107, 31);
             this.No_Tag_lb.Name = "No_Tag_lb";
-            this.No_Tag_lb.Size = new System.Drawing.Size(13, 13);
+            this.No_Tag_lb.Size = new System.Drawing.Size(26, 29);
             this.No_Tag_lb.TabIndex = 8;
             this.No_Tag_lb.Text = "0";
             // 
@@ -341,7 +349,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(4, 38);
+            this.label2.Location = new System.Drawing.Point(6, 47);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(82, 13);
             this.label2.TabIndex = 7;
@@ -418,6 +426,7 @@
             // tabPage2
             // 
             this.tabPage2.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage2.Controls.Add(this.groupBox10);
             this.tabPage2.Controls.Add(this.StackLight_ckb);
             this.tabPage2.Controls.Add(this.RFID_API_ckb);
             this.tabPage2.Controls.Add(this.Offline_ckb);
@@ -443,6 +452,64 @@
             this.tabPage2.Size = new System.Drawing.Size(902, 299);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Gateway configuration";
+            // 
+            // groupBox10
+            // 
+            this.groupBox10.Controls.Add(this.label7);
+            this.groupBox10.Controls.Add(this.conn_property_btn);
+            this.groupBox10.Controls.Add(this.Change_conntype_cbx);
+            this.groupBox10.Controls.Add(this.set_newconn_btn);
+            this.groupBox10.Location = new System.Drawing.Point(6, 166);
+            this.groupBox10.Name = "groupBox10";
+            this.groupBox10.Size = new System.Drawing.Size(451, 47);
+            this.groupBox10.TabIndex = 30;
+            this.groupBox10.TabStop = false;
+            this.groupBox10.Text = "New protocol";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(6, 16);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(109, 13);
+            this.label7.TabIndex = 26;
+            this.label7.Text = "Connection selection:";
+            // 
+            // conn_property_btn
+            // 
+            this.conn_property_btn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.conn_property_btn.Location = new System.Drawing.Point(358, 12);
+            this.conn_property_btn.Name = "conn_property_btn";
+            this.conn_property_btn.Size = new System.Drawing.Size(80, 21);
+            this.conn_property_btn.TabIndex = 29;
+            this.conn_property_btn.Text = "Properties";
+            this.conn_property_btn.UseVisualStyleBackColor = true;
+            // 
+            // Change_conntype_cbx
+            // 
+            this.Change_conntype_cbx.FormattingEnabled = true;
+            this.Change_conntype_cbx.Items.AddRange(new object[] {
+            "Zigbee",
+            "Wifi",
+            "Bluetooth",
+            "Ethernet",
+            "RS485"});
+            this.Change_conntype_cbx.Location = new System.Drawing.Point(132, 13);
+            this.Change_conntype_cbx.Name = "Change_conntype_cbx";
+            this.Change_conntype_cbx.Size = new System.Drawing.Size(106, 21);
+            this.Change_conntype_cbx.TabIndex = 27;
+            this.Change_conntype_cbx.Text = "Zigbee";
+            // 
+            // set_newconn_btn
+            // 
+            this.set_newconn_btn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.set_newconn_btn.Location = new System.Drawing.Point(260, 13);
+            this.set_newconn_btn.Name = "set_newconn_btn";
+            this.set_newconn_btn.Size = new System.Drawing.Size(75, 21);
+            this.set_newconn_btn.TabIndex = 28;
+            this.set_newconn_btn.Text = "Set";
+            this.set_newconn_btn.UseVisualStyleBackColor = true;
+            this.set_newconn_btn.Click += new System.EventHandler(this.set_newconn_btn_Click);
             // 
             // StackLight_ckb
             // 
@@ -545,6 +612,19 @@
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Tag patten";
             // 
+            // PalletSupport_cbx
+            // 
+            this.PalletSupport_cbx.AutoSize = true;
+            this.PalletSupport_cbx.Checked = true;
+            this.PalletSupport_cbx.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.PalletSupport_cbx.Location = new System.Drawing.Point(19, 19);
+            this.PalletSupport_cbx.Name = "PalletSupport_cbx";
+            this.PalletSupport_cbx.Size = new System.Drawing.Size(129, 17);
+            this.PalletSupport_cbx.TabIndex = 28;
+            this.PalletSupport_cbx.Text = "Pallet Pattern Support";
+            this.PalletSupport_cbx.UseVisualStyleBackColor = true;
+            this.PalletSupport_cbx.CheckedChanged += new System.EventHandler(this.PalletSupport_cbx_CheckedChanged);
+            // 
             // PatternID_tx
             // 
             this.PatternID_tx.Location = new System.Drawing.Point(142, 44);
@@ -565,20 +645,34 @@
             // groupBox5
             // 
             this.groupBox5.Controls.Add(this.AudioSupport_cbx);
+            this.groupBox5.Controls.Add(this.label9);
             this.groupBox5.Controls.Add(this.Audio_val);
             this.groupBox5.Controls.Add(this.AudioVolume_trb);
             this.groupBox5.Controls.Add(this.label16);
-            this.groupBox5.Location = new System.Drawing.Point(6, 189);
+            this.groupBox5.Location = new System.Drawing.Point(3, 226);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(335, 67);
             this.groupBox5.TabIndex = 8;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Audio";
             // 
+            // AudioSupport_cbx
+            // 
+            this.AudioSupport_cbx.AutoSize = true;
+            this.AudioSupport_cbx.Checked = true;
+            this.AudioSupport_cbx.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.AudioSupport_cbx.Location = new System.Drawing.Point(6, 22);
+            this.AudioSupport_cbx.Name = "AudioSupport_cbx";
+            this.AudioSupport_cbx.Size = new System.Drawing.Size(93, 17);
+            this.AudioSupport_cbx.TabIndex = 11;
+            this.AudioSupport_cbx.Text = "Audio Support";
+            this.AudioSupport_cbx.UseVisualStyleBackColor = true;
+            this.AudioSupport_cbx.CheckedChanged += new System.EventHandler(this.AudioSupport_cbx_CheckedChanged);
+            // 
             // Audio_val
             // 
             this.Audio_val.AutoSize = true;
-            this.Audio_val.Location = new System.Drawing.Point(258, 51);
+            this.Audio_val.Location = new System.Drawing.Point(251, 51);
             this.Audio_val.Name = "Audio_val";
             this.Audio_val.Size = new System.Drawing.Size(13, 13);
             this.Audio_val.TabIndex = 3;
@@ -603,7 +697,7 @@
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(84, 13);
             this.label16.TabIndex = 1;
-            this.label16.Text = "Speaker volumn";
+            this.label16.Text = "Speaker volume";
             // 
             // ConnectionList_ck
             // 
@@ -934,7 +1028,7 @@
             // 
             this.trackBar2.LargeChange = 10;
             this.trackBar2.Location = new System.Drawing.Point(79, 18);
-            this.trackBar2.Maximum = 40;
+            this.trackBar2.Maximum = 30;
             this.trackBar2.Minimum = 5;
             this.trackBar2.Name = "trackBar2";
             this.trackBar2.Size = new System.Drawing.Size(119, 45);
@@ -1141,11 +1235,11 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(4, 26);
+            this.label5.Location = new System.Drawing.Point(42, 26);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(84, 13);
+            this.label5.Size = new System.Drawing.Size(46, 13);
             this.label5.TabIndex = 1;
-            this.label5.Text = "Connection type";
+            this.label5.Text = "Protocol";
             // 
             // label6
             // 
@@ -1229,31 +1323,14 @@
             this.Log_lb.TabIndex = 11;
             this.Log_lb.Text = "Idle";
             // 
-            // PalletSupport_cbx
+            // label9
             // 
-            this.PalletSupport_cbx.AutoSize = true;
-            this.PalletSupport_cbx.Checked = true;
-            this.PalletSupport_cbx.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.PalletSupport_cbx.Location = new System.Drawing.Point(19, 19);
-            this.PalletSupport_cbx.Name = "PalletSupport_cbx";
-            this.PalletSupport_cbx.Size = new System.Drawing.Size(129, 17);
-            this.PalletSupport_cbx.TabIndex = 28;
-            this.PalletSupport_cbx.Text = "Pallet Pattern Support";
-            this.PalletSupport_cbx.UseVisualStyleBackColor = true;
-            this.PalletSupport_cbx.CheckedChanged += new System.EventHandler(this.PalletSupport_cbx_CheckedChanged);
-            // 
-            // AudioSupport_cbx
-            // 
-            this.AudioSupport_cbx.AutoSize = true;
-            this.AudioSupport_cbx.Checked = true;
-            this.AudioSupport_cbx.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.AudioSupport_cbx.Location = new System.Drawing.Point(6, 22);
-            this.AudioSupport_cbx.Name = "AudioSupport_cbx";
-            this.AudioSupport_cbx.Size = new System.Drawing.Size(93, 17);
-            this.AudioSupport_cbx.TabIndex = 11;
-            this.AudioSupport_cbx.Text = "Audio Support";
-            this.AudioSupport_cbx.UseVisualStyleBackColor = true;
-            this.AudioSupport_cbx.CheckedChanged += new System.EventHandler(this.AudioSupport_cbx_CheckedChanged);
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(279, 51);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(15, 13);
+            this.label9.TabIndex = 3;
+            this.label9.Text = "%";
             // 
             // Form1
             // 
@@ -1278,6 +1355,8 @@
             this.groupBox1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            this.groupBox10.ResumeLayout(false);
+            this.groupBox10.PerformLayout();
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
             this.groupBox5.ResumeLayout(false);
@@ -1404,6 +1483,12 @@
         private System.Windows.Forms.Button get_power_mode_btn;
         private System.Windows.Forms.CheckBox PalletSupport_cbx;
         private System.Windows.Forms.CheckBox AudioSupport_cbx;
+        private System.Windows.Forms.ComboBox Change_conntype_cbx;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Button conn_property_btn;
+        private System.Windows.Forms.Button set_newconn_btn;
+        private System.Windows.Forms.GroupBox groupBox10;
+        private System.Windows.Forms.Label label9;
     }
 }
 

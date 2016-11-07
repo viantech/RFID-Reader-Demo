@@ -36,17 +36,19 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.static_btn = new System.Windows.Forms.RadioButton();
+            this.dhcp_btn = new System.Windows.Forms.RadioButton();
             this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.TcpIP_tx = new System.Windows.Forms.TextBox();
-            this.TcpPort_tx = new System.Windows.Forms.TextBox();
-            this.ZigbeeChannel_tx = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.ssid_name_tx = new System.Windows.Forms.TextBox();
+            this.password_tx = new System.Windows.Forms.TextBox();
+            this.gateway_tx = new System.Windows.Forms.TextBox();
+            this.port_tx = new System.Windows.Forms.TextBox();
+            this.address_tx = new System.Windows.Forms.TextBox();
             this.Subnet_tx = new System.Windows.Forms.TextBox();
             this.close_btn = new System.Windows.Forms.Button();
             this.update_btn = new System.Windows.Forms.Button();
@@ -62,7 +64,7 @@
             this.groupBox4.Controls.Add(this.Tcp_len_tx);
             this.groupBox4.Controls.Add(this.label5);
             this.groupBox4.Controls.Add(this.label3);
-            this.groupBox4.Location = new System.Drawing.Point(12, 220);
+            this.groupBox4.Location = new System.Drawing.Point(14, 238);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(241, 100);
             this.groupBox4.TabIndex = 9;
@@ -123,60 +125,73 @@
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.radioButton2);
-            this.groupBox3.Controls.Add(this.radioButton1);
+            this.groupBox3.Controls.Add(this.static_btn);
+            this.groupBox3.Controls.Add(this.dhcp_btn);
             this.groupBox3.Controls.Add(this.label7);
+            this.groupBox3.Controls.Add(this.label8);
             this.groupBox3.Controls.Add(this.label1);
             this.groupBox3.Controls.Add(this.label2);
             this.groupBox3.Controls.Add(this.label10);
             this.groupBox3.Controls.Add(this.label9);
-            this.groupBox3.Controls.Add(this.TcpIP_tx);
-            this.groupBox3.Controls.Add(this.TcpPort_tx);
-            this.groupBox3.Controls.Add(this.ZigbeeChannel_tx);
-            this.groupBox3.Controls.Add(this.textBox1);
+            this.groupBox3.Controls.Add(this.ssid_name_tx);
+            this.groupBox3.Controls.Add(this.password_tx);
+            this.groupBox3.Controls.Add(this.gateway_tx);
+            this.groupBox3.Controls.Add(this.port_tx);
+            this.groupBox3.Controls.Add(this.address_tx);
             this.groupBox3.Controls.Add(this.Subnet_tx);
             this.groupBox3.Location = new System.Drawing.Point(12, 12);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(241, 202);
+            this.groupBox3.Size = new System.Drawing.Size(241, 220);
             this.groupBox3.TabIndex = 8;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Connection Properties";
             // 
-            // radioButton2
+            // static_btn
             // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(126, 78);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(52, 17);
-            this.radioButton2.TabIndex = 2;
-            this.radioButton2.TabStop = true;
-            this.radioButton2.Text = "Static";
-            this.radioButton2.UseVisualStyleBackColor = true;
+            this.static_btn.AutoSize = true;
+            this.static_btn.Location = new System.Drawing.Point(126, 134);
+            this.static_btn.Name = "static_btn";
+            this.static_btn.Size = new System.Drawing.Size(52, 17);
+            this.static_btn.TabIndex = 2;
+            this.static_btn.TabStop = true;
+            this.static_btn.Text = "Static";
+            this.static_btn.UseVisualStyleBackColor = true;
+            this.static_btn.CheckedChanged += new System.EventHandler(this.static_btn_CheckedChanged);
             // 
-            // radioButton1
+            // dhcp_btn
             // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Location = new System.Drawing.Point(11, 78);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(55, 17);
-            this.radioButton1.TabIndex = 2;
-            this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "DHCP";
-            this.radioButton1.UseVisualStyleBackColor = true;
+            this.dhcp_btn.AutoSize = true;
+            this.dhcp_btn.Location = new System.Drawing.Point(11, 134);
+            this.dhcp_btn.Name = "dhcp_btn";
+            this.dhcp_btn.Size = new System.Drawing.Size(55, 17);
+            this.dhcp_btn.TabIndex = 2;
+            this.dhcp_btn.TabStop = true;
+            this.dhcp_btn.Text = "DHCP";
+            this.dhcp_btn.UseVisualStyleBackColor = true;
+            this.dhcp_btn.CheckedChanged += new System.EventHandler(this.dhcp_btn_CheckedChanged);
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(8, 172);
+            this.label7.Location = new System.Drawing.Point(8, 191);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(49, 13);
             this.label7.TabIndex = 0;
             this.label7.Text = "Gateway";
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(9, 111);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(26, 13);
+            this.label8.TabIndex = 0;
+            this.label8.Text = "Port";
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(8, 113);
+            this.label1.Location = new System.Drawing.Point(8, 81);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(45, 13);
             this.label1.TabIndex = 0;
@@ -185,7 +200,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 144);
+            this.label2.Location = new System.Drawing.Point(6, 163);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(53, 13);
             this.label2.TabIndex = 0;
@@ -205,48 +220,55 @@
             this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(7, 46);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(56, 13);
+            this.label9.Size = new System.Drawing.Size(53, 13);
             this.label9.TabIndex = 0;
-            this.label9.Text = "Pass word";
+            this.label9.Text = "Password";
             // 
-            // TcpIP_tx
+            // ssid_name_tx
             // 
-            this.TcpIP_tx.Location = new System.Drawing.Point(76, 19);
-            this.TcpIP_tx.Name = "TcpIP_tx";
-            this.TcpIP_tx.Size = new System.Drawing.Size(124, 20);
-            this.TcpIP_tx.TabIndex = 1;
-            this.TcpIP_tx.Text = "Seldat_inc";
+            this.ssid_name_tx.Location = new System.Drawing.Point(76, 19);
+            this.ssid_name_tx.Name = "ssid_name_tx";
+            this.ssid_name_tx.Size = new System.Drawing.Size(124, 20);
+            this.ssid_name_tx.TabIndex = 1;
+            this.ssid_name_tx.Text = "Seldat_inc";
             // 
-            // TcpPort_tx
+            // password_tx
             // 
-            this.TcpPort_tx.Location = new System.Drawing.Point(77, 46);
-            this.TcpPort_tx.Name = "TcpPort_tx";
-            this.TcpPort_tx.Size = new System.Drawing.Size(123, 20);
-            this.TcpPort_tx.TabIndex = 1;
-            this.TcpPort_tx.Text = "5000";
+            this.password_tx.Location = new System.Drawing.Point(77, 46);
+            this.password_tx.Name = "password_tx";
+            this.password_tx.Size = new System.Drawing.Size(123, 20);
+            this.password_tx.TabIndex = 1;
+            this.password_tx.Text = "seldatvietnam135";
             // 
-            // ZigbeeChannel_tx
+            // gateway_tx
             // 
-            this.ZigbeeChannel_tx.Enabled = false;
-            this.ZigbeeChannel_tx.Location = new System.Drawing.Point(77, 169);
-            this.ZigbeeChannel_tx.Name = "ZigbeeChannel_tx";
-            this.ZigbeeChannel_tx.Size = new System.Drawing.Size(123, 20);
-            this.ZigbeeChannel_tx.TabIndex = 1;
-            this.ZigbeeChannel_tx.Text = "192.168.1.1";
+            this.gateway_tx.Enabled = false;
+            this.gateway_tx.Location = new System.Drawing.Point(77, 188);
+            this.gateway_tx.Name = "gateway_tx";
+            this.gateway_tx.Size = new System.Drawing.Size(123, 20);
+            this.gateway_tx.TabIndex = 1;
+            this.gateway_tx.Text = "192.168.1.1";
             // 
-            // textBox1
+            // port_tx
             // 
-            this.textBox1.Enabled = false;
-            this.textBox1.Location = new System.Drawing.Point(76, 110);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(124, 20);
-            this.textBox1.TabIndex = 1;
-            this.textBox1.Text = "192.168.1.102";
+            this.port_tx.Location = new System.Drawing.Point(77, 108);
+            this.port_tx.Name = "port_tx";
+            this.port_tx.Size = new System.Drawing.Size(124, 20);
+            this.port_tx.TabIndex = 1;
+            this.port_tx.Text = "5000";
+            // 
+            // address_tx
+            // 
+            this.address_tx.Location = new System.Drawing.Point(76, 78);
+            this.address_tx.Name = "address_tx";
+            this.address_tx.Size = new System.Drawing.Size(124, 20);
+            this.address_tx.TabIndex = 1;
+            this.address_tx.Text = "192.168.1.102";
             // 
             // Subnet_tx
             // 
             this.Subnet_tx.Enabled = false;
-            this.Subnet_tx.Location = new System.Drawing.Point(76, 137);
+            this.Subnet_tx.Location = new System.Drawing.Point(76, 156);
             this.Subnet_tx.Name = "Subnet_tx";
             this.Subnet_tx.Size = new System.Drawing.Size(124, 20);
             this.Subnet_tx.TabIndex = 1;
@@ -254,7 +276,7 @@
             // 
             // close_btn
             // 
-            this.close_btn.Location = new System.Drawing.Point(191, 326);
+            this.close_btn.Location = new System.Drawing.Point(193, 344);
             this.close_btn.Name = "close_btn";
             this.close_btn.Size = new System.Drawing.Size(62, 23);
             this.close_btn.TabIndex = 11;
@@ -264,7 +286,7 @@
             // 
             // update_btn
             // 
-            this.update_btn.Location = new System.Drawing.Point(95, 326);
+            this.update_btn.Location = new System.Drawing.Point(95, 344);
             this.update_btn.Name = "update_btn";
             this.update_btn.Size = new System.Drawing.Size(75, 23);
             this.update_btn.TabIndex = 10;
@@ -276,7 +298,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(267, 356);
+            this.ClientSize = new System.Drawing.Size(267, 379);
             this.Controls.Add(this.close_btn);
             this.Controls.Add(this.update_btn);
             this.Controls.Add(this.groupBox4);
@@ -301,19 +323,21 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.RadioButton radioButton2;
-        private System.Windows.Forms.RadioButton radioButton1;
+        private System.Windows.Forms.RadioButton static_btn;
+        private System.Windows.Forms.RadioButton dhcp_btn;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.TextBox TcpIP_tx;
-        private System.Windows.Forms.TextBox TcpPort_tx;
-        private System.Windows.Forms.TextBox ZigbeeChannel_tx;
+        private System.Windows.Forms.TextBox ssid_name_tx;
+        private System.Windows.Forms.TextBox password_tx;
+        private System.Windows.Forms.TextBox gateway_tx;
         private System.Windows.Forms.TextBox Subnet_tx;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox address_tx;
         private System.Windows.Forms.Button close_btn;
         private System.Windows.Forms.Button update_btn;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox port_tx;
     }
 }
