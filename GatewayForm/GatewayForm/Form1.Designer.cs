@@ -75,6 +75,7 @@
             this.label17 = new System.Windows.Forms.Label();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.AudioSupport_cbx = new System.Windows.Forms.CheckBox();
+            this.label9 = new System.Windows.Forms.Label();
             this.Audio_val = new System.Windows.Forms.Label();
             this.AudioVolume_trb = new System.Windows.Forms.TrackBar();
             this.label16 = new System.Windows.Forms.Label();
@@ -134,7 +135,6 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.label10 = new System.Windows.Forms.Label();
             this.Log_lb = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -669,6 +669,15 @@
             this.AudioSupport_cbx.UseVisualStyleBackColor = true;
             this.AudioSupport_cbx.CheckedChanged += new System.EventHandler(this.AudioSupport_cbx_CheckedChanged);
             // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(279, 51);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(15, 13);
+            this.label9.TabIndex = 3;
+            this.label9.Text = "%";
+            // 
             // Audio_val
             // 
             this.Audio_val.AutoSize = true;
@@ -929,7 +938,8 @@
             "MINIMUM SAVING",
             "MEDIUM SAVING",
             "MAXIUM SAVING",
-            "SLEEP MODE"});
+            "SLEEP MODE",
+            "FULL MODE"});
             this.power_mode_cbx.Location = new System.Drawing.Point(83, 102);
             this.power_mode_cbx.Name = "power_mode_cbx";
             this.power_mode_cbx.Size = new System.Drawing.Size(134, 21);
@@ -1322,15 +1332,6 @@
             this.Log_lb.Size = new System.Drawing.Size(24, 13);
             this.Log_lb.TabIndex = 11;
             this.Log_lb.Text = "Idle";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(279, 51);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(15, 13);
-            this.label9.TabIndex = 3;
-            this.label9.Text = "%";
             // 
             // Form1
             // 

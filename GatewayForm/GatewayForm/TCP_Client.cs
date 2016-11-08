@@ -136,9 +136,19 @@ namespace GatewayForm
 
                 // Connect to a remote device.
                 // Establish the remote endpoint for the socket.
-
-                IPAddress ipAddress = IPAddress.Parse(ip_server);
-                IPEndPoint remoteEP = new IPEndPoint(ipAddress, port);
+               IPEndPoint remoteEP;
+               IPAddress ipAddress;
+               //if (ip_server.Contains("local"))
+               //{
+                 //IPHostEntry ipHostInfo = Dns.Resolve();
+                 //IPAddress ipAddress = ipHostInfo.AddressList[0];
+                 //remoteEP = new IPEndPoint(ipAddress, port);
+               //}
+               //else
+               //{
+                 ipAddress = IPAddress.Parse(ip_server);
+                 remoteEP = new IPEndPoint(ipAddress, port);
+               //}
 
                 // Create a TCP/IP socket.
                 tcp_client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -619,6 +629,13 @@ namespace GatewayForm
                         Log_Raise("Set connection done");
                     else
                         Log_Raise("Failed set connection");
+                    break;
+                case CM.COMMAND.DIS_CONNECT_CMD:
+                    info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.DIS_CONNECT_CMD, result_data_byte);
+                    if (0x00 == info_ack)
+                        Log_Raise("Disconnect");
+                    else
+                        Log_Raise("Failed disconnect");
                     break;
                 /* start operate */
                 case CM.COMMAND.START_OPERATION_CMD:

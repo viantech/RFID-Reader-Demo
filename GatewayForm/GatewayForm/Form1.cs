@@ -202,6 +202,7 @@ namespace GatewayForm
                 if (config_str[12].Contains("yes"))
                     SetControl(RFID_API_ckb, "yes");
                 else SetControl(RFID_API_ckb, "no");
+                Log_Handler("Get GW Config done");
             }
             else if (config_str[0] == "Power RFID")
             {
@@ -493,11 +494,6 @@ namespace GatewayForm
                 default:
                     break;
             }
-        }
-
-        private void AudioVolume_trb_Scroll(object sender, EventArgs e)
-        {
-            
         }
 
         private void get_power_btn_Click(object sender, EventArgs e)
