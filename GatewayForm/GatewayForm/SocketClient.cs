@@ -28,7 +28,7 @@ namespace GatewayForm
     {
         private static byte[] zigbee_header_byte = Encoding.ASCII.GetBytes("AT+UCAST:000D6F00059B7D98=");
         private static byte[] zigbee_binary = Encoding.ASCII.GetBytes("AT+UCASTB:");
-        private static byte[] addr_node = Encoding.ASCII.GetBytes("000D6F00059B7D98");
+        private static byte[] addr_node = Encoding.ASCII.GetBytes("000D6F000C68DF02");
         /*private static byte[] seq_header = Encoding.ASCII.GetBytes("SEQ");
         private static byte[] ack_header = Encoding.ASCII.GetBytes("ACK");
         private static byte[] nack_header = Encoding.ASCII.GetBytes("NACK");
@@ -137,14 +137,43 @@ namespace GatewayForm
             Send_Binary(byte_get_cmd);
         }
 
+        public void Get_Command_Power(CM.COMMAND command, byte power_mode)
+        {
+            CM.SubFrameFormat sub_fmt_get = new CM.SubFrameFormat();
+            CM.FrameFormat fmt_get = new CM.FrameFormat();
+            fmt_get.command = (byte)command;
+            fmt_get.length = (ushort)CM.LENGTH.FRAME_NON_DATA + 1;
+            fmt_get.metal_data = new byte[1];
+            fmt_get.metal_data[0] = power_mode;
+
+            sub_fmt_get.metal_data = CM.Encode_Frame(fmt_get);
+            sub_fmt_get.header = (byte)CM.HEADER.PACKET_HDR;
+            sub_fmt_get.length = (ushort)CM.LENGTH.SUB_FRAME_NON_DATA + 1;
+            sub_fmt_get.truncate = 0x01;
+
+            byte[] byte_get_cmd = CM.Encode_SubFrame(sub_fmt_get);
+            Send_Binary(byte_get_cmd);
+        }
+
         public void Set_Command_Send(CM.COMMAND command, String user_data)
         {
             CM.FrameFormat fmt_set = new CM.FrameFormat();
             fmt_set.command = (byte)command;
-            //fmt_set.length = (ushort)CM.LENGTH.FRAME_NON_DATA;
             byte[] user_byte = Encoding.ASCII.GetBytes(user_data);
             fmt_set.metal_data = user_byte;
             fmt_set.length = (ushort)((ushort)CM.LENGTH.FRAME_NON_DATA + user_byte.Length);
+
+            /* Byte data of Frame Format*/
+            byte[] sub_fmt_byte = CM.Encode_Frame(fmt_set);
+            Send_Packets(sub_fmt_byte);
+        }
+
+        public void Set_Command_Send_Bytes(CM.COMMAND command, byte[] user_bytes)
+        {
+            CM.FrameFormat fmt_set = new CM.FrameFormat();
+            fmt_set.command = (byte)command;
+            fmt_set.length = (ushort)((ushort)CM.LENGTH.FRAME_NON_DATA + user_bytes.Length);
+            fmt_set.metal_data = user_bytes;
 
             /* Byte data of Frame Format*/
             byte[] sub_fmt_byte = CM.Encode_Frame(fmt_set);
@@ -291,14 +320,15 @@ namespace GatewayForm
 
             if (0x00 == byte_receive[0])
             {
-                Log_Raise("Ready");
-                MessageBox.Show("Accepted!");
+                Log_Raise("Accepted!");
             }
             else
             {
-                if (retry_count > 1)
+                if (retry_count > 0)
                 {
                     MessageBox.Show("Fail request connection\n Retry!");
+                    result_byte_frame = new byte[0];
+                    raw_read_byte = new byte[0];
                     retry_count--;
                     Send_ConnectionRequest();
                     ReadAsync(CM.COMMAND.CONNECTION_REQUEST_CMD);

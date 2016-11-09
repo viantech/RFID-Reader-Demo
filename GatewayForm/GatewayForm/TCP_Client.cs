@@ -458,6 +458,7 @@ namespace GatewayForm
             byte[] sub_fmt_byte = CM.Encode_Frame(fmt_set);
             Send_Packets(sub_fmt_byte);
         }
+
         private void Send_Packets(byte[] frame_data_byte)
         {
             UInt16 num_packet, last_packet_byte, len_transmit;

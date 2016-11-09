@@ -136,7 +136,7 @@ namespace GatewayForm
             switch (type)
             {
                 case CM.TYPECONNECT.HDR_ZIGBEE:
-                    //zigbee.Get_Command_Send(command_type);
+                    zigbee.Get_Command_Power(command_type,option_mode);
                     break;
                 case CM.TYPECONNECT.HDR_WIFI:
                     tcp.Get_Command_Power(command_type, option_mode);
@@ -179,7 +179,7 @@ namespace GatewayForm
             switch (type)
             {
                 case CM.TYPECONNECT.HDR_ZIGBEE:
-                    //zigbee.Set_Command_Send(command_type, user_bytes);
+                    zigbee.Set_Command_Send_Bytes(command_type, user_bytes);
                     break;
                 case CM.TYPECONNECT.HDR_WIFI:
                     tcp.Set_Command_Send_Bytes(command_type, user_bytes);

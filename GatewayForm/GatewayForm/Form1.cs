@@ -65,7 +65,7 @@ namespace GatewayForm
                         com_type.Connect(zigbee_form.ip_add, int.Parse(zigbee_form.port));
                         Connected_Behavior();
                     }
-                    else if (Connect_btn.Text == "Disconnect")
+                    else
                     {
                         com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
                         com_type.Receive_Command_Handler(CM.COMMAND.DIS_CONNECT_CMD);
@@ -86,7 +86,7 @@ namespace GatewayForm
                         if (com_type.connect_ok)
                             Connected_Behavior();
                     }
-                    else if (Connect_btn.Text == "Disconnect")
+                    else
                     {
                         com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
                         com_type.Receive_Command_Handler(CM.COMMAND.DIS_CONNECT_CMD);
@@ -110,7 +110,7 @@ namespace GatewayForm
                         if (com_type.connect_ok)
                             Connected_Behavior();
                     }
-                    else if (Connect_btn.Text == "Disconnect")
+                    else
                     {
                         com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
                         com_type.Receive_Command_Handler(CM.COMMAND.DIS_CONNECT_CMD);
@@ -229,6 +229,8 @@ namespace GatewayForm
                 com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
                 com_type.Receive_Command_Handler(CM.COMMAND.DIS_CONNECT_CMD);
                 com_type.Close();
+                com_type.Config_Msg -= new SocketReceivedHandler(GetConfig_Handler);
+                com_type.Log_Msg -= new SocketReceivedHandler(Log_Handler);
                 Disconnect_Behavior();
                 ConnType_cbx.SelectedIndex = Change_conntype_cbx.SelectedIndex;
             }
@@ -301,7 +303,7 @@ namespace GatewayForm
                         break;
 
                     case "TrackBar":
-                        if ((control as TrackBar).Name == "trackBar2")
+                        if ((control as TrackBar).Name.Contains("trackBar"))
                         {
                             (control as TrackBar).Value = int.Parse(config_tx);
                         }
@@ -367,7 +369,7 @@ namespace GatewayForm
                 com_type.Receive_Command_Handler(CM.COMMAND.START_OPERATION_CMD);
                 Stop_Behavior();
             }
-            else if (Start_Operate_btn.Text == "Stop inventory")
+            else
             {
                 com_type.TagID_Msg -= new SocketReceivedHandler(Read_handler);
                 com_type.Get_Command_Send(CM.COMMAND.STOP_OPERATION_CMD);
