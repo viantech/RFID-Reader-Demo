@@ -10,4 +10,16 @@ C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Release\Gatewa
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Release\GatewayForm.exe
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Release\GatewayForm.pdb
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Release\GatewayForm.pdb
-C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Release\GatewayForm.csprojResolveAssemblyReference.cache
+D:\GUI\guidesign\GatewayForm\GatewayForm\bin\Release\GatewayForm.exe.config
+D:\GUI\guidesign\GatewayForm\GatewayForm\bin\Release\GatewayForm.exe
+D:\GUI\guidesign\GatewayForm\GatewayForm\bin\Release\GatewayForm.pdb
+D:\GUI\guidesign\GatewayForm\GatewayForm\obj\Release\GatewayForm.csprojResolveAssemblyReference.cache
+D:\GUI\guidesign\GatewayForm\GatewayForm\obj\Release\GatewayForm.Form1.resources
+D:\GUI\guidesign\GatewayForm\GatewayForm\obj\Release\GatewayForm.Serial_pop.resources
+D:\GUI\guidesign\GatewayForm\GatewayForm\obj\Release\GatewayForm.Tcp_pop.resources
+D:\GUI\guidesign\GatewayForm\GatewayForm\obj\Release\GatewayForm.Wifi_pop.resources
+D:\GUI\guidesign\GatewayForm\GatewayForm\obj\Release\GatewayForm.Zigbee_pop.resources
+D:\GUI\guidesign\GatewayForm\GatewayForm\obj\Release\GatewayForm.Properties.Resources.resources
+D:\GUI\guidesign\GatewayForm\GatewayForm\obj\Release\GatewayForm.csproj.GenerateResource.Cache
+D:\GUI\guidesign\GatewayForm\GatewayForm\obj\Release\GatewayForm.exe
+D:\GUI\guidesign\GatewayForm\GatewayForm\obj\Release\GatewayForm.pdb

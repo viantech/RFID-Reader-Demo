@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -135,6 +136,8 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.label10 = new System.Windows.Forms.Label();
             this.Log_lb = new System.Windows.Forms.Label();
+            this.get_write_power_btn = new System.Windows.Forms.Button();
+            this.set_write_power_btn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -215,6 +218,7 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(910, 325);
             this.tabControl1.TabIndex = 1;
+            this.tabControl1.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabControl1_Selecting);
             // 
             // tabPage1
             // 
@@ -892,7 +896,9 @@
             this.groupBox9.Controls.Add(this.set_power_mode_btn);
             this.groupBox9.Controls.Add(this.get_power_mode_btn);
             this.groupBox9.Controls.Add(this.power_mode_cbx);
+            this.groupBox9.Controls.Add(this.set_write_power_btn);
             this.groupBox9.Controls.Add(this.set_power_btn);
+            this.groupBox9.Controls.Add(this.get_write_power_btn);
             this.groupBox9.Controls.Add(this.get_power_btn);
             this.groupBox9.Controls.Add(this.write_power_lb);
             this.groupBox9.Controls.Add(this.read_power_lb);
@@ -934,17 +940,16 @@
             // 
             this.power_mode_cbx.FormattingEnabled = true;
             this.power_mode_cbx.Items.AddRange(new object[] {
-            "MINIMUM",
+            "FULL MODE",
             "MINIMUM SAVING",
             "MEDIUM SAVING",
             "MAXIUM SAVING",
-            "SLEEP MODE",
-            "FULL MODE"});
+            "SLEEP MODE"});
             this.power_mode_cbx.Location = new System.Drawing.Point(83, 102);
             this.power_mode_cbx.Name = "power_mode_cbx";
             this.power_mode_cbx.Size = new System.Drawing.Size(134, 21);
             this.power_mode_cbx.TabIndex = 10;
-            this.power_mode_cbx.Text = "MINIMUM";
+            this.power_mode_cbx.Text = "FULL MODE";
             // 
             // set_power_btn
             // 
@@ -1333,6 +1338,26 @@
             this.Log_lb.TabIndex = 11;
             this.Log_lb.Text = "Idle";
             // 
+            // get_write_power_btn
+            // 
+            this.get_write_power_btn.Location = new System.Drawing.Point(261, 57);
+            this.get_write_power_btn.Name = "get_write_power_btn";
+            this.get_write_power_btn.Size = new System.Drawing.Size(59, 23);
+            this.get_write_power_btn.TabIndex = 8;
+            this.get_write_power_btn.Text = "Get";
+            this.get_write_power_btn.UseVisualStyleBackColor = true;
+            this.get_write_power_btn.Click += new System.EventHandler(this.get_write_power_btn_Click);
+            // 
+            // set_write_power_btn
+            // 
+            this.set_write_power_btn.Location = new System.Drawing.Point(333, 58);
+            this.set_write_power_btn.Name = "set_write_power_btn";
+            this.set_write_power_btn.Size = new System.Drawing.Size(59, 23);
+            this.set_write_power_btn.TabIndex = 9;
+            this.set_write_power_btn.Text = "Set";
+            this.set_write_power_btn.UseVisualStyleBackColor = true;
+            this.set_write_power_btn.Click += new System.EventHandler(this.set_write_power_btn_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1343,8 +1368,9 @@
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.tabControl1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
-            this.Text = "RFID Demo";
+            this.Text = "Seldat RFID GUI @ HW Team";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
@@ -1490,6 +1516,8 @@
         private System.Windows.Forms.Button set_newconn_btn;
         private System.Windows.Forms.GroupBox groupBox10;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Button set_write_power_btn;
+        private System.Windows.Forms.Button get_write_power_btn;
     }
 }
 

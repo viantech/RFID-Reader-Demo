@@ -22,6 +22,7 @@ namespace GatewayForm
         Tcp_pop tcp_form;
         Serial_pop serial_form;
         StringBuilder gateway_config = new StringBuilder();
+        byte read_write_bit;
         string[] GW_Format = new string[16] {
                  "Seldatinc gateway configuration=\n",
                  "Gateway serial={0}\n",
@@ -68,14 +69,14 @@ namespace GatewayForm
                     {
                         com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
                         com_type.Receive_Command_Handler(CM.COMMAND.DIS_CONNECT_CMD);
+                        com_type.Close();
                         com_type.Config_Msg -= new SocketReceivedHandler(GetConfig_Handler);
                         com_type.Log_Msg -= new SocketReceivedHandler(Log_Handler);
-                        com_type.Close();
                         Disconnect_Behavior();
                     }
                     break;
                 //wifi
-                case 1: 
+                case 1:
                     if (Connect_btn.Text == "Connect")
                     {
                         com_type = new Communication(CM.TYPECONNECT.HDR_WIFI);
@@ -89,9 +90,9 @@ namespace GatewayForm
                     {
                         com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
                         com_type.Receive_Command_Handler(CM.COMMAND.DIS_CONNECT_CMD);
+                        com_type.Close();
                         com_type.Config_Msg -= new SocketReceivedHandler(GetConfig_Handler);
                         com_type.Log_Msg -= new SocketReceivedHandler(Log_Handler);
-                        com_type.Close();
                         Disconnect_Behavior();
                     }
                     break;
@@ -113,9 +114,9 @@ namespace GatewayForm
                     {
                         com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
                         com_type.Receive_Command_Handler(CM.COMMAND.DIS_CONNECT_CMD);
+                        com_type.Close();
                         com_type.Config_Msg -= new SocketReceivedHandler(GetConfig_Handler);
                         com_type.Log_Msg -= new SocketReceivedHandler(Log_Handler);
-                        com_type.Close();
                         Disconnect_Behavior();
                     }
                     break;
@@ -206,8 +207,11 @@ namespace GatewayForm
             }
             else if (config_str[0] == "Power RFID")
             {
-                SetControl(trackBar2, config_str[1]);
-                Log_Handler("Get Power done");
+                if (read_write_bit == 0)
+                { SetControl(trackBar2, config_str[1]); Log_Handler("Get Read Power done"); }
+                else
+                { SetControl(trackBar3, config_str[1]); Log_Handler("Get Write Power done"); }
+
             }
             else if (config_str[0] == "Region RFID")
             {
@@ -361,16 +365,68 @@ namespace GatewayForm
                 com_type.TagID_Msg += new SocketReceivedHandler(Read_handler);
                 com_type.Get_Command_Send(CM.COMMAND.START_OPERATION_CMD);
                 com_type.Receive_Command_Handler(CM.COMMAND.START_OPERATION_CMD);
-                Start_Operate_btn.Text = "Stop inventory";
+                Stop_Behavior();
             }
             else if (Start_Operate_btn.Text == "Stop inventory")
             {
                 com_type.TagID_Msg -= new SocketReceivedHandler(Read_handler);
                 com_type.Get_Command_Send(CM.COMMAND.STOP_OPERATION_CMD);
-                Start_Operate_btn.Text = "Start inventory";
-                this.dataGridView1.Rows.Clear();
-                this.No_Tag_lb.Text = "0";
+                Start_Behavior();
             }
+        }
+
+        private void Stop_Behavior()
+        {
+            Start_Operate_btn.Text = "Stop inventory";
+            
+            Set_GW_Config_btn.Enabled = false;
+            Get_GW_Config_btn.Enabled = false;
+            set_newconn_btn.Enabled = false;
+            conn_property_btn.Enabled = false;
+            Get_RFID_btn.Enabled = false;
+            Set_RFID_btn.Enabled = false;
+            Connect_btn.Enabled = false;
+
+            foreach (Button comm_btn in this.groupBox8.Controls.OfType<Button>())
+            {
+                comm_btn.Enabled = false;
+            }
+            foreach (Button comm_btn in this.groupBox9.Controls.OfType<Button>())
+            {
+                comm_btn.Enabled = false;
+            }
+            foreach (Button comm_btn in this.groupBox11.Controls.OfType<Button>())
+            {
+                comm_btn.Enabled = false;
+            }
+        }
+
+        private void Start_Behavior()
+        {
+            Start_Operate_btn.Text = "Start inventory";
+
+            Set_GW_Config_btn.Enabled = true;
+            Get_GW_Config_btn.Enabled = true;
+            set_newconn_btn.Enabled = true;
+            conn_property_btn.Enabled = true;
+            Get_RFID_btn.Enabled = true;
+            Set_RFID_btn.Enabled = true;
+            Connect_btn.Enabled = true;
+
+            foreach (Button comm_btn in this.groupBox8.Controls.OfType<Button>())
+            {
+                comm_btn.Enabled = true;
+            }
+            foreach (Button comm_btn in this.groupBox9.Controls.OfType<Button>())
+            {
+                comm_btn.Enabled = true;
+            }
+            foreach (Button comm_btn in this.groupBox11.Controls.OfType<Button>())
+            {
+                comm_btn.Enabled = true;
+            }
+            this.dataGridView1.Rows.Clear();
+            this.No_Tag_lb.Text = "0";
         }
 
         private void Get_GW_Config_btn_Click(object sender, EventArgs e)
@@ -498,16 +554,34 @@ namespace GatewayForm
 
         private void get_power_btn_Click(object sender, EventArgs e)
         {
-            com_type.Get_Command_Power(CM.COMMAND.GET_POWER_CMD, 0);
+            read_write_bit = 0;
+            com_type.Get_Command_Power(CM.COMMAND.GET_POWER_CMD, read_write_bit);
             com_type.Receive_Command_Handler(CM.COMMAND.GET_POWER_CMD);
+            read_write_bit = new byte();
         }
 
         private void set_power_btn_Click(object sender, EventArgs e)
         {
-            //string powerconfig = "0" + trackBar2.Value;
             byte[] power_bytes = new byte[2];
-            power_bytes[0] = (byte)0;
+            power_bytes[0] = 0;
             power_bytes[1] = (byte)trackBar2.Value;
+            com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_POWER_CMD, power_bytes);
+            com_type.Receive_Command_Handler(CM.COMMAND.SET_POWER_CMD);
+        }
+
+        private void get_write_power_btn_Click(object sender, EventArgs e)
+        {
+            read_write_bit = 1;
+            com_type.Get_Command_Power(CM.COMMAND.GET_POWER_CMD, read_write_bit);
+            com_type.Receive_Command_Handler(CM.COMMAND.GET_POWER_CMD);
+            read_write_bit = new byte();
+        }
+
+        private void set_write_power_btn_Click(object sender, EventArgs e)
+        {
+            byte[] power_bytes = new byte[2];
+            power_bytes[0] = 1;
+            power_bytes[1] = (byte)trackBar3.Value;
             com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_POWER_CMD, power_bytes);
             com_type.Receive_Command_Handler(CM.COMMAND.SET_POWER_CMD);
         }
@@ -577,6 +651,26 @@ namespace GatewayForm
             conn_type_byte[0] = (byte)Change_conntype_cbx.SelectedIndex;
             com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_CONN_TYPE_CMD, conn_type_byte);
             com_type.Receive_Command_Handler(CM.COMMAND.SET_CONN_TYPE_CMD);
+        }
+
+        private void tabControl1_Selecting(object sender, TabControlCancelEventArgs e)
+        {
+            if (tabControl1.SelectedIndex == 2)
+            {
+                if (trackBar2.Value == 5 && Start_Operate_btn.Text == "Start inventory" && Connect_btn.Text == "Disconnect")
+                {
+                    read_write_bit = 0;
+                    com_type.Get_Command_Power(CM.COMMAND.GET_POWER_CMD, read_write_bit);
+                    com_type.Receive_Command_Handler(CM.COMMAND.GET_POWER_CMD);
+                    read_write_bit = new byte();
+
+                    com_type.Get_Command_Send(CM.COMMAND.GET_POWER_MODE_CMD);
+                    com_type.Receive_Command_Handler(CM.COMMAND.GET_POWER_MODE_CMD);
+
+                    com_type.Get_Command_Send(CM.COMMAND.GET_REGION_CMD);
+                    com_type.Receive_Command_Handler(CM.COMMAND.GET_REGION_CMD);
+                }
+            }
         }
 
     }

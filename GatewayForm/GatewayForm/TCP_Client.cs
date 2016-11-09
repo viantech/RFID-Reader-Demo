@@ -632,10 +632,8 @@ namespace GatewayForm
                     break;
                 case CM.COMMAND.DIS_CONNECT_CMD:
                     info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.DIS_CONNECT_CMD, result_data_byte);
-                    if (0x00 == info_ack)
-                        Log_Raise("Disconnect");
-                    else
-                        Log_Raise("Failed disconnect");
+                    if (0x00 != info_ack)
+                        MessageBox.Show("Failed disconnect");
                     break;
                 /* start operate */
                 case CM.COMMAND.START_OPERATION_CMD:
@@ -792,7 +790,7 @@ namespace GatewayForm
             tcp_client.Disconnect(true);
             tcp_client.Close();
             //pingTimer.Stop();
-            Log_Raise("Socket disconneted");
+            Log_Raise("Disconneted");
         }
 
         ~TCP_Client()
