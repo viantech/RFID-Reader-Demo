@@ -100,7 +100,9 @@
             this.set_power_mode_btn = new System.Windows.Forms.Button();
             this.get_power_mode_btn = new System.Windows.Forms.Button();
             this.power_mode_cbx = new System.Windows.Forms.ComboBox();
+            this.set_write_power_btn = new System.Windows.Forms.Button();
             this.set_power_btn = new System.Windows.Forms.Button();
+            this.get_write_power_btn = new System.Windows.Forms.Button();
             this.get_power_btn = new System.Windows.Forms.Button();
             this.write_power_lb = new System.Windows.Forms.Label();
             this.read_power_lb = new System.Windows.Forms.Label();
@@ -136,8 +138,6 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.label10 = new System.Windows.Forms.Label();
             this.Log_lb = new System.Windows.Forms.Label();
-            this.get_write_power_btn = new System.Windows.Forms.Button();
-            this.set_write_power_btn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -951,6 +951,16 @@
             this.power_mode_cbx.TabIndex = 10;
             this.power_mode_cbx.Text = "FULL MODE";
             // 
+            // set_write_power_btn
+            // 
+            this.set_write_power_btn.Location = new System.Drawing.Point(333, 58);
+            this.set_write_power_btn.Name = "set_write_power_btn";
+            this.set_write_power_btn.Size = new System.Drawing.Size(59, 23);
+            this.set_write_power_btn.TabIndex = 9;
+            this.set_write_power_btn.Text = "Set";
+            this.set_write_power_btn.UseVisualStyleBackColor = true;
+            this.set_write_power_btn.Click += new System.EventHandler(this.set_write_power_btn_Click);
+            // 
             // set_power_btn
             // 
             this.set_power_btn.Location = new System.Drawing.Point(333, 19);
@@ -960,6 +970,16 @@
             this.set_power_btn.Text = "Set";
             this.set_power_btn.UseVisualStyleBackColor = true;
             this.set_power_btn.Click += new System.EventHandler(this.set_power_btn_Click);
+            // 
+            // get_write_power_btn
+            // 
+            this.get_write_power_btn.Location = new System.Drawing.Point(261, 57);
+            this.get_write_power_btn.Name = "get_write_power_btn";
+            this.get_write_power_btn.Size = new System.Drawing.Size(59, 23);
+            this.get_write_power_btn.TabIndex = 8;
+            this.get_write_power_btn.Text = "Get";
+            this.get_write_power_btn.UseVisualStyleBackColor = true;
+            this.get_write_power_btn.Click += new System.EventHandler(this.get_write_power_btn_Click);
             // 
             // get_power_btn
             // 
@@ -1337,26 +1357,6 @@
             this.Log_lb.Size = new System.Drawing.Size(24, 13);
             this.Log_lb.TabIndex = 11;
             this.Log_lb.Text = "Idle";
-            // 
-            // get_write_power_btn
-            // 
-            this.get_write_power_btn.Location = new System.Drawing.Point(261, 57);
-            this.get_write_power_btn.Name = "get_write_power_btn";
-            this.get_write_power_btn.Size = new System.Drawing.Size(59, 23);
-            this.get_write_power_btn.TabIndex = 8;
-            this.get_write_power_btn.Text = "Get";
-            this.get_write_power_btn.UseVisualStyleBackColor = true;
-            this.get_write_power_btn.Click += new System.EventHandler(this.get_write_power_btn_Click);
-            // 
-            // set_write_power_btn
-            // 
-            this.set_write_power_btn.Location = new System.Drawing.Point(333, 58);
-            this.set_write_power_btn.Name = "set_write_power_btn";
-            this.set_write_power_btn.Size = new System.Drawing.Size(59, 23);
-            this.set_write_power_btn.TabIndex = 9;
-            this.set_write_power_btn.Text = "Set";
-            this.set_write_power_btn.UseVisualStyleBackColor = true;
-            this.set_write_power_btn.Click += new System.EventHandler(this.set_write_power_btn_Click);
             // 
             // Form1
             // 

@@ -135,20 +135,10 @@ namespace GatewayForm
                 #endregion
 
                 // Connect to a remote device.
-                // Establish the remote endpoint for the socket.
-               IPEndPoint remoteEP;
-               IPAddress ipAddress;
-               //if (ip_server.Contains("local"))
-               //{
-                 //IPHostEntry ipHostInfo = Dns.Resolve();
-                 //IPAddress ipAddress = ipHostInfo.AddressList[0];
-                 //remoteEP = new IPEndPoint(ipAddress, port);
-               //}
-               //else
-               //{
-                 ipAddress = IPAddress.Parse(ip_server);
-                 remoteEP = new IPEndPoint(ipAddress, port);
-               //}
+               
+                //IPHostEntry ipHostInfo = Dns.GetHostEntry(ip_server);
+                IPAddress ipAddress = Dns.GetHostAddresses(ip_server)[0]; //ipHostInfo.AddressList[0];
+                IPEndPoint remoteEP = new IPEndPoint(ipAddress, port);
 
                 // Create a TCP/IP socket.
                 tcp_client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -170,8 +160,8 @@ namespace GatewayForm
                     {
                         //pingsender.SendAsync(ipAddress, 120, icmp_test, options, waiter);
                         //waiter.WaitOne();
-                    };*/
-                //pingTimer.Start();
+                    };
+                pingTimer.Start();*/
             }
             catch (IOException e)
             {
