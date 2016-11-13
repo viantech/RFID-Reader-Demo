@@ -42,6 +42,7 @@ namespace GatewayForm
             SET_PORT_PROPERTIES_CMD = 0x09,
             REQUEST_TAG_ID_CMD = 0x0A,
             DIS_CONNECT_CMD = 0x0B,
+            CHECK_READER_STT_CMD = 0x0C,
             SET_POWER_CMD = 0x0D,
             GET_POWER_CMD = 0x0E,
             SET_REGION_CMD = 0x0F,
@@ -155,17 +156,17 @@ namespace GatewayForm
             //datalen_subfmt = sub_fmt.length - 5;
             if (sub_fmt.length != len - 1)
             {
-                Console.WriteLine("len error {0} vs {1}", len, sub_fmt.length);
+                //Console.WriteLine("len error {0} vs {1}", len, sub_fmt.length);
                 return null;
             }
 
             //Check CRC
             //sub_fmt.checksum = buffer[len - 1];
-            /*if (sub_fmt.checksum != Chcksum(buffer.Skip(1).ToArray(), sub_fmt.length - 1))
+            if (sub_fmt.checksum != Chcksum(buffer.Skip(1).ToArray(), sub_fmt.length - 1))
             {
                 //form1.SetLog("Error CRC Packet ");
                 return null;
-            }*/
+            }
 
             /*Data of TCP packet is part of Frame Format*/
             sub_fmt.metal_data = new byte[len - 6];

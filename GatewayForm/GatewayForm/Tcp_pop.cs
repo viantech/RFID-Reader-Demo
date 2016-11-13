@@ -59,5 +59,10 @@ namespace GatewayForm
             this.Subnet_tx.Enabled = true;
             this.gateway_tx.Enabled = true;
         }
+
+        private void groupBox4_Enter(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -117,22 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DATABASE_NAME" xml:space="preserve">
-    <value>datastore.sqlite</value>
-  </data>
-  <data name="DATABASE_TABLENAME" xml:space="preserve">
-    <value>SQLGATEWAY</value>
-  </data>
-  <data name="ERROR_SEARCH_DATABASE" xml:space="preserve">
-    <value>No data from field required </value>
-  </data>
-  <data name="SELDAT_DATABASE" xml:space="preserve">
-    <value>\DataStore</value>
-  </data>
-  <data name="SELDAT_EXCEL_DATASTORE" xml:space="preserve">
-    <value>\DataStore\Excel</value>
-  </data>
-  <data name="SELDAT_EXCEL_TITLE" xml:space="preserve">
-    <value>GATEWAY DATA</value>
-  </data>
 </root>

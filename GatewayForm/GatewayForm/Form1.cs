@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using CM = GatewayForm.Common;
 using System.Threading;
+using System.IO;
 
 namespace GatewayForm
 {
@@ -23,6 +24,8 @@ namespace GatewayForm
         Serial_pop serial_form;
         StringBuilder gateway_config = new StringBuilder();
         byte read_write_bit;
+        string messageLoghandle;
+        LogIOData plog; // Declare Database Table
         string[] GW_Format = new string[16] {
                  "Seldatinc gateway configuration=\n",
                  "Gateway serial={0}\n",
@@ -49,83 +52,89 @@ namespace GatewayForm
             wifi_form = new Wifi_pop();
             tcp_form = new Tcp_pop();
             serial_form = new Serial_pop();
+            // create contructor for class LogIOData
+            if (plog == null)
+            {
+                plog = new LogIOData();
+                plog.loadData2Table += LoadDatatoTablefromDBbrowser;
+                plog.CreateDBTable();
+            }
+
         }
 
         private void Connect_btn_Click(object sender, EventArgs e)
         {
-            switch (ConnType_cbx.SelectedIndex)
+
+            try
             {
-                //zigbee
-                case 0:
-                    if (Connect_btn.Text == "Connect")
-                    {
-                        com_type = new Communication(CM.TYPECONNECT.HDR_ZIGBEE);
-                        com_type.Config_Msg += new SocketReceivedHandler(GetConfig_Handler);
-                        com_type.Log_Msg += new SocketReceivedHandler(Log_Handler);
-                        com_type.Connect(zigbee_form.ip_add, int.Parse(zigbee_form.port));
-                        Connected_Behavior();
-                    }
-                    else
-                    {
-                        com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
-                        com_type.Receive_Command_Handler(CM.COMMAND.DIS_CONNECT_CMD);
-                        com_type.Close();
-                        com_type.Config_Msg -= new SocketReceivedHandler(GetConfig_Handler);
-                        com_type.Log_Msg -= new SocketReceivedHandler(Log_Handler);
-                        Disconnect_Behavior();
-                    }
-                    break;
-                //wifi
-                case 1:
-                    if (Connect_btn.Text == "Connect")
-                    {
-                        com_type = new Communication(CM.TYPECONNECT.HDR_WIFI);
-                        com_type.Config_Msg += new SocketReceivedHandler(GetConfig_Handler);
-                        com_type.Log_Msg += new SocketReceivedHandler(Log_Handler);
-                        com_type.Connect(wifi_form.address, int.Parse(wifi_form.port));
-                        if (com_type.connect_ok)
+                switch (ConnType_cbx.SelectedIndex)
+                {
+                    //zigbee
+                    case 0:
+                        if (Connect_btn.Text == "Connect")
+                        {
+                            com_type = new Communication(CM.TYPECONNECT.HDR_ZIGBEE);
+                            com_type.Config_Msg += new SocketReceivedHandler(GetConfig_Handler);
+                            com_type.Log_Msg += new SocketReceivedHandler(Log_Handler);
+                            //com_type.Connect(zigbee_form.ip_add, int.Parse(zigbee_form.port));
                             Connected_Behavior();
-                    }
-                    else
-                    {
-                        com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
-                        com_type.Receive_Command_Handler(CM.COMMAND.DIS_CONNECT_CMD);
-                        com_type.Close();
-                        com_type.Config_Msg -= new SocketReceivedHandler(GetConfig_Handler);
-                        com_type.Log_Msg -= new SocketReceivedHandler(Log_Handler);
-                        Disconnect_Behavior();
-                    }
-                    break;
-                //bluetooth
-                case 2:
-                    break;
-                //Ethernet
-                case 3:
-                    if (Connect_btn.Text == "Connect")
-                    {
-                        com_type = new Communication(CM.TYPECONNECT.HDR_ETHERNET);
-                        com_type.Config_Msg += new SocketReceivedHandler(GetConfig_Handler);
-                        com_type.Log_Msg += new SocketReceivedHandler(Log_Handler);
-                        com_type.Connect(tcp_form.address, int.Parse(tcp_form.port));
-                        if (com_type.connect_ok)
+                        }
+                        else
+                        {
+                            com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
+                            com_type.Close();
+                            com_type.Config_Msg -= new SocketReceivedHandler(GetConfig_Handler);
+                            com_type.Log_Msg -= new SocketReceivedHandler(Log_Handler);
+                            Disconnect_Behavior();
+                        }
+                        break;
+                    //wifi
+                    case 1:
+                        if (Connect_btn.Text == "Connect")
+                        {
+                            com_type = new Communication(CM.TYPECONNECT.HDR_WIFI,wifi_form.address, int.Parse(wifi_form.port));
+                            com_type.Config_Msg += new SocketReceivedHandler(GetConfig_Handler);
+                            com_type.Log_Msg += new SocketReceivedHandler(Log_Handler);
+                            com_type.Connect();
                             Connected_Behavior();
-                    }
-                    else
-                    {
-                        com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
-                        com_type.Receive_Command_Handler(CM.COMMAND.DIS_CONNECT_CMD);
-                        com_type.Close();
-                        com_type.Config_Msg -= new SocketReceivedHandler(GetConfig_Handler);
-                        com_type.Log_Msg -= new SocketReceivedHandler(Log_Handler);
-                        Disconnect_Behavior();
-                    }
-                    break;
-                //RS485
-                case 4:
-                    break;
-                default:
-                    break;
+                        }
+                        else
+                        {
+                            com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
+                            com_type.Config_Msg -= new SocketReceivedHandler(GetConfig_Handler);
+                            com_type.Log_Msg -= new SocketReceivedHandler(Log_Handler);
+                            Disconnect_Behavior();
+                        }
+                        break;
+                    //bluetooth
+                    case 2:
+                        break;
+                    //Ethernet
+                    case 3:
+                        if (Connect_btn.Text == "Connect")
+                        {
+                            com_type = new Communication(CM.TYPECONNECT.HDR_ETHERNET, tcp_form.address, int.Parse(tcp_form.port));
+                            com_type.Config_Msg += new SocketReceivedHandler(GetConfig_Handler);
+                            com_type.Log_Msg += new SocketReceivedHandler(Log_Handler);
+                            com_type.Connect();
+                            Connected_Behavior();
+                        }
+                        else
+                        {
+                            com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
+                            com_type.Config_Msg -= new SocketReceivedHandler(GetConfig_Handler);
+                            com_type.Log_Msg -= new SocketReceivedHandler(Log_Handler);
+                            Disconnect_Behavior();
+                        }
+                        break;
+                    //RS485
+                    case 4:
+                        break;
+                    default:
+                        break;
+                }
             }
+            catch { }
         }
 
         private void Connected_Behavior()
@@ -227,7 +236,6 @@ namespace GatewayForm
             {
                 MessageBox.Show(config_msg);
                 com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
-                com_type.Receive_Command_Handler(CM.COMMAND.DIS_CONNECT_CMD);
                 com_type.Close();
                 com_type.Config_Msg -= new SocketReceivedHandler(GetConfig_Handler);
                 com_type.Log_Msg -= new SocketReceivedHandler(Log_Handler);
@@ -240,17 +248,13 @@ namespace GatewayForm
 
         private void Log_Handler(string log_msg)
         {
-            SetControl(Log_lb, log_msg);
-            if (log_msg == "No Connection")
+            this.Invoke((MethodInvoker)delegate
             {
-                SetControl(status_lb, "Inactive");
-                SetControl(status_btn, "Failed");
-            }
-            else if (log_msg == "Connected")
-            {
-                SetControl(status_lb, "Active");
-                SetControl(status_btn, "True");
-            }
+                Log_lb.Text = log_msg;
+                messageLoghandle = log_msg;
+                ptimer_loghandle.Interval = 5000;
+                ptimer_loghandle.Start();
+            });
         }
 
         private delegate void SetConfigDelegate(Control control, string config_tx);
@@ -330,9 +334,14 @@ namespace GatewayForm
 
             }
         }
-        private void Read_handler(string msg)
+        private void Read_handler(string msg)// open and save
         {
             SetText(this.dataGridView1, msg);
+            /*this.Invoke((MethodInvoker)delegate
+            {
+                plog.InsertData2Sql(msg.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries));
+            });*/
+            
         }
 
         private delegate void SetTextDelegate(DataGridView table, string text);
@@ -348,8 +357,9 @@ namespace GatewayForm
                 table.Rows.Clear();
                 //string[] seperators = new string[] { "EPC:", "ANT:", "RSSI:", "Read Count:", "Date:" };
                 rows = text.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
+                
                 rows = rows.Skip(5).ToArray();
-
+                plog.InsertData2Sql(rows);
                 for (int i = 0; i < rows.Length; i++)
                 {
                     string[] cells;
@@ -366,7 +376,6 @@ namespace GatewayForm
             {
                 com_type.TagID_Msg += new SocketReceivedHandler(Read_handler);
                 com_type.Get_Command_Send(CM.COMMAND.START_OPERATION_CMD);
-                com_type.Receive_Command_Handler(CM.COMMAND.START_OPERATION_CMD);
                 Stop_Behavior();
             }
             else
@@ -384,7 +393,6 @@ namespace GatewayForm
             Set_GW_Config_btn.Enabled = false;
             Get_GW_Config_btn.Enabled = false;
             set_newconn_btn.Enabled = false;
-            conn_property_btn.Enabled = false;
             Get_RFID_btn.Enabled = false;
             Set_RFID_btn.Enabled = false;
             Connect_btn.Enabled = false;
@@ -410,7 +418,6 @@ namespace GatewayForm
             Set_GW_Config_btn.Enabled = true;
             Get_GW_Config_btn.Enabled = true;
             set_newconn_btn.Enabled = true;
-            conn_property_btn.Enabled = true;
             Get_RFID_btn.Enabled = true;
             Set_RFID_btn.Enabled = true;
             Connect_btn.Enabled = true;
@@ -434,11 +441,11 @@ namespace GatewayForm
         private void Get_GW_Config_btn_Click(object sender, EventArgs e)
         {
             com_type.Get_Command_Send(CM.COMMAND.GET_CONFIGURATION_CMD);
-            com_type.Receive_Command_Handler(CM.COMMAND.GET_CONFIGURATION_CMD);
         }
 
         private void Set_GW_Config_btn_Click(object sender, EventArgs e)
         {
+            gateway_config.Clear();
             gateway_config.Append(GW_Format[0]);
             gateway_config.AppendFormat(GW_Format[1], Gateway_ID_tx.Text);
             gateway_config.AppendFormat(GW_Format[2], HW_Verrsion_tx.Text);
@@ -477,8 +484,6 @@ namespace GatewayForm
             }
             gateway_config.AppendFormat(GW_Format[15], GPO_sets.Remove(GPO_sets.Length - 1));
             com_type.Set_Command_Send(CM.COMMAND.SET_CONFIGURATION_CMD, gateway_config.ToString());
-            com_type.Receive_Command_Handler(CM.COMMAND.SET_CONFIGURATION_CMD);
-            gateway_config.Clear();
         }
 
         private void dataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
@@ -528,7 +533,6 @@ namespace GatewayForm
         private void Get_RFID_btn_Click(object sender, EventArgs e)
         {
             com_type.Get_Command_Send(CM.COMMAND.GET_RFID_CONFIGURATION_CMD);
-            com_type.Receive_Command_Handler(CM.COMMAND.GET_RFID_CONFIGURATION_CMD);
         }
 
         private void ConnType_cbx_SelectedIndexChanged(object sender, EventArgs e)
@@ -558,24 +562,22 @@ namespace GatewayForm
         {
             read_write_bit = 0;
             com_type.Get_Command_Power(CM.COMMAND.GET_POWER_CMD, read_write_bit);
-            com_type.Receive_Command_Handler(CM.COMMAND.GET_POWER_CMD);
             read_write_bit = new byte();
         }
 
         private void set_power_btn_Click(object sender, EventArgs e)
         {
+            //Log_lb.Text = "Sending...";
             byte[] power_bytes = new byte[2];
             power_bytes[0] = 0;
             power_bytes[1] = (byte)trackBar2.Value;
             com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_POWER_CMD, power_bytes);
-            com_type.Receive_Command_Handler(CM.COMMAND.SET_POWER_CMD);
         }
 
         private void get_write_power_btn_Click(object sender, EventArgs e)
         {
             read_write_bit = 1;
             com_type.Get_Command_Power(CM.COMMAND.GET_POWER_CMD, read_write_bit);
-            com_type.Receive_Command_Handler(CM.COMMAND.GET_POWER_CMD);
             read_write_bit = new byte();
         }
 
@@ -585,13 +587,11 @@ namespace GatewayForm
             power_bytes[0] = 1;
             power_bytes[1] = (byte)trackBar3.Value;
             com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_POWER_CMD, power_bytes);
-            com_type.Receive_Command_Handler(CM.COMMAND.SET_POWER_CMD);
         }
 
         private void get_region_btn_Click(object sender, EventArgs e)
         {
             com_type.Get_Command_Send(CM.COMMAND.GET_REGION_CMD);
-            com_type.Receive_Command_Handler(CM.COMMAND.GET_REGION_CMD);
         }
 
         private void set_region_btn_Click(object sender, EventArgs e)
@@ -599,7 +599,6 @@ namespace GatewayForm
             byte[] region_byte = new byte[1];
             region_byte[0] = (byte)region_lst.SelectedIndex;
             com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_REGION_CMD, region_byte);
-            com_type.Receive_Command_Handler(CM.COMMAND.SET_REGION_CMD);
         }
 
         private void trackBar2_ValueChanged(object sender, EventArgs e)
@@ -620,7 +619,6 @@ namespace GatewayForm
         private void get_power_mode_btn_Click(object sender, EventArgs e)
         {
             com_type.Get_Command_Send(CM.COMMAND.GET_POWER_MODE_CMD);
-            com_type.Receive_Command_Handler(CM.COMMAND.GET_POWER_MODE_CMD);
         }
 
         private void set_power_mode_btn_Click(object sender, EventArgs e)
@@ -628,7 +626,6 @@ namespace GatewayForm
             byte[] pw_mode_byte = new byte[1];
             pw_mode_byte[0] = (byte)power_mode_cbx.SelectedIndex;
             com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_POWER_MODE_CMD, pw_mode_byte);
-            com_type.Receive_Command_Handler(CM.COMMAND.SET_POWER_MODE_CMD);
         }
 
         private void AudioSupport_cbx_CheckedChanged(object sender, EventArgs e)
@@ -652,28 +649,102 @@ namespace GatewayForm
             byte[] conn_type_byte = new byte[1];
             conn_type_byte[0] = (byte)Change_conntype_cbx.SelectedIndex;
             com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_CONN_TYPE_CMD, conn_type_byte);
-            com_type.Receive_Command_Handler(CM.COMMAND.SET_CONN_TYPE_CMD);
         }
 
         private void tabControl1_Selecting(object sender, TabControlCancelEventArgs e)
-        {
+        {   
             if (tabControl1.SelectedIndex == 2)
             {
                 if (trackBar2.Value == 5 && Start_Operate_btn.Text == "Start inventory" && Connect_btn.Text == "Disconnect")
                 {
-                    read_write_bit = 0;
-                    com_type.Get_Command_Power(CM.COMMAND.GET_POWER_CMD, read_write_bit);
-                    com_type.Receive_Command_Handler(CM.COMMAND.GET_POWER_CMD);
-                    read_write_bit = new byte();
-
-                    com_type.Get_Command_Send(CM.COMMAND.GET_POWER_MODE_CMD);
-                    com_type.Receive_Command_Handler(CM.COMMAND.GET_POWER_MODE_CMD);
-
-                    com_type.Get_Command_Send(CM.COMMAND.GET_REGION_CMD);
-                    com_type.Receive_Command_Handler(CM.COMMAND.GET_REGION_CMD);
+                    com_type.RFID_Process();
                 }
             }
         }
+        private void LoadDatatoTablefromDBbrowser(String[] mgs)
+        {
+            Table_dbbrowser_datagrid.Rows.Add(mgs[0], mgs[1],mgs[2], mgs[3], mgs[4]);
+        }
+        private void button2_Click(object sender, EventArgs e)
+        {
 
+        }
+
+        private void tabPage5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            string startupPath = System.IO.Directory.GetCurrentDirectory();
+            MessageBox.Show(startupPath+Properties.Resources.SELDAT_DATABASE);
+          //  var folder = Directory.CreateDirectory("E://luatga"); 
+            // returns a DirectoryInfo object
+           // FolderBrowserDialog st_currentpath = new FolderBrowserDialog();
+           // st_currentpath.ShowDialog();
+            //txt_dbbrowser_selectedpath.Text = st_currentpath.SelectedPath;
+            //MessageBox.Show(pp.SelectedPath);
+
+        }
+        private void chk_dbbrowser_currentpath_CheckedChanged_1(object sender, EventArgs e)
+        {
+
+        }
+        private void btn_downloadtabletoExcel_Click(object sender, EventArgs e)
+        {
+            if (plog != null)
+            {
+                plog.DownloadExelFile();
+            }
+        }
+
+        private void btn_dbbrowser_search_Click(object sender, EventArgs e)
+        {
+            if(plog!=null)
+            {
+
+                SearchForm_Data psearchform = new SearchForm_Data();
+                psearchform.loaddatasearch += LoadDataSearch;
+                psearchform.Show();
+
+            }
+        }
+        public void LoadDataSearch(String field, String data)
+        {
+            if (plog != null)
+            {
+                this.Invoke((MethodInvoker)delegate
+                {
+                    plog.SearchDataINSql(field, data);
+                });
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Set_RFID_btn_Click(object sender, EventArgs e)
+        {
+
+        }
+        private void ptimer_loghandle_Tick_1(object sender, EventArgs e)
+        {
+            SetControl(Log_lb, messageLoghandle);
+            /*if (messageLoghandle == "No Connection")
+            {
+                SetControl(status_lb, "Inactive");
+                SetControl(status_btn, "Failed");
+            }
+            else if (messageLoghandle == "Connected")
+            {
+                SetControl(status_lb, "Active");
+                SetControl(status_btn, "True");
+            }*/
+            Log_lb.Text = "Ready!";
+            ptimer_loghandle.Stop();
+        }
     }
 }

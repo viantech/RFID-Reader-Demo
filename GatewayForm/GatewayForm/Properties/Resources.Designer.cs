@@ -59,5 +59,59 @@ namespace GatewayForm.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to datastore.sqlite.
+        /// </summary>
+        internal static string DATABASE_NAME {
+            get {
+                return ResourceManager.GetString("DATABASE_NAME", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SQLGATEWAY.
+        /// </summary>
+        internal static string DATABASE_TABLENAME {
+            get {
+                return ResourceManager.GetString("DATABASE_TABLENAME", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No data from field required .
+        /// </summary>
+        internal static string ERROR_SEARCH_DATABASE {
+            get {
+                return ResourceManager.GetString("ERROR_SEARCH_DATABASE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to \DataStore.
+        /// </summary>
+        internal static string SELDAT_DATABASE {
+            get {
+                return ResourceManager.GetString("SELDAT_DATABASE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to \DataStore\Excel.
+        /// </summary>
+        internal static string SELDAT_EXCEL_DATASTORE {
+            get {
+                return ResourceManager.GetString("SELDAT_EXCEL_DATASTORE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GATEWAY DATA.
+        /// </summary>
+        internal static string SELDAT_EXCEL_TITLE {
+            get {
+                return ResourceManager.GetString("SELDAT_EXCEL_TITLE", resourceCulture);
+            }
+        }
     }
 }

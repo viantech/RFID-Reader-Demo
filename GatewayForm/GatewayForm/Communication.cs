@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using CM = GatewayForm.Common;
 
 namespace GatewayForm
@@ -11,19 +12,21 @@ namespace GatewayForm
     {
         private CM.TYPECONNECT type;
         private SocketClient zigbee;
-        private TCP_Client tcp;
+        //private TCP_Client tcp;
         public bool connect_ok = true;
         //public delegate void ReceivedHandler(string msg);
         public event SocketReceivedHandler TagID_Msg;
         public event SocketReceivedHandler Config_Msg;
         public event SocketReceivedHandler Log_Msg;
-        public Communication (CM.TYPECONNECT type_connect)
+
+        TcpipConnection pTcpipClient;
+        public Communication (CM.TYPECONNECT type_connect, string ip_addr = "192.168.1.119",  int port = 5000)
         {
             this.type = type_connect;
-            SelectType();
+            SelectType(ip_addr, port);
         }
 
-        private void SelectType()
+        private void SelectType(string ip_addr, int port)
         {
             //Select new connection
             switch (type)
@@ -32,12 +35,12 @@ namespace GatewayForm
                     zigbee = new SocketClient();
                     break;
                 case CM.TYPECONNECT.HDR_WIFI:
-                    tcp = new TCP_Client();
+                    pTcpipClient = new TcpipConnection(ip_addr, port);
                     break;
                 case CM.TYPECONNECT.HDR_BLUETOOTH:
                     break;
                 case CM.TYPECONNECT.HDR_ETHERNET:
-                    tcp = new TCP_Client();
+                    pTcpipClient = new TcpipConnection(ip_addr, port);
                     break;
                 case CM.TYPECONNECT.HDR_RS232:
                     break;
@@ -46,7 +49,7 @@ namespace GatewayForm
             }
         }
 
-        public void Connect (string ip, int port)
+        public void Connect ()
         {
             switch (type)
             {
@@ -54,23 +57,40 @@ namespace GatewayForm
                     zigbee.TagID_Received += new SocketReceivedHandler(passed_event);
                     zigbee.Get_Configuration += new SocketReceivedHandler(passed_config);
                     zigbee.Log_Msg += new SocketReceivedHandler(passed_log);
-                    zigbee.Connect(ip, port);
+                    //zigbee.Connect(ip, port);
                     break;
                 case CM.TYPECONNECT.HDR_WIFI:
-                    tcp.MessageReceived += new SocketReceivedHandler(passed_event); //chu y
-                    tcp.ConfigMessage += new SocketReceivedHandler(passed_config);
-                    tcp.Log_Msg += new SocketReceivedHandler(passed_log);
-                    tcp.InitClient(ip, port);
-                    this.connect_ok = tcp.connect_ok;
+                    if (pTcpipClient != null)
+                    {
+                        pTcpipClient.CreateSocketConnection();
+                        if (pTcpipClient.isconnected)
+                        {
+                            pTcpipClient.ConfigMessage += passed_config;
+                            pTcpipClient.MessageReceived += passed_event;
+                            pTcpipClient.Log_Msg += passed_log;
+                            pTcpipClient.Send_ConnectionRequest();
+                        }
+                    }
                     break;
                 case CM.TYPECONNECT.HDR_BLUETOOTH:
                     break;
                 case CM.TYPECONNECT.HDR_ETHERNET:
-                    tcp.MessageReceived += new SocketReceivedHandler(passed_event); //chu y
-                    tcp.ConfigMessage += new SocketReceivedHandler(passed_config);
-                    tcp.Log_Msg += new SocketReceivedHandler(passed_log);
-                    tcp.InitClient(ip, port);
-                    this.connect_ok = tcp.connect_ok;
+                    /*   tcp.MessageReceived += new SocketReceivedHandler(passed_event); //chu y
+                       tcp.ConfigMessage += new SocketReceivedHandler(passed_config);
+                       tcp.Log_Msg += new SocketReceivedHandler(passed_log);
+                       tcp.InitClient(ip, port);
+                       this.connect_ok = tcp.connect_ok;*/
+                    if (pTcpipClient != null)
+                    {
+                        pTcpipClient.CreateSocketConnection();
+                        if (pTcpipClient.isconnected)
+                        {
+                            pTcpipClient.ConfigMessage += passed_config;
+                            pTcpipClient.MessageReceived += passed_event;
+                            pTcpipClient.Log_Msg += passed_log;
+                            pTcpipClient.Send_ConnectionRequest();
+                        }
+                    }
                     break;
                 case CM.TYPECONNECT.HDR_RS232:
                     break;
@@ -89,18 +109,18 @@ namespace GatewayForm
                     zigbee.Log_Msg -= new SocketReceivedHandler(passed_log);
                     break;
                 case CM.TYPECONNECT.HDR_WIFI:
-                    tcp.Free();
-                    tcp.MessageReceived -= new SocketReceivedHandler(passed_event); //chu y
-                    tcp.ConfigMessage -= new SocketReceivedHandler(passed_config);
-                    tcp.Log_Msg -= new SocketReceivedHandler(passed_log);
+                    //tcp.Free();
+                    //tcp.MessageReceived -= new SocketReceivedHandler(passed_event); //chu y
+                    //tcp.ConfigMessage -= new SocketReceivedHandler(passed_config);
+                    //tcp.Log_Msg -= new SocketReceivedHandler(passed_log);
                     break;
                 case CM.TYPECONNECT.HDR_BLUETOOTH:
                     break;
                 case CM.TYPECONNECT.HDR_ETHERNET:
-                    tcp.Free();
-                    tcp.MessageReceived -= new SocketReceivedHandler(passed_event); //chu y
-                    tcp.ConfigMessage -= new SocketReceivedHandler(passed_config);
-                    tcp.Log_Msg -= new SocketReceivedHandler(passed_log);
+                    //pp.close();
+                    //tcp.MessageReceived -= new SocketReceivedHandler(passed_event); //chu y
+                    //tcp.ConfigMessage -= new SocketReceivedHandler(passed_config);
+                    //tcp.Log_Msg -= new SocketReceivedHandler(passed_log);
                     break;
                 case CM.TYPECONNECT.HDR_RS232:
                     break;
@@ -117,12 +137,20 @@ namespace GatewayForm
                     zigbee.Get_Command_Send(command_type);
                     break;
                 case CM.TYPECONNECT.HDR_WIFI:
-                    tcp.Get_Command_Send(command_type);
+                    if (pTcpipClient != null)
+                    {
+                        if (pTcpipClient.isconnected)
+                            pTcpipClient.Get_Command_Send(command_type);
+                    }
                     break;
                 case CM.TYPECONNECT.HDR_BLUETOOTH:
                     break;
                 case CM.TYPECONNECT.HDR_ETHERNET:
-                    tcp.Get_Command_Send(command_type);
+                    if (pTcpipClient != null)
+                    {
+                        if(pTcpipClient.isconnected)
+                            pTcpipClient.Get_Command_Send(command_type);
+                    }
                     break;
                 case CM.TYPECONNECT.HDR_RS232:
                     break;
@@ -139,12 +167,20 @@ namespace GatewayForm
                     zigbee.Get_Command_Power(command_type,option_mode);
                     break;
                 case CM.TYPECONNECT.HDR_WIFI:
-                    tcp.Get_Command_Power(command_type, option_mode);
+                    if (pTcpipClient != null)
+                    {
+                        if (pTcpipClient.isconnected)
+                            pTcpipClient.Get_Command_Power(command_type, option_mode);
+                    }
                     break;
                 case CM.TYPECONNECT.HDR_BLUETOOTH:
                     break;
                 case CM.TYPECONNECT.HDR_ETHERNET:
-                    tcp.Get_Command_Power(command_type, option_mode);
+                    if (pTcpipClient != null)
+                    {
+                        if (pTcpipClient.isconnected)
+                            pTcpipClient.Get_Command_Power(command_type, option_mode);
+                    }
                     break;
                 case CM.TYPECONNECT.HDR_RS232:
                     break;
@@ -161,12 +197,20 @@ namespace GatewayForm
                     zigbee.Set_Command_Send(command_type, user_str);
                     break;
                 case CM.TYPECONNECT.HDR_WIFI:
-                    tcp.Set_Command_Send(command_type, user_str);
+                    if (pTcpipClient != null)
+                    {
+                        if (pTcpipClient.isconnected)
+                            pTcpipClient.Set_Command_Send(command_type, user_str);
+                    }
                     break;
                 case CM.TYPECONNECT.HDR_BLUETOOTH:
                     break;
                 case CM.TYPECONNECT.HDR_ETHERNET:
-                    tcp.Set_Command_Send(command_type, user_str);
+                    if (pTcpipClient != null)
+                    {
+                        if (pTcpipClient.isconnected)
+                            pTcpipClient.Set_Command_Send(command_type, user_str);
+                    }
                     break;
                 case CM.TYPECONNECT.HDR_RS232:
                     break;
@@ -182,12 +226,20 @@ namespace GatewayForm
                     zigbee.Set_Command_Send_Bytes(command_type, user_bytes);
                     break;
                 case CM.TYPECONNECT.HDR_WIFI:
-                    tcp.Set_Command_Send_Bytes(command_type, user_bytes);
+                    if (pTcpipClient != null)
+                    {
+                        if (pTcpipClient.isconnected)
+                            pTcpipClient.Set_Command_Send_Bytes(command_type, user_bytes);
+                    }
                     break;
                 case CM.TYPECONNECT.HDR_BLUETOOTH:
                     break;
                 case CM.TYPECONNECT.HDR_ETHERNET:
-                    tcp.Set_Command_Send_Bytes(command_type, user_bytes);
+                    if (pTcpipClient != null)
+                    {
+                        if (pTcpipClient.isconnected)
+                            pTcpipClient.Set_Command_Send_Bytes(command_type, user_bytes);
+                    }
                     break;
                 case CM.TYPECONNECT.HDR_RS232:
                     break;
@@ -195,7 +247,7 @@ namespace GatewayForm
                     break;
             }
         }
-
+        
         public void Receive_Command_Handler(CM.COMMAND command_type)
         {
             switch (type)
@@ -204,12 +256,42 @@ namespace GatewayForm
                     zigbee.ReadAsync(command_type);
                     break;
                 case CM.TYPECONNECT.HDR_WIFI:
-                    tcp.Receive_Command_Handler(command_type);
+                    //tcp.Receive_Command_Handler(command_type);
                     break;
                 case CM.TYPECONNECT.HDR_BLUETOOTH:
                     break;
                 case CM.TYPECONNECT.HDR_ETHERNET:
-                    tcp.Receive_Command_Handler(command_type);
+                    //tcp.Receive_Command_Handler(command_type);
+                    break;
+                case CM.TYPECONNECT.HDR_RS232:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public void RFID_Process()
+        {
+            switch (type)
+            {
+                case CM.TYPECONNECT.HDR_ZIGBEE:
+                    //zigbee.ReadAsync(command_type);
+                    break;
+                case CM.TYPECONNECT.HDR_WIFI:
+                    if (pTcpipClient != null)
+                    {
+                        if (pTcpipClient.isconnected)
+                            pTcpipClient.startRFIDprocess();
+                    }
+                    break;
+                case CM.TYPECONNECT.HDR_BLUETOOTH:
+                    break;
+                case CM.TYPECONNECT.HDR_ETHERNET:
+                    if (pTcpipClient != null)
+                    {
+                        if (pTcpipClient.isconnected)
+                            pTcpipClient.startRFIDprocess();
+                    }
                     break;
                 case CM.TYPECONNECT.HDR_RS232:
                     break;
