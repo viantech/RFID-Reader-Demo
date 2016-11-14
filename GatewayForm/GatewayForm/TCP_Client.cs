@@ -39,7 +39,7 @@ namespace GatewayForm
         private byte[] result_data_byte = new byte[0];
         // The port number for the remote device.
         //private const int defaultport = 5000;
-        public bool connect_ok = true;
+        public bool connect_ok = false;
         /*private IPEndPoint remoteEP;
         private string address;
         private int portt;*/
@@ -155,23 +155,29 @@ namespace GatewayForm
                 tcp_client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
                 // Connect to the remote endpoint.
                 tcp_client.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), tcp_client);
-                connectDone.WaitOne();
+                if (connectDone.WaitOne(5000))
+                {
+                    connect_ok = true;
+                    //Send Connection Request
+                    Send_ConnectionRequest();
 
-                //Send Connection Request
-                Send_ConnectionRequest();
+                    //Receive the response status
+                    Receive_Command_Handler(CM.COMMAND.CONNECTION_REQUEST_CMD);
 
-                //Receive the response status
-                Receive_Command_Handler(CM.COMMAND.CONNECTION_REQUEST_CMD);
-
-                //Get Gateway Configuration
-                Get_Command_Send(CM.COMMAND.GET_CONFIGURATION_CMD);
-                Receive_Command_Handler(CM.COMMAND.GET_CONFIGURATION_CMD);
-                /*pingTimer.Elapsed += (sender, e) =>
-                    {
-                        //pingsender.SendAsync(ipAddress, 120, icmp_test, options, waiter);
-                        //waiter.WaitOne();
-                    };*/
-                //pingTimer.Start();
+                    //Get Gateway Configuration
+                    Get_Command_Send(CM.COMMAND.GET_CONFIGURATION_CMD);
+                    Receive_Command_Handler(CM.COMMAND.GET_CONFIGURATION_CMD);
+                    /*pingTimer.Elapsed += (sender, e) =>
+                        {
+                            //pingsender.SendAsync(ipAddress, 120, icmp_test, options, waiter);
+                            //waiter.WaitOne();
+                        };*/
+                    //pingTimer.Start();
+                }
+                else
+                {
+                    throw new SocketException();
+                }
             }
             catch (IOException e)
             {
@@ -180,8 +186,9 @@ namespace GatewayForm
             catch (SocketException ex)
             {
                 //pingTimer.Stop();
-                receiveDone.Set();
+                //receiveDone.Set();
                 MessageBox.Show(ex.ToString());
+                //this.Free();
             }
         }
 
@@ -195,22 +202,24 @@ namespace GatewayForm
             {
                 // Retrieve the socket from the state object.
                 Socket client = (Socket)ar.AsyncState;
+                if (client.Connected)
+                {
+                    // Complete the connection.
+                    client.EndConnect(ar);
 
-                // Complete the connection.
-                client.EndConnect(ar);
-
-                // Signal that the connection has been made.
-                connectDone.Set();
+                    // Signal that the connection has been made.
+                    connectDone.Set();
+                }
             }
             catch (IOException e)
             {
                 MessageBox.Show(e.ToString());
             }
-            catch (SocketException e)
+            catch (SocketException )
             {
-                connect_ok = false;
-                connectDone.Set();
-                MessageBox.Show(e.ToString()); //2
+                //connect_ok = false;
+                //connectDone.Set();
+                //MessageBox.Show(e.ToString()); //2
             }
             catch (ObjectDisposedException)
             {
@@ -581,129 +590,133 @@ namespace GatewayForm
 
             // Begin receiving the data from the remote device.
             tcp_client.BeginReceive(state.buffer, 0, StateTCPClient.BufferSize, 0, new AsyncCallback(Receive_Command_Callback), state);
-            receiveDone.WaitOne();
-            receiveDone.Reset();
-
-            // After received all packet
-            byte info_ack = new byte();
-            string data_response = null;
-            switch (command_type)
+            if (receiveDone.WaitOne(2000))
             {
-                /* connection request */
-                case CM.COMMAND.CONNECTION_REQUEST_CMD:
-                    Request_Connection_Handler(CM.Decode_Frame((byte)CM.COMMAND.CONNECTION_REQUEST_CMD, result_data_byte));
-                    break;
-                /* configuration */
-                case CM.COMMAND.GET_CONFIGURATION_CMD:
-                    data_response = CM.Get_Data(CM.Decode_Frame((byte)CM.COMMAND.GET_CONFIGURATION_CMD, result_data_byte));
-                    Cmd_Raise(data_response);
-                    break;
-                case CM.COMMAND.SET_CONFIGURATION_CMD:
-                    info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_CONFIGURATION_CMD, result_data_byte);
-                    if (0x00 == info_ack)
-                        Log_Raise("Set GW Config done");
-                    else
-                        Log_Raise("Failed set Config");
-                    break;
-                /* RFID configuration */
-                case CM.COMMAND.GET_RFID_CONFIGURATION_CMD:
-                    data_response = CM.Get_Data(CM.Decode_Frame((byte)CM.COMMAND.GET_RFID_CONFIGURATION_CMD, result_data_byte));
-                    Cmd_Raise(data_response);
-                    MessageBox.Show(data_response);
-                    break;
-                case CM.COMMAND.SET_RFID_CONFIGURATION_CMD:
-                    info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_RFID_CONFIGURATION_CMD, result_data_byte);
-                    if (0x00 == info_ack)
-                        Log_Raise("Set RFID done");
-                    else
-                        Log_Raise("Failed set RFID");
-                    break;
-                /* Port Properties */
-                case CM.COMMAND.GET_PORT_PROPERTIES_CMD:
-                    data_response = CM.Get_Data(CM.Decode_Frame((byte)CM.COMMAND.GET_PORT_PROPERTIES_CMD, result_data_byte));
-                    Cmd_Raise(data_response);
-                    MessageBox.Show(data_response);
-                    break;
-                case CM.COMMAND.SET_PORT_PROPERTIES_CMD:
-                    info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_PORT_PROPERTIES_CMD, result_data_byte);
-                    if (0x00 == info_ack)
-                        Log_Raise("Set connection done");
-                    else
-                        Log_Raise("Failed set connection");
-                    break;
-                case CM.COMMAND.DIS_CONNECT_CMD:
-                    info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.DIS_CONNECT_CMD, result_data_byte);
-                    if (0x00 != info_ack)
-                        MessageBox.Show("Failed disconnect");
-                    break;
-                /* start operate */
-                case CM.COMMAND.START_OPERATION_CMD:
-                    info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.START_OPERATION_CMD, result_data_byte);
-                    if (0x00 == info_ack)
-                    {
-                        start_enable = true;
-                        //pingTimer.Stop();
-                        Log_Raise("Inventory Mode");
-                        Receive_Data_Handler();
-                    }
-                    else
-                        MessageBox.Show("Failed start operation");
-                    break;
-                    //Power RFID
-                case CM.COMMAND.GET_POWER_CMD:
-                    byte[] power_bits = CM.Decode_Frame((byte)CM.COMMAND.GET_POWER_CMD, result_data_byte);
-                    if (0x00 == power_bits[0])
-                        Cmd_Raise("Power RFID\n" + power_bits[1].ToString() + "\n");
-                    else
-                        Log_Msg("Fail get power");
-                    break;
-                case CM.COMMAND.SET_POWER_CMD:
-                    info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_POWER_CMD, result_data_byte);
-                    if (0x00 == info_ack)
-                        Log_Raise("Set Power done");
-                    else
-                        Log_Raise("Failed Set Power");
-                    break;
-                    //Region Configuration
-                case CM.COMMAND.GET_REGION_CMD:
-                    byte[] region_bits = CM.Decode_Frame((byte)CM.COMMAND.GET_REGION_CMD, result_data_byte);
-                    if (0x00 == region_bits[0])
-                        Cmd_Raise("Region RFID\n" + region_bits[1].ToString() + "\n");
-                    else
-                        Log_Msg("Fail get region");
-                    break;
-                case CM.COMMAND.SET_REGION_CMD:
-                    info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_REGION_CMD, result_data_byte);
-                    if (0x00 == info_ack)
-                        Log_Raise("Set Region done");
-                    else
-                        Log_Raise("Failed set region");
-                    break;
-                //Power Mode Configuration
-                case CM.COMMAND.GET_POWER_MODE_CMD:
-                    byte[] pw_mode_bits = CM.Decode_Frame((byte)CM.COMMAND.GET_POWER_MODE_CMD, result_data_byte);
-                    if (0x00 == pw_mode_bits[0])
-                        Cmd_Raise("Power Mode RFID\n" + pw_mode_bits[1].ToString() + "\n");
-                    else
-                        Log_Msg("Fail get power mode");
-                    break;
-                case CM.COMMAND.SET_POWER_MODE_CMD:
-                    info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_POWER_MODE_CMD, result_data_byte);
-                    if (0x00 == info_ack)
-                        Log_Raise("Set Power Mode done");
-                    else
-                        Log_Raise("Failed set power mode");
-                    break;
-                    // Change Connection Type
-                case CM.COMMAND.SET_CONN_TYPE_CMD:
-                    data_response = CM.Get_Data(CM.Decode_Frame((byte)CM.COMMAND.SET_CONN_TYPE_CMD, result_data_byte));
-                    Cmd_Raise(data_response);
-                    break;
-                default:
-                    break;
-            }
+                receiveDone.Reset();
 
-            result_data_byte = new byte[0];
+                // After received all packet
+                byte info_ack = new byte();
+                string data_response = null;
+                switch (command_type)
+                {
+                    /* connection request */
+                    case CM.COMMAND.CONNECTION_REQUEST_CMD:
+                        Request_Connection_Handler(CM.Decode_Frame((byte)CM.COMMAND.CONNECTION_REQUEST_CMD, result_data_byte));
+                        break;
+                    /* configuration */
+                    case CM.COMMAND.GET_CONFIGURATION_CMD:
+                        data_response = CM.Get_Data(CM.Decode_Frame((byte)CM.COMMAND.GET_CONFIGURATION_CMD, result_data_byte));
+                        Cmd_Raise(data_response);
+                        break;
+                    case CM.COMMAND.SET_CONFIGURATION_CMD:
+                        info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_CONFIGURATION_CMD, result_data_byte);
+                        if (0x00 == info_ack)
+                            Log_Raise("Set GW Config done");
+                        else
+                            Log_Raise("Failed set Config");
+                        break;
+                    /* RFID configuration */
+                    case CM.COMMAND.GET_RFID_CONFIGURATION_CMD:
+                        data_response = CM.Get_Data(CM.Decode_Frame((byte)CM.COMMAND.GET_RFID_CONFIGURATION_CMD, result_data_byte));
+                        Cmd_Raise(data_response);
+                        MessageBox.Show(data_response);
+                        break;
+                    case CM.COMMAND.SET_RFID_CONFIGURATION_CMD:
+                        info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_RFID_CONFIGURATION_CMD, result_data_byte);
+                        if (0x00 == info_ack)
+                            Log_Raise("Set RFID done");
+                        else
+                            Log_Raise("Failed set RFID");
+                        break;
+                    /* Port Properties */
+                    case CM.COMMAND.GET_PORT_PROPERTIES_CMD:
+                        data_response = CM.Get_Data(CM.Decode_Frame((byte)CM.COMMAND.GET_PORT_PROPERTIES_CMD, result_data_byte));
+                        Cmd_Raise(data_response);
+                        MessageBox.Show(data_response);
+                        break;
+                    case CM.COMMAND.SET_PORT_PROPERTIES_CMD:
+                        info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_PORT_PROPERTIES_CMD, result_data_byte);
+                        if (0x00 == info_ack)
+                            Log_Raise("Set connection done");
+                        else
+                            Log_Raise("Failed set connection");
+                        break;
+                    case CM.COMMAND.DIS_CONNECT_CMD:
+                        info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.DIS_CONNECT_CMD, result_data_byte);
+                        if (0x00 != info_ack)
+                            MessageBox.Show("Failed disconnect");
+                        break;
+                    /* start operate */
+                    case CM.COMMAND.START_OPERATION_CMD:
+                        info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.START_OPERATION_CMD, result_data_byte);
+                        if (0x00 == info_ack)
+                        {
+                            start_enable = true;
+                            //pingTimer.Stop();
+                            Log_Raise("Inventory Mode");
+                            Receive_Data_Handler();
+                        }
+                        else
+                            MessageBox.Show("Failed start operation");
+                        break;
+                    //Power RFID
+                    case CM.COMMAND.GET_POWER_CMD:
+                        byte[] power_bits = CM.Decode_Frame((byte)CM.COMMAND.GET_POWER_CMD, result_data_byte);
+                        if (0x00 == power_bits[0])
+                            Cmd_Raise("Power RFID\n" + power_bits[1].ToString() + "\n");
+                        else
+                            Log_Msg("Fail get power");
+                        break;
+                    case CM.COMMAND.SET_POWER_CMD:
+                        info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_POWER_CMD, result_data_byte);
+                        if (0x00 == info_ack)
+                            Log_Raise("Set Power done");
+                        else
+                            Log_Raise("Failed Set Power");
+                        break;
+                    //Region Configuration
+                    case CM.COMMAND.GET_REGION_CMD:
+                        byte[] region_bits = CM.Decode_Frame((byte)CM.COMMAND.GET_REGION_CMD, result_data_byte);
+                        if (0x00 == region_bits[0])
+                            Cmd_Raise("Region RFID\n" + region_bits[1].ToString() + "\n");
+                        else
+                            Log_Msg("Fail get region");
+                        break;
+                    case CM.COMMAND.SET_REGION_CMD:
+                        info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_REGION_CMD, result_data_byte);
+                        if (0x00 == info_ack)
+                            Log_Raise("Set Region done");
+                        else
+                            Log_Raise("Failed set region");
+                        break;
+                    //Power Mode Configuration
+                    case CM.COMMAND.GET_POWER_MODE_CMD:
+                        byte[] pw_mode_bits = CM.Decode_Frame((byte)CM.COMMAND.GET_POWER_MODE_CMD, result_data_byte);
+                        if (0x00 == pw_mode_bits[0])
+                            Cmd_Raise("Power Mode RFID\n" + pw_mode_bits[1].ToString() + "\n");
+                        else
+                            Log_Msg("Fail get power mode");
+                        break;
+                    case CM.COMMAND.SET_POWER_MODE_CMD:
+                        info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_POWER_MODE_CMD, result_data_byte);
+                        if (0x00 == info_ack)
+                            Log_Raise("Set Power Mode done");
+                        else
+                            Log_Raise("Failed set power mode");
+                        break;
+                    // Change Connection Type
+                    case CM.COMMAND.SET_CONN_TYPE_CMD:
+                        data_response = CM.Get_Data(CM.Decode_Frame((byte)CM.COMMAND.SET_CONN_TYPE_CMD, result_data_byte));
+                        Cmd_Raise(data_response);
+                        break;
+                    default:
+                        break;
+                }
+
+                result_data_byte = new byte[0];
+            }
+            else
+                receiveDone.Reset();
         }
 
         private void Receive_Data_Callback(IAsyncResult ar)

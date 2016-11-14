@@ -274,7 +274,7 @@
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Name = "Zigbee_pop";
-            this.Text = "Zigbee Setting";
+            this.Text = "Zigbee Setting Form";
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.groupBox4.ResumeLayout(false);

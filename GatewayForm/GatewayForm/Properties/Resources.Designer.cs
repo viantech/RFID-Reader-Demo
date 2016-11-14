@@ -88,6 +88,16 @@ namespace GatewayForm.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon favicon__1_ {
+            get {
+                object obj = ResourceManager.GetObject("favicon__1_", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to \DataStore.
         /// </summary>
         internal static string SELDAT_DATABASE {

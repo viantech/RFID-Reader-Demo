@@ -161,7 +161,7 @@ namespace GatewayForm
             }
 
             //Check CRC
-            //sub_fmt.checksum = buffer[len - 1];
+            sub_fmt.checksum = buffer[len - 1];
             if (sub_fmt.checksum != Chcksum(buffer.Skip(1).ToArray(), sub_fmt.length - 1))
             {
                 //form1.SetLog("Error CRC Packet ");

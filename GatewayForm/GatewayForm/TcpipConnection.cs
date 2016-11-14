@@ -13,8 +13,8 @@ namespace GatewayForm
 {
     class TcpipConnection
     {
-        public String _ipserver="";
-        public int _port = 5000;
+        //public String _ipserver="";
+        //public int _port = 5000;
         private Socket psocketClient;
         private Thread pReceiveThreading;
         private Thread pRFIDprocess;
@@ -40,14 +40,13 @@ namespace GatewayForm
             if (logmsg != null)
                 logmsg(log_str);
         }
-
-        public TcpipConnection(String ip,int port)
+        public TcpipConnection()
         {
-            _ipserver = ip;
-            _port = port;
+            //_ipserver = ip;
+            //_port = port;
             
         }
-        public bool CreateSocketConnection()
+        public bool CreateSocketConnection(string ip_addr, int port)
         {
             isconnected = false;
             flag_received = false;
@@ -56,8 +55,8 @@ namespace GatewayForm
 
                 if (psocketClient == null)
                 {
-                    IPAddress ipAddress = IPAddress.Parse(_ipserver);
-                    IPEndPoint remoteEP = new IPEndPoint(ipAddress, _port);
+                    IPAddress ipAddress = IPAddress.Parse(ip_addr);
+                    IPEndPoint remoteEP = new IPEndPoint(ipAddress, port);
                     psocketClient = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                     psocketClient.Connect(remoteEP);
                     pReceiveThreading = new Thread(RecievedData);
@@ -90,6 +89,7 @@ namespace GatewayForm
             while (flag_received)
             {
                 bool flag_correctdata = false;
+                
                 while (true)
                 {
                     try
@@ -126,9 +126,7 @@ namespace GatewayForm
                 }
                 if (flag_correctdata)
                 {
-                   
-                    Data_Handler((CM.COMMAND)result_data_byte[0]);
-                   
+                   Data_Handler((CM.COMMAND)result_data_byte[0]);
                 }
               
             }
@@ -370,6 +368,7 @@ namespace GatewayForm
             }
             //Array.Clear(result_data_byte,0, result_data_byte.Length);
             result_data_byte = new byte[0];
+            flag_arriveddata = false;
         }
         public void SendPacket(byte [] packet)
         {

@@ -263,7 +263,7 @@
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Name = "Tcp_pop";
-            this.Text = "Tcp_pop";
+            this.Text = "Ethernet Setting Form";
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             this.groupBox3.ResumeLayout(false);

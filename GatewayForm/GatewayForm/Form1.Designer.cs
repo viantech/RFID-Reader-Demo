@@ -1289,7 +1289,6 @@
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "Data Store";
             this.tabPage5.UseVisualStyleBackColor = true;
-            this.tabPage5.Click += new System.EventHandler(this.tabPage5_Click);
             // 
             // groupBox13
             // 
@@ -1574,7 +1573,7 @@
             // 
             // Column5
             // 
-            this.Column5.HeaderText = "Read date/time";
+            this.Column5.HeaderText = "Date/time";
             this.Column5.Name = "Column5";
             this.Column5.Width = 135;
             // 

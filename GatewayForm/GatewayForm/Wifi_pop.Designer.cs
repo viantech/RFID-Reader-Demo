@@ -304,7 +304,7 @@
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Name = "Wifi_pop";
-            this.Text = "Wifi_pop";
+            this.Text = "Wifi Setting Form";
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             this.groupBox3.ResumeLayout(false);

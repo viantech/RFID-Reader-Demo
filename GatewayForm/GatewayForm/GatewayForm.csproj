@@ -174,10 +174,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\seldat.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Icon1.ico" />
+    <None Include="Resources\favicon %281%29.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
