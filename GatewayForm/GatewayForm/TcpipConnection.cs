@@ -44,7 +44,7 @@ namespace GatewayForm
         {
             //_ipserver = ip;
             //_port = port;
-            
+
         }
         public bool CreateSocketConnection(string ip_addr, int port)
         {
@@ -66,14 +66,15 @@ namespace GatewayForm
                 }
                 return true;
             }
-            catch {
+            catch
+            {
                 MessageBox.Show("Error Open Socket");
                 return false;
             }
         }
         public void close()
         {
-            if(isconnected)
+            if (isconnected)
             {
                 isconnected = false;
                 flag_received = false;
@@ -89,7 +90,7 @@ namespace GatewayForm
             while (flag_received)
             {
                 bool flag_correctdata = false;
-                
+
                 while (true)
                 {
                     try
@@ -119,34 +120,37 @@ namespace GatewayForm
                             break;
                         }
                     }
-                    catch {
+                    catch
+                    {
                         MessageBox.Show("Socket close");
                         break;
                     }
                 }
                 if (flag_correctdata)
                 {
-                   Data_Handler((CM.COMMAND)result_data_byte[0]);
+                    if (result_data_byte != null)
+                        Data_Handler((CM.COMMAND)result_data_byte[0]);
                 }
-              
+
             }
         }
         public void startRFIDprocess()
         {
-            if(pRFIDprocess!=null)
-            {   try
+            if (pRFIDprocess != null)
+            {
+                try
                 {
                     pRFIDprocess.Abort();
                 }
                 catch { }
-               pRFIDprocess = null;
+                pRFIDprocess = null;
             }
             pRFIDprocess = new Thread(RFIDProcessing);
             pRFIDprocess.Start();
         }
         private void RFIDProcessing()
         {
-            while(true)
+            while (true)
             {
                 switch (stepCmd_RFID)
                 {
@@ -195,7 +199,7 @@ namespace GatewayForm
 
             }
         }
-        
+
         private void Request_Connection_Handler(byte[] byte_receive)
         {
             if (0x00 == byte_receive[0])
@@ -228,6 +232,7 @@ namespace GatewayForm
         {
             byte info_ack = new byte();
             string data_response = null;
+            byte[] byte_bits = null;
             switch (command_option)
             {
                 /* connection request */
@@ -237,7 +242,8 @@ namespace GatewayForm
                 /* configuration */
                 case CM.COMMAND.GET_CONFIGURATION_CMD:
                     data_response = CM.Get_Data(CM.Decode_Frame((byte)command_option, result_data_byte));
-                    Cmd_Raise(data_response);
+                    if (data_response.Length > 0)
+                        Cmd_Raise(data_response);
                     break;
                 case CM.COMMAND.SET_CONFIGURATION_CMD:
                     info_ack = CM.Decode_Frame_ACK((byte)command_option, result_data_byte);
@@ -245,11 +251,13 @@ namespace GatewayForm
                         Log_Raise("Set GW Config done");
                     else
                         Log_Raise("Failed set Config");
+
                     break;
                 /* RFID configuration */
                 case CM.COMMAND.GET_RFID_CONFIGURATION_CMD:
                     data_response = CM.Get_Data(CM.Decode_Frame((byte)command_option, result_data_byte));
-                    Cmd_Raise(data_response);
+                    if (data_response.Length > 0)
+                        Cmd_Raise(data_response);
                     MessageBox.Show(data_response);
                     break;
                 case CM.COMMAND.SET_RFID_CONFIGURATION_CMD:
@@ -262,11 +270,13 @@ namespace GatewayForm
                 /* Port Properties */
                 case CM.COMMAND.GET_PORT_PROPERTIES_CMD:
                     data_response = CM.Get_Data(CM.Decode_Frame((byte)command_option, result_data_byte));
-                    Cmd_Raise(data_response);
+                    if (data_response.Length > 0)
+                        Cmd_Raise(data_response);
                     MessageBox.Show(data_response);
                     break;
                 case CM.COMMAND.SET_PORT_PROPERTIES_CMD:
                     info_ack = CM.Decode_Frame_ACK((byte)command_option, result_data_byte);
+
                     if (0x00 == info_ack)
                         Log_Raise("Set connection done");
                     else
@@ -296,12 +306,14 @@ namespace GatewayForm
                     break;
                 /* TAG ID */
                 case CM.COMMAND.REQUEST_TAG_ID_CMD:
-                    
+
                     var messageReceived = MessageReceived;
                     byte[] byte_user = CM.Decode_Frame((byte)CM.COMMAND.REQUEST_TAG_ID_CMD, result_data_byte);
-
-                    if (messageReceived != null)
-                        messageReceived(Encoding.ASCII.GetString(byte_user, 0, byte_user.Length));
+                    if (byte_user != null)
+                    {
+                        if (messageReceived != null)
+                            messageReceived(Encoding.ASCII.GetString(byte_user, 0, byte_user.Length));
+                    }
                     break;
                 /* stop operate */
                 case CM.COMMAND.STOP_OPERATION_CMD:
@@ -315,14 +327,17 @@ namespace GatewayForm
                     break;
                 //Power RFID
                 case CM.COMMAND.GET_POWER_CMD:
-                    byte[] power_bits = CM.Decode_Frame((byte)command_option, result_data_byte);
-                    if (0x00 == power_bits[0])
-                        Cmd_Raise("Power RFID\n" + power_bits[1].ToString() + "\n");
-                    else
-                        Log_Msg("Fail get power");
+                    byte_bits = CM.Decode_Frame((byte)CM.COMMAND.GET_POWER_CMD, result_data_byte);
+                    if (byte_bits != null)
+                    {
+                        if (0x00 == byte_bits[0])
+                            Cmd_Raise("Power RFID\n" + byte_bits[1].ToString() + "\n");
+                        else
+                            Log_Msg("Fail get power");
+                    }
                     break;
                 case CM.COMMAND.SET_POWER_CMD:
-                    info_ack = CM.Decode_Frame_ACK((byte)command_option, result_data_byte);
+                    info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_POWER_CMD, result_data_byte);
                     if (0x00 == info_ack)
                         Log_Raise("Set Power done");
                     else
@@ -330,14 +345,17 @@ namespace GatewayForm
                     break;
                 //Region Configuration
                 case CM.COMMAND.GET_REGION_CMD:
-                    byte[] region_bits = CM.Decode_Frame((byte)command_option, result_data_byte);
-                    if (0x00 == region_bits[0])
-                        Cmd_Raise("Region RFID\n" + region_bits[1].ToString() + "\n");
-                    else
-                        Log_Msg("Fail get region");
+                    byte_bits = CM.Decode_Frame((byte)CM.COMMAND.GET_REGION_CMD, result_data_byte);
+                    if (byte_bits != null)
+                    {
+                        if (0x00 == byte_bits[0])
+                            Cmd_Raise("Region RFID\n" + byte_bits[1].ToString() + "\n");
+                        else
+                            Log_Msg("Fail get region");
+                    }
                     break;
                 case CM.COMMAND.SET_REGION_CMD:
-                    info_ack = CM.Decode_Frame_ACK((byte)command_option, result_data_byte);
+                    info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_REGION_CMD, result_data_byte);
                     if (0x00 == info_ack)
                         Log_Raise("Set Region done");
                     else
@@ -345,14 +363,17 @@ namespace GatewayForm
                     break;
                 //Power Mode Configuration
                 case CM.COMMAND.GET_POWER_MODE_CMD:
-                    byte[] pw_mode_bits = CM.Decode_Frame((byte)command_option, result_data_byte);
-                    if (0x00 == pw_mode_bits[0])
-                        Cmd_Raise("Power Mode RFID\n" + pw_mode_bits[1].ToString() + "\n");
-                    else
-                        Log_Msg("Fail get power mode");
+                    byte_bits = CM.Decode_Frame((byte)CM.COMMAND.GET_POWER_MODE_CMD, result_data_byte);
+                    if (byte_bits != null)
+                    {
+                        if (0x00 == byte_bits[0])
+                            Cmd_Raise("Power Mode RFID\n" + byte_bits[1].ToString() + "\n");
+                        else
+                            Log_Msg("Fail get power mode");
+                    }
                     break;
                 case CM.COMMAND.SET_POWER_MODE_CMD:
-                    info_ack = CM.Decode_Frame_ACK((byte)command_option, result_data_byte);
+                    info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_POWER_MODE_CMD, result_data_byte);
                     if (0x00 == info_ack)
                         Log_Raise("Set Power Mode done");
                     else
@@ -360,8 +381,26 @@ namespace GatewayForm
                     break;
                 // Change Connection Type
                 case CM.COMMAND.SET_CONN_TYPE_CMD:
-                    data_response = CM.Get_Data(CM.Decode_Frame((byte)command_option, result_data_byte));
-                    Cmd_Raise(data_response);
+                    data_response = CM.Get_Data(CM.Decode_Frame((byte)CM.COMMAND.SET_CONN_TYPE_CMD, result_data_byte));
+                    if (data_response.Length > 0)
+                        Cmd_Raise(data_response);
+                    break;
+                case CM.COMMAND.GET_BLF_CMD:
+                    byte_bits = CM.Decode_Frame((byte)CM.COMMAND.GET_BLF_CMD, result_data_byte);
+                    if (byte_bits != null)
+                    {
+                        if (0x00 == byte_bits[0])
+                            Cmd_Raise("BLF Setting\n" + (byte_bits[2] + (byte_bits[1] << 8)).ToString() + "\n");
+                        else
+                            Log_Msg("Fail get power");
+                    }
+                    break;
+                case CM.COMMAND.SET_BLF_CMD:
+                    info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_BLF_CMD, result_data_byte);
+                    if (0x00 == info_ack)
+                        Log_Raise("Set BLF done");
+                    else
+                        Log_Raise("Failed BLF");
                     break;
                 default:
                     break;
@@ -370,11 +409,11 @@ namespace GatewayForm
             result_data_byte = new byte[0];
             flag_arriveddata = false;
         }
-        public void SendPacket(byte [] packet)
+        public void SendPacket(byte[] packet)
         {
-            if(psocketClient!=null)
+            if (psocketClient != null)
             {
-                if(isconnected)
+                if (isconnected)
                 {
                     //Console.WriteLine("sending");
                     psocketClient.Send(packet);
@@ -426,10 +465,10 @@ namespace GatewayForm
             byte[] user_byte = Encoding.ASCII.GetBytes(user_data);
             fmt_set.length = (ushort)((ushort)CM.LENGTH.FRAME_NON_DATA + user_byte.Length);
             fmt_set.metal_data = user_byte;
-            
+
             /* Byte data of Frame Format*/
             byte[] sub_fmt_byte = CM.Encode_Frame(fmt_set);
-            
+
             sub_fmt_get.header = (byte)CM.HEADER.PACKET_HDR;
             sub_fmt_get.length = (ushort)(5 + sub_fmt_byte.Length);
             sub_fmt_get.metal_data = sub_fmt_byte;

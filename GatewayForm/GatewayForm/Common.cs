@@ -50,6 +50,8 @@ namespace GatewayForm
             SET_POWER_MODE_CMD = 0x11,
             GET_POWER_MODE_CMD = 0x12,
             SET_CONN_TYPE_CMD = 0x13,
+            SET_BLF_CMD = 0x14,
+            GET_BLF_CMD = 0x15,
         };
 
         public enum HEADER

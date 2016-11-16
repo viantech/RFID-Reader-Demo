@@ -34,14 +34,19 @@
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
-            this.GPO4_ckb = new System.Windows.Forms.CheckBox();
             this.GPO0_ckb = new System.Windows.Forms.CheckBox();
-            this.GPO3_ckb = new System.Windows.Forms.CheckBox();
             this.GPO1_ckb = new System.Windows.Forms.CheckBox();
             this.GPO2_ckb = new System.Windows.Forms.CheckBox();
+            this.GPO3_ckb = new System.Windows.Forms.CheckBox();
+            this.GPO4_ckb = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -115,12 +120,12 @@
             this.set_protocol_btn = new System.Windows.Forms.Button();
             this.get_protocol_btn = new System.Windows.Forms.Button();
             this.label24 = new System.Windows.Forms.Label();
-            this.comboBox4 = new System.Windows.Forms.ComboBox();
+            this.tari_cbx = new System.Windows.Forms.ComboBox();
             this.label23 = new System.Windows.Forms.Label();
-            this.comboBox3 = new System.Windows.Forms.ComboBox();
+            this.coding_cbx = new System.Windows.Forms.ComboBox();
             this.label22 = new System.Windows.Forms.Label();
             this.label21 = new System.Windows.Forms.Label();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this.freq_cbx = new System.Windows.Forms.ComboBox();
             this.label20 = new System.Windows.Forms.Label();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.groupBox13 = new System.Windows.Forms.GroupBox();
@@ -148,11 +153,6 @@
             this.label10 = new System.Windows.Forms.Label();
             this.Log_lb = new System.Windows.Forms.Label();
             this.ptimer_loghandle = new System.Windows.Forms.Timer(this.components);
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -199,6 +199,36 @@
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dataGridView1_RowsAdded);
             // 
+            // Column1
+            // 
+            this.Column1.HeaderText = "TAG ID";
+            this.Column1.Name = "Column1";
+            this.Column1.Width = 200;
+            // 
+            // Column2
+            // 
+            this.Column2.HeaderText = "Read Antenna";
+            this.Column2.Name = "Column2";
+            this.Column2.Width = 75;
+            // 
+            // Column3
+            // 
+            this.Column3.HeaderText = "RSSI";
+            this.Column3.Name = "Column3";
+            this.Column3.Width = 75;
+            // 
+            // Column4
+            // 
+            this.Column4.HeaderText = "Read Count";
+            this.Column4.Name = "Column4";
+            this.Column4.Width = 80;
+            // 
+            // Column5
+            // 
+            this.Column5.HeaderText = "Date/time";
+            this.Column5.Name = "Column5";
+            this.Column5.Width = 135;
+            // 
             // tabControl1
             // 
             this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -234,11 +264,11 @@
             // 
             // groupBox7
             // 
-            this.groupBox7.Controls.Add(this.GPO4_ckb);
             this.groupBox7.Controls.Add(this.GPO0_ckb);
-            this.groupBox7.Controls.Add(this.GPO3_ckb);
             this.groupBox7.Controls.Add(this.GPO1_ckb);
             this.groupBox7.Controls.Add(this.GPO2_ckb);
+            this.groupBox7.Controls.Add(this.GPO3_ckb);
+            this.groupBox7.Controls.Add(this.GPO4_ckb);
             this.groupBox7.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox7.Location = new System.Drawing.Point(653, 184);
             this.groupBox7.Name = "groupBox7";
@@ -247,44 +277,22 @@
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "[GPO Set]";
             // 
-            // GPO4_ckb
-            // 
-            this.GPO4_ckb.AutoSize = true;
-            this.GPO4_ckb.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GPO4_ckb.Location = new System.Drawing.Point(93, 42);
-            this.GPO4_ckb.Name = "GPO4_ckb";
-            this.GPO4_ckb.Size = new System.Drawing.Size(57, 18);
-            this.GPO4_ckb.TabIndex = 10;
-            this.GPO4_ckb.Text = "GPO4";
-            this.GPO4_ckb.UseVisualStyleBackColor = true;
-            // 
             // GPO0_ckb
             // 
             this.GPO0_ckb.AutoSize = true;
             this.GPO0_ckb.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GPO0_ckb.Location = new System.Drawing.Point(7, 19);
+            this.GPO0_ckb.Location = new System.Drawing.Point(16, 19);
             this.GPO0_ckb.Name = "GPO0_ckb";
             this.GPO0_ckb.Size = new System.Drawing.Size(57, 18);
             this.GPO0_ckb.TabIndex = 10;
             this.GPO0_ckb.Text = "GPO0";
             this.GPO0_ckb.UseVisualStyleBackColor = true;
             // 
-            // GPO3_ckb
-            // 
-            this.GPO3_ckb.AutoSize = true;
-            this.GPO3_ckb.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GPO3_ckb.Location = new System.Drawing.Point(7, 42);
-            this.GPO3_ckb.Name = "GPO3_ckb";
-            this.GPO3_ckb.Size = new System.Drawing.Size(57, 18);
-            this.GPO3_ckb.TabIndex = 10;
-            this.GPO3_ckb.Text = "GPO3";
-            this.GPO3_ckb.UseVisualStyleBackColor = true;
-            // 
             // GPO1_ckb
             // 
             this.GPO1_ckb.AutoSize = true;
             this.GPO1_ckb.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GPO1_ckb.Location = new System.Drawing.Point(93, 19);
+            this.GPO1_ckb.Location = new System.Drawing.Point(101, 19);
             this.GPO1_ckb.Name = "GPO1_ckb";
             this.GPO1_ckb.Size = new System.Drawing.Size(57, 18);
             this.GPO1_ckb.TabIndex = 10;
@@ -295,12 +303,34 @@
             // 
             this.GPO2_ckb.AutoSize = true;
             this.GPO2_ckb.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GPO2_ckb.Location = new System.Drawing.Point(179, 19);
+            this.GPO2_ckb.Location = new System.Drawing.Point(183, 19);
             this.GPO2_ckb.Name = "GPO2_ckb";
             this.GPO2_ckb.Size = new System.Drawing.Size(57, 18);
             this.GPO2_ckb.TabIndex = 10;
             this.GPO2_ckb.Text = "GPO2";
             this.GPO2_ckb.UseVisualStyleBackColor = true;
+            // 
+            // GPO3_ckb
+            // 
+            this.GPO3_ckb.AutoSize = true;
+            this.GPO3_ckb.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GPO3_ckb.Location = new System.Drawing.Point(16, 41);
+            this.GPO3_ckb.Name = "GPO3_ckb";
+            this.GPO3_ckb.Size = new System.Drawing.Size(57, 18);
+            this.GPO3_ckb.TabIndex = 10;
+            this.GPO3_ckb.Text = "GPO3";
+            this.GPO3_ckb.UseVisualStyleBackColor = true;
+            // 
+            // GPO4_ckb
+            // 
+            this.GPO4_ckb.AutoSize = true;
+            this.GPO4_ckb.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GPO4_ckb.Location = new System.Drawing.Point(101, 42);
+            this.GPO4_ckb.Name = "GPO4_ckb";
+            this.GPO4_ckb.Size = new System.Drawing.Size(57, 18);
+            this.GPO4_ckb.TabIndex = 10;
+            this.GPO4_ckb.Text = "GPO4";
+            this.GPO4_ckb.UseVisualStyleBackColor = true;
             // 
             // groupBox2
             // 
@@ -1149,12 +1179,12 @@
             this.groupBox8.Controls.Add(this.set_protocol_btn);
             this.groupBox8.Controls.Add(this.get_protocol_btn);
             this.groupBox8.Controls.Add(this.label24);
-            this.groupBox8.Controls.Add(this.comboBox4);
+            this.groupBox8.Controls.Add(this.tari_cbx);
             this.groupBox8.Controls.Add(this.label23);
-            this.groupBox8.Controls.Add(this.comboBox3);
+            this.groupBox8.Controls.Add(this.coding_cbx);
             this.groupBox8.Controls.Add(this.label22);
             this.groupBox8.Controls.Add(this.label21);
-            this.groupBox8.Controls.Add(this.comboBox2);
+            this.groupBox8.Controls.Add(this.freq_cbx);
             this.groupBox8.Controls.Add(this.label20);
             this.groupBox8.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox8.Location = new System.Drawing.Point(4, 6);
@@ -1173,6 +1203,7 @@
             this.set_protocol_btn.TabIndex = 7;
             this.set_protocol_btn.Text = "Set";
             this.set_protocol_btn.UseVisualStyleBackColor = true;
+            this.set_protocol_btn.Click += new System.EventHandler(this.set_protocol_btn_Click);
             // 
             // get_protocol_btn
             // 
@@ -1183,6 +1214,7 @@
             this.get_protocol_btn.TabIndex = 7;
             this.get_protocol_btn.Text = "Get";
             this.get_protocol_btn.UseVisualStyleBackColor = true;
+            this.get_protocol_btn.Click += new System.EventHandler(this.get_protocol_btn_Click);
             // 
             // label24
             // 
@@ -1194,19 +1226,19 @@
             this.label24.TabIndex = 6;
             this.label24.Text = "us";
             // 
-            // comboBox4
+            // tari_cbx
             // 
-            this.comboBox4.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.comboBox4.FormattingEnabled = true;
-            this.comboBox4.Items.AddRange(new object[] {
-            "6.25",
+            this.tari_cbx.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tari_cbx.FormattingEnabled = true;
+            this.tari_cbx.Items.AddRange(new object[] {
+            "25",
             "12.5",
-            "25"});
-            this.comboBox4.Location = new System.Drawing.Point(174, 67);
-            this.comboBox4.Name = "comboBox4";
-            this.comboBox4.Size = new System.Drawing.Size(73, 23);
-            this.comboBox4.TabIndex = 5;
-            this.comboBox4.Text = "6.25";
+            "6.25"});
+            this.tari_cbx.Location = new System.Drawing.Point(174, 67);
+            this.tari_cbx.Name = "tari_cbx";
+            this.tari_cbx.Size = new System.Drawing.Size(73, 23);
+            this.tari_cbx.TabIndex = 5;
+            this.tari_cbx.Text = "6.25";
             // 
             // label23
             // 
@@ -1218,20 +1250,20 @@
             this.label23.TabIndex = 1;
             this.label23.Text = "Tari:";
             // 
-            // comboBox3
+            // coding_cbx
             // 
-            this.comboBox3.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.comboBox3.FormattingEnabled = true;
-            this.comboBox3.Items.AddRange(new object[] {
+            this.coding_cbx.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.coding_cbx.FormattingEnabled = true;
+            this.coding_cbx.Items.AddRange(new object[] {
             "FM0",
             "M2",
             "M4",
             "M8"});
-            this.comboBox3.Location = new System.Drawing.Point(174, 42);
-            this.comboBox3.Name = "comboBox3";
-            this.comboBox3.Size = new System.Drawing.Size(73, 23);
-            this.comboBox3.TabIndex = 4;
-            this.comboBox3.Text = "FM0";
+            this.coding_cbx.Location = new System.Drawing.Point(174, 42);
+            this.coding_cbx.Name = "coding_cbx";
+            this.coding_cbx.Size = new System.Drawing.Size(73, 23);
+            this.coding_cbx.TabIndex = 4;
+            this.coding_cbx.Text = "FM0";
             // 
             // label22
             // 
@@ -1253,21 +1285,19 @@
             this.label21.TabIndex = 2;
             this.label21.Text = "Khz";
             // 
-            // comboBox2
+            // freq_cbx
             // 
-            this.comboBox2.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Items.AddRange(new object[] {
-            "40",
+            this.freq_cbx.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.freq_cbx.FormattingEnabled = true;
+            this.freq_cbx.Items.AddRange(new object[] {
             "250",
-            "300",
             "320",
             "640"});
-            this.comboBox2.Location = new System.Drawing.Point(174, 17);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(73, 23);
-            this.comboBox2.TabIndex = 1;
-            this.comboBox2.Text = "320";
+            this.freq_cbx.Location = new System.Drawing.Point(174, 17);
+            this.freq_cbx.Name = "freq_cbx";
+            this.freq_cbx.Size = new System.Drawing.Size(73, 23);
+            this.freq_cbx.TabIndex = 1;
+            this.freq_cbx.Text = "250";
             // 
             // label20
             // 
@@ -1526,7 +1556,7 @@
             this.label10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(675, 459);
+            this.label10.Location = new System.Drawing.Point(664, 459);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(94, 15);
             this.label10.TabIndex = 10;
@@ -1537,7 +1567,7 @@
             this.Log_lb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.Log_lb.AutoSize = true;
             this.Log_lb.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Log_lb.Location = new System.Drawing.Point(777, 459);
+            this.Log_lb.Location = new System.Drawing.Point(764, 459);
             this.Log_lb.Name = "Log_lb";
             this.Log_lb.Size = new System.Drawing.Size(28, 15);
             this.Log_lb.TabIndex = 11;
@@ -1546,36 +1576,6 @@
             // ptimer_loghandle
             // 
             this.ptimer_loghandle.Tick += new System.EventHandler(this.ptimer_loghandle_Tick_1);
-            // 
-            // Column1
-            // 
-            this.Column1.HeaderText = "TAG ID";
-            this.Column1.Name = "Column1";
-            this.Column1.Width = 200;
-            // 
-            // Column2
-            // 
-            this.Column2.HeaderText = "Read Antenna";
-            this.Column2.Name = "Column2";
-            this.Column2.Width = 75;
-            // 
-            // Column3
-            // 
-            this.Column3.HeaderText = "RSSI";
-            this.Column3.Name = "Column3";
-            this.Column3.Width = 75;
-            // 
-            // Column4
-            // 
-            this.Column4.HeaderText = "Read Count";
-            this.Column4.Name = "Column4";
-            this.Column4.Width = 80;
-            // 
-            // Column5
-            // 
-            this.Column5.HeaderText = "Date/time";
-            this.Column5.Name = "Column5";
-            this.Column5.Width = 135;
             // 
             // Form1
             // 
@@ -1680,20 +1680,20 @@
         private System.Windows.Forms.TextBox MessageInterval_tx;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.GroupBox groupBox7;
-        private System.Windows.Forms.CheckBox GPO4_ckb;
         private System.Windows.Forms.CheckBox GPO0_ckb;
-        private System.Windows.Forms.CheckBox GPO3_ckb;
         private System.Windows.Forms.CheckBox GPO1_ckb;
         private System.Windows.Forms.CheckBox GPO2_ckb;
+        private System.Windows.Forms.CheckBox GPO3_ckb;
+        private System.Windows.Forms.CheckBox GPO4_ckb;
         private System.Windows.Forms.GroupBox groupBox8;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Label label21;
-        private System.Windows.Forms.ComboBox comboBox2;
+        private System.Windows.Forms.ComboBox freq_cbx;
         private System.Windows.Forms.Label label23;
-        private System.Windows.Forms.ComboBox comboBox3;
+        private System.Windows.Forms.ComboBox coding_cbx;
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.Label label24;
-        private System.Windows.Forms.ComboBox comboBox4;
+        private System.Windows.Forms.ComboBox tari_cbx;
         private System.Windows.Forms.GroupBox groupBox9;
         private System.Windows.Forms.Label label26;
         private System.Windows.Forms.TrackBar trackBar2;
