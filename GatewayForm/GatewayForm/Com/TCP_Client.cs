@@ -47,9 +47,6 @@ namespace GatewayForm
         //private System.Timers.Timer pingTimer = new System.Timers.Timer() { Interval = 10000 };
         private ManualResetEvent waiter = new ManualResetEvent(false);
         // Event Handler
-        public event SocketReceivedHandler MessageReceived;
-        public event SocketReceivedHandler ConfigMessage;
-        public event SocketReceivedHandler Log_Msg;
         private volatile bool start_enable = false;
         public bool alive = true;
         private static int retry_count = 3;
@@ -60,20 +57,6 @@ namespace GatewayForm
         {
             // TODO: Complete member initialization
             //this.form1 = form1;
-        }
-
-        private void Log_Raise(string log_str)
-        {
-            SocketReceivedHandler logmsg = Log_Msg;
-            if (logmsg != null)
-                logmsg(log_str);
-        }
-
-        private void Cmd_Raise(string cmd_str)
-        {
-            SocketReceivedHandler cmd_msg = ConfigMessage;
-            if (cmd_msg != null)
-                cmd_msg(cmd_str);
         }
 
         #region Connect
@@ -114,7 +97,7 @@ namespace GatewayForm
                     {
                         if (alive == false)
                         {
-                            Log_Raise("Re-connect");
+                            CM.Log_Raise("Re-connect");
                             pingTimer.Interval = 5000;
                             alive = true;
                         }
@@ -122,7 +105,7 @@ namespace GatewayForm
                     else
                     {
                         alive = false;
-                        Log_Raise("No Connection");
+                        CM.Log_Raise("No Connection");
                         pingTimer.Interval = 10000;
                     }
                     ((AutoResetEvent)rev.UserState).Set();
@@ -130,20 +113,11 @@ namespace GatewayForm
                 #endregion
 
                 // Connect to a remote device.
-                // Establish the remote endpoint for the socket.
                 IPEndPoint remoteEP;
-                IPAddress ipAddress;
-                //if (ip_server.Contains("local"))
-                //{
-                //IPHostEntry ipHostInfo = Dns.Resolve();
+                IPAddress ipAddress = Dns.GetHostAddresses(ip_server)[0];
                 //IPAddress ipAddress = ipHostInfo.AddressList[0];
-                //remoteEP = new IPEndPoint(ipAddress, port);
-                //}
-                //else
-                //{
-                ipAddress = IPAddress.Parse(ip_server);
+                //ipAddress = IPAddress.Parse(ip_server);
                 remoteEP = new IPEndPoint(ipAddress, port);
-                //}
 
                 // Create a TCP/IP socket.
                 tcp_client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -170,7 +144,7 @@ namespace GatewayForm
                 }
                 else
                 {
-                    throw new SocketException();
+                    MessageBox.Show("Error Socket");
                 }
             }
             catch (IOException e)
@@ -180,7 +154,6 @@ namespace GatewayForm
             catch (SocketException ex)
             {
                 //pingTimer.Stop();
-                //receiveDone.Set();
                 MessageBox.Show(ex.ToString());
                 //this.Free();
             }
@@ -217,7 +190,7 @@ namespace GatewayForm
             }
             catch (ObjectDisposedException)
             {
-                Log_Raise("Abort due to close");
+                CM.Log_Raise("Abort due to close");
             }
         }
 
@@ -244,7 +217,7 @@ namespace GatewayForm
                         waiter.Reset();
                         if (alive == false)
                         {
-                            Log_Raise("No Connection");
+                            CM.Log_Raise("No Connection");
                             //pingTimer.Interval = 5000;
                             return false;
                         }
@@ -297,12 +270,12 @@ namespace GatewayForm
                     {
                         alive = true;
                         if (!this.IsConnected)
-                            Log_Raise("Re-Connect.");
+                            CM.Log_Raise("Re-Connect.");
                         receiveDone.Set();
                     }
                     else
                     {
-                        Log_Raise("Error");
+                        CM.Log_Raise("Error");
                     }
                 }
             }
@@ -341,7 +314,7 @@ namespace GatewayForm
             }
             catch (ObjectDisposedException)
             {
-                Log_Raise("Abort due to close");
+                CM.Log_Raise("Abort due to close");
             }
         }
 
@@ -370,7 +343,7 @@ namespace GatewayForm
             }
             catch (ObjectDisposedException)
             {
-                Log_Raise("Abort due to close");
+                CM.Log_Raise("Abort due to close");
             }
         }
 
@@ -515,7 +488,7 @@ namespace GatewayForm
             if (0x00 == byte_receive[0])
             {
                 connect_ok = true;
-                Log_Raise("Accepted!");
+                CM.Log_Raise("Accepted!");
                 //MessageBox.Show("Accepted!");
             }
             else
@@ -531,7 +504,7 @@ namespace GatewayForm
                 }
                 else
                 {
-                    Log_Raise("Retry Failed. Closed Socket.");
+                    CM.Log_Raise("Retry Failed. Closed Socket.");
                     retry_count = 3;
                     tcp_client.Close();
 
@@ -586,7 +559,7 @@ namespace GatewayForm
             }
             catch (ObjectDisposedException)
             {
-                Log_Raise("Abort due to close");
+                CM.Log_Raise("Abort due to close");
             }
         }
 
@@ -611,154 +584,23 @@ namespace GatewayForm
                     // After received all packet
                     if (result_data_byte != null)
                     {
-                        byte info_ack;
-                        string data_response = null;
-                        byte[] byte_bits = null;
-                        switch (command_type)
+                        if (CM.COMMAND.CONNECTION_REQUEST_CMD == command_type)
+                            Request_Connection_Handler(CM.Decode_Frame((byte)CM.COMMAND.CONNECTION_REQUEST_CMD, result_data_byte));
+                        else if (CM.COMMAND.START_OPERATION_CMD == command_type)
                         {
-                            /* connection request */
-                            case CM.COMMAND.CONNECTION_REQUEST_CMD:
-                                Request_Connection_Handler(CM.Decode_Frame((byte)CM.COMMAND.CONNECTION_REQUEST_CMD, result_data_byte));
-                                break;
-                            /* configuration */
-                            case CM.COMMAND.GET_CONFIGURATION_CMD:
-                                data_response = CM.Get_Data(CM.Decode_Frame((byte)CM.COMMAND.GET_CONFIGURATION_CMD, result_data_byte));
-                                if (data_response.Length > 0)
-                                    Cmd_Raise(data_response);
-                                break;
-                            case CM.COMMAND.SET_CONFIGURATION_CMD:
-                                info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_CONFIGURATION_CMD, result_data_byte);
-                                if (0x00 == info_ack)
-                                    Log_Raise("Set GW Config done");
-                                else
-                                    Log_Raise("Failed set Config");
-                                break;
-                            /* RFID configuration */
-                            case CM.COMMAND.GET_RFID_CONFIGURATION_CMD:
-                                data_response = CM.Get_Data(CM.Decode_Frame((byte)CM.COMMAND.GET_RFID_CONFIGURATION_CMD, result_data_byte));
-                                if (data_response.Length > 0)
-                                    Cmd_Raise(data_response);
-                                MessageBox.Show(data_response);
-                                break;
-                            case CM.COMMAND.SET_RFID_CONFIGURATION_CMD:
-                                info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_RFID_CONFIGURATION_CMD, result_data_byte);
-                                if (0x00 == info_ack)
-                                    Log_Raise("Set RFID done");
-                                else
-                                    Log_Raise("Failed set RFID");
-                                break;
-                            /* Port Properties */
-                            case CM.COMMAND.GET_PORT_PROPERTIES_CMD:
-                                data_response = CM.Get_Data(CM.Decode_Frame((byte)CM.COMMAND.GET_PORT_PROPERTIES_CMD, result_data_byte));
-                                if (data_response.Length > 0)
-                                    Cmd_Raise(data_response);
-                                MessageBox.Show(data_response);
-                                break;
-                            case CM.COMMAND.SET_PORT_PROPERTIES_CMD:
-                                info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_PORT_PROPERTIES_CMD, result_data_byte);
-                                if (0x00 == info_ack)
-                                    Log_Raise("Set connection done");
-                                else
-                                    Log_Raise("Failed set connection");
-                                break;
-                            case CM.COMMAND.DIS_CONNECT_CMD:
-                                info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.DIS_CONNECT_CMD, result_data_byte);
-                                if (0x00 != info_ack)
-                                    MessageBox.Show("Failed disconnect");
-                                break;
                             /* start operate */
-                            case CM.COMMAND.START_OPERATION_CMD:
-                                info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.START_OPERATION_CMD, result_data_byte);
-                                if (0x00 == info_ack)
-                                {
-                                    start_enable = true;
-                                    //pingTimer.Stop();
-                                    Log_Raise("Inventory Mode");
-                                    Receive_Data_Handler();
-                                }
-                                else
-                                    MessageBox.Show("Failed start operation");
-                                break;
-                            //Power RFID
-                            case CM.COMMAND.GET_POWER_CMD:
-                                byte_bits = CM.Decode_Frame((byte)CM.COMMAND.GET_POWER_CMD, result_data_byte);
-                                if (byte_bits != null)
-                                {
-                                    if (0x00 == byte_bits[0])
-                                        Cmd_Raise("Power RFID\n" + byte_bits[1].ToString() + "\n");
-                                    else
-                                        Log_Msg("Fail get power");
-                                }
-                                break;
-                            case CM.COMMAND.SET_POWER_CMD:
-                                info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_POWER_CMD, result_data_byte);
-                                if (0x00 == info_ack)
-                                    Log_Raise("Set Power done");
-                                else
-                                    Log_Raise("Failed Set Power");
-                                break;
-                            //Region Configuration
-                            case CM.COMMAND.GET_REGION_CMD:
-                                byte_bits = CM.Decode_Frame((byte)CM.COMMAND.GET_REGION_CMD, result_data_byte);
-                                if (byte_bits != null)
-                                {
-                                    if (0x00 == byte_bits[0])
-                                        Cmd_Raise("Region RFID\n" + byte_bits[1].ToString() + "\n");
-                                    else
-                                        Log_Msg("Fail get region");
-                                }
-                                break;
-                            case CM.COMMAND.SET_REGION_CMD:
-                                info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_REGION_CMD, result_data_byte);
-                                if (0x00 == info_ack)
-                                    Log_Raise("Set Region done");
-                                else
-                                    Log_Raise("Failed set region");
-                                break;
-                            //Power Mode Configuration
-                            case CM.COMMAND.GET_POWER_MODE_CMD:
-                                byte_bits = CM.Decode_Frame((byte)CM.COMMAND.GET_POWER_MODE_CMD, result_data_byte);
-                                if (byte_bits != null)
-                                {
-                                    if (0x00 == byte_bits[0])
-                                        Cmd_Raise("Power Mode RFID\n" + byte_bits[1].ToString() + "\n");
-                                    else
-                                        Log_Msg("Fail get power mode");
-                                }
-                                break;
-                            case CM.COMMAND.SET_POWER_MODE_CMD:
-                                info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_POWER_MODE_CMD, result_data_byte);
-                                if (0x00 == info_ack)
-                                    Log_Raise("Set Power Mode done");
-                                else
-                                    Log_Raise("Failed set power mode");
-                                break;
-                            // Change Connection Type
-                            case CM.COMMAND.SET_CONN_TYPE_CMD:
-                                data_response = CM.Get_Data(CM.Decode_Frame((byte)CM.COMMAND.SET_CONN_TYPE_CMD, result_data_byte));
-                                if (data_response.Length > 0)
-                                    Cmd_Raise(data_response);
-                                break;
-                            case CM.COMMAND.GET_BLF_CMD:
-                                byte_bits = CM.Decode_Frame((byte)CM.COMMAND.GET_BLF_CMD, result_data_byte);
-                                if (byte_bits != null)
-                                {
-                                    if (0x00 == byte_bits[0])
-                                        Cmd_Raise("BLF Setting\n" + byte_bits[1].ToString() + "\n");
-                                    else
-                                        Log_Msg("Fail get power");
-                                }
-                                break;
-                            case CM.COMMAND.SET_BLF_CMD:
-                                info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_BLF_CMD, result_data_byte);
-                                if (0x00 == info_ack)
-                                    Log_Raise("Set BLF done");
-                                else
-                                    Log_Raise("Failed BLF");
-                                break;
-                            default:
-                                break;
+                            byte info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.START_OPERATION_CMD, result_data_byte);
+                            if (0x00 == info_ack)
+                            {
+                                start_enable = true;
+                                //pingTimer.Stop();
+                                CM.Log_Raise("Inventory Mode");
+                                Receive_Data_Handler();
+                            }
+                            else
+                                MessageBox.Show("Failed start operation");
                         }
+                        else CM.Data_Receive_Handler(result_data_byte);
 
                         result_data_byte = new byte[0];
                     }
@@ -799,27 +641,13 @@ namespace GatewayForm
                     {
                         if (result_data_byte != null)
                         {
+                            CM.Data_Receive_Handler(result_data_byte);
+                            result_data_byte = new byte[0];
                             if (!start_enable)
                             {
-                                byte stop_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.STOP_OPERATION_CMD, result_data_byte);
-                                if (0x00 == stop_ack)
-                                {
-                                    Log_Raise("Stop operate");
-                                    //pingTimer.Start();
-                                }
-                                else
-                                    MessageBox.Show("Failed stop operate");
-                                result_data_byte = new byte[0];
                             }
                             else
                             {
-                                /* TAG ID */
-                                var messageReceived = MessageReceived;
-                                byte[] byte_user = CM.Decode_Frame((byte)CM.COMMAND.REQUEST_TAG_ID_CMD, result_data_byte);
-
-                                if (messageReceived != null)
-                                    messageReceived(Encoding.ASCII.GetString(byte_user, 0, byte_user.Length));
-                                result_data_byte = new byte[0];
                                 Receive_Data_Handler();
                             }
                         }
@@ -832,7 +660,7 @@ namespace GatewayForm
             }
             catch (ObjectDisposedException)
             {
-                Log_Raise("Abort connection");
+                CM.Log_Raise("Abort connection");
             }
         }
 
@@ -868,7 +696,7 @@ namespace GatewayForm
             tcp_client.Close();
             connect_ok = false;
             //pingTimer.Stop();
-            Log_Raise("Disconnected");
+            CM.Log_Raise("Disconnected");
         }
 
         ~TCP_Client()

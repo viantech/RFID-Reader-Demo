@@ -22,24 +22,9 @@ namespace GatewayForm
         public Boolean flag_received = false;
         public Boolean flag_arriveddata = false;
         private byte[] result_data_byte = new byte[0];
-        public event SocketReceivedHandler MessageReceived;
-        public event SocketReceivedHandler ConfigMessage;
-        public event SocketReceivedHandler Log_Msg;
         static int retry_count = 3;
         int stepCmd_RFID = 1;
 
-        private void Cmd_Raise(string cmd_str)
-        {
-            SocketReceivedHandler cmd_msg = ConfigMessage;
-            if (cmd_msg != null)
-                cmd_msg(cmd_str);
-        }
-        private void Log_Raise(string log_str)
-        {
-            SocketReceivedHandler logmsg = Log_Msg;
-            if (logmsg != null)
-                logmsg(log_str);
-        }
         public TcpipConnection()
         {
             //_ipserver = ip;
@@ -129,7 +114,28 @@ namespace GatewayForm
                 if (flag_correctdata)
                 {
                     if (result_data_byte != null)
-                        Data_Handler((CM.COMMAND)result_data_byte[0]);
+                    {
+                        if (CM.COMMAND.CONNECTION_REQUEST_CMD == (CM.COMMAND)result_data_byte[0])
+                        Request_Connection_Handler(CM.Decode_Frame((byte)CM.COMMAND.CONNECTION_REQUEST_CMD, result_data_byte));
+                        else if (CM.COMMAND.START_OPERATION_CMD == (CM.COMMAND)result_data_byte[0])
+                        {
+                            /* start operate */
+                            byte info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.START_OPERATION_CMD, result_data_byte);
+                            if (0x00 == info_ack)
+                            {
+                                //start_enable = true;
+                                //pingTimer.Stop();
+                                CM.Log_Raise("Inventory Mode");
+                                //Data_Receive_Handler();
+                            }
+                            else
+                                MessageBox.Show("Failed start operation");
+                        }
+                        else
+                            CM.Data_Receive_Handler(result_data_byte);
+                        result_data_byte = new byte[0];
+                        flag_arriveddata = false;
+                    }
                 }
 
             }
@@ -204,7 +210,7 @@ namespace GatewayForm
         {
             if (0x00 == byte_receive[0])
             {
-                Log_Raise("Accepted!");
+                CM.Log_Raise("Accepted!");
                 Get_Command_Send(CM.COMMAND.GET_CONFIGURATION_CMD);
             }
             else
@@ -219,7 +225,7 @@ namespace GatewayForm
                 }
                 else
                 {
-                    Log_Raise("Retry Failed. Closed Socket.");
+                    CM.Log_Raise("Retry Failed. Closed Socket.");
                     retry_count = 3;
                     close();
 
@@ -228,18 +234,18 @@ namespace GatewayForm
                 }
             }
         }
-        private void Data_Handler(CM.COMMAND command_option)
+        /*private void Data_Handler(CM.COMMAND command_option)
         {
             byte info_ack = new byte();
             string data_response = null;
             byte[] byte_bits = null;
             switch (command_option)
             {
-                /* connection request */
+                // connection request 
                 case CM.COMMAND.CONNECTION_REQUEST_CMD:
                     Request_Connection_Handler(CM.Decode_Frame((byte)command_option, result_data_byte));
                     break;
-                /* configuration */
+                // configuration 
                 case CM.COMMAND.GET_CONFIGURATION_CMD:
                     data_response = CM.Get_Data(CM.Decode_Frame((byte)command_option, result_data_byte));
                     if (data_response.Length > 0)
@@ -253,7 +259,7 @@ namespace GatewayForm
                         Log_Raise("Failed set Config");
 
                     break;
-                /* RFID configuration */
+                // RFID configuration 
                 case CM.COMMAND.GET_RFID_CONFIGURATION_CMD:
                     data_response = CM.Get_Data(CM.Decode_Frame((byte)command_option, result_data_byte));
                     if (data_response.Length > 0)
@@ -267,7 +273,7 @@ namespace GatewayForm
                     else
                         Log_Raise("Failed set RFID");
                     break;
-                /* Port Properties */
+                // Port Properties
                 case CM.COMMAND.GET_PORT_PROPERTIES_CMD:
                     data_response = CM.Get_Data(CM.Decode_Frame((byte)command_option, result_data_byte));
                     if (data_response.Length > 0)
@@ -292,7 +298,7 @@ namespace GatewayForm
                         close();
                     }
                     break;
-                /* start operate */
+                // start operate 
                 case CM.COMMAND.START_OPERATION_CMD:
                     info_ack = CM.Decode_Frame_ACK((byte)command_option, result_data_byte);
                     if (0x00 == info_ack)
@@ -304,9 +310,8 @@ namespace GatewayForm
                     else
                         MessageBox.Show("Failed start operation");
                     break;
-                /* TAG ID */
+                // TAG ID
                 case CM.COMMAND.REQUEST_TAG_ID_CMD:
-
                     var messageReceived = MessageReceived;
                     byte[] byte_user = CM.Decode_Frame((byte)CM.COMMAND.REQUEST_TAG_ID_CMD, result_data_byte);
                     if (byte_user != null)
@@ -315,7 +320,7 @@ namespace GatewayForm
                             messageReceived(Encoding.ASCII.GetString(byte_user, 0, byte_user.Length));
                     }
                     break;
-                /* stop operate */
+                // stop operate 
                 case CM.COMMAND.STOP_OPERATION_CMD:
                     info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.STOP_OPERATION_CMD, result_data_byte);
                     if (0x00 == info_ack)
@@ -408,7 +413,7 @@ namespace GatewayForm
             //Array.Clear(result_data_byte,0, result_data_byte.Length);
             result_data_byte = new byte[0];
             flag_arriveddata = false;
-        }
+        }*/
         public void SendPacket(byte[] packet)
         {
             if (psocketClient != null)

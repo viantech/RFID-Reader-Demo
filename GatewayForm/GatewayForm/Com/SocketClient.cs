@@ -14,7 +14,7 @@ using CM = GatewayForm.Common;
 
 namespace GatewayForm
 {
-    public delegate void SocketReceivedHandler(string msg);
+    
 
     public class ZigbeeClient
     {
@@ -26,9 +26,9 @@ namespace GatewayForm
 
     public class SocketClient
     {
-        private static byte[] zigbee_header_byte = Encoding.ASCII.GetBytes("AT+UCAST:000D6F00059B7D98=");
-        private static byte[] zigbee_binary = Encoding.ASCII.GetBytes("AT+UCASTB:");
-        private static byte[] addr_node = Encoding.ASCII.GetBytes("000D6F000C68DF02");
+        private static byte[] zigbee_header_byte = Encoding.ASCII.GetBytes(Properties.Resources.ZIGBEE_HEADER);
+        private static byte[] zigbee_binary = Encoding.ASCII.GetBytes(Properties.Resources.ZIGBEE_BINARY);
+        private static byte[] addr_node = Encoding.ASCII.GetBytes(Properties.Resources.ADDRESS_NODE);
         /*private static byte[] seq_header = Encoding.ASCII.GetBytes("SEQ");
         private static byte[] ack_header = Encoding.ASCII.GetBytes("ACK");
         private static byte[] nack_header = Encoding.ASCII.GetBytes("NACK");
@@ -36,16 +36,12 @@ namespace GatewayForm
         private static byte[] ucast_header = Encoding.ASCII.GetBytes("UCAST");
         private byte[] result_byte_frame = new byte[0];
         private byte[] raw_read_byte = new byte[0];
-        private string respose;
+        //private string respose;
         private static int retry_count = 3;
         private volatile bool start_enable = false;
         private TcpClient client;
         private NetworkStream stream;
         //private Socket client_socket;
-
-        public event SocketReceivedHandler TagID_Received;
-        public event SocketReceivedHandler Get_Configuration;
-        public event SocketReceivedHandler Log_Msg;
 
         private ManualResetEvent connectDone = new ManualResetEvent(false);
         private ManualResetEvent sendDone = new ManualResetEvent(false);
@@ -277,7 +273,7 @@ namespace GatewayForm
             }
             catch (ObjectDisposedException)
             {
-                Log_Raise("Abort due to close");
+                CM.Log_Raise("Abort due to close");
             }
         }
 
@@ -296,7 +292,7 @@ namespace GatewayForm
             {
                 // Complete sending the data to the remote device.
                 stream.EndWrite(ar);
-                //Log_Raise(String.Format("Sent {0} bytes to server.", bytesSent));
+                //CM.Log_Raise(String.Format("Sent {0} bytes to server.", bytesSent));
 
                 // Signal that all bytes have been sent.
                 sendDone.Set();
@@ -320,7 +316,7 @@ namespace GatewayForm
 
             if (0x00 == byte_receive[0])
             {
-                Log_Raise("Accepted!");
+                CM.Log_Raise("Accepted!");
             }
             else
             {
@@ -335,7 +331,7 @@ namespace GatewayForm
                 }
                 else
                 {
-                    Log_Raise("Retry Failed. Closed Socket.");
+                    CM.Log_Raise("Retry Failed. Closed Socket.");
                     retry_count = 3;
                     stream.Close();
                     client.Close();
@@ -437,8 +433,28 @@ namespace GatewayForm
                     Array.Resize(ref result_byte_frame, result_byte_frame.Length + meta_sub.Length);
                     Buffer.BlockCopy(meta_sub, 0, result_byte_frame, result_byte_frame.Length - meta_sub.Length, meta_sub.Length);
                 }
-                Data_Handler(type_command);
-                result_byte_frame = new byte[0];
+                if (result_byte_frame.Length > 0)
+                {
+                    if (CM.COMMAND.CONNECTION_REQUEST_CMD == type_command)
+                        Request_Connection_Handler(CM.Decode_Frame((byte)CM.COMMAND.CONNECTION_REQUEST_CMD, result_byte_frame));
+                    else if (CM.COMMAND.START_OPERATION_CMD == type_command)
+                    {
+                        /* start operate */
+                        byte info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.START_OPERATION_CMD, result_byte_frame);
+                        if (0x00 == info_ack)
+                        {
+                            start_enable = true;
+                            //pingTimer.Stop();
+                            CM.Log_Raise("Inventory Mode");
+                            Receive_TagID_Handler();
+                        }
+                        else
+                            MessageBox.Show("Failed start operation");
+                    }
+                    else CM.Data_Receive_Handler(result_byte_frame);
+
+                    result_byte_frame = new byte[0];
+                }
                 raw_read_byte = new byte[0];
             }
         }
@@ -481,107 +497,13 @@ namespace GatewayForm
             }
             catch (ObjectDisposedException)
             {
-                Log_Raise("Abort due to close");
+                CM.Log_Raise("Abort due to close");
             }
         }
 
         #endregion
 
-        /// <summary>
-        /// After received all packets. Decode the byte array into metal data.
-        /// </summary>
-        /// <param name="command_type"></param>
-        private void Data_Handler(CM.COMMAND command_type)
-        {
-            byte info_ack;
-            string data_response = null;
-            SocketReceivedHandler command_rev;
-            //______________________________________________//
-            switch (command_type)
-            {
-                /* connection request */
-                case CM.COMMAND.CONNECTION_REQUEST_CMD:
-                    Request_Connection_Handler(CM.Decode_Frame((byte)CM.COMMAND.CONNECTION_REQUEST_CMD, result_byte_frame));
-                    break;
-                /* configuration */
-                case CM.COMMAND.GET_CONFIGURATION_CMD:
-                    data_response = CM.Get_Data(CM.Decode_Frame((byte)CM.COMMAND.GET_CONFIGURATION_CMD, result_byte_frame));
-                    command_rev = Get_Configuration;
-                    if (command_rev != null)
-                        command_rev(data_response);
-                    break;
-                case CM.COMMAND.SET_CONFIGURATION_CMD:
-                    info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_CONFIGURATION_CMD, result_byte_frame);
-                    if (0x00 == info_ack)
-                        Log_Raise("Set Config success");
-                    else
-                        Log_Raise("Failed set Config");
-                    break;
-                /* RFID configuration */
-                case CM.COMMAND.GET_RFID_CONFIGURATION_CMD:
-                    data_response = CM.Get_Data(CM.Decode_Frame((byte)CM.COMMAND.GET_RFID_CONFIGURATION_CMD, result_byte_frame));
-                    command_rev = Get_Configuration;
-                    if (command_rev != null)
-                        command_rev(data_response);
-                    MessageBox.Show(data_response);
-                    break;
-                case CM.COMMAND.SET_RFID_CONFIGURATION_CMD:
-                    info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_RFID_CONFIGURATION_CMD, result_byte_frame);
-                    if (0x00 == info_ack)
-                        Log_Raise("Set RFID successfull");
-                    else
-                        Log_Raise("Failed set RFID");
-                    break;
-                /* Port Properties */
-                case CM.COMMAND.GET_PORT_PROPERTIES_CMD:
-                    data_response = CM.Get_Data(CM.Decode_Frame((byte)CM.COMMAND.GET_PORT_PROPERTIES_CMD, result_byte_frame));
-                    command_rev = Get_Configuration;
-                    if (command_rev != null)
-                        command_rev(data_response);
-                    MessageBox.Show(data_response);
-                    break;
-                case CM.COMMAND.SET_PORT_PROPERTIES_CMD:
-                    info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_PORT_PROPERTIES_CMD, result_byte_frame);
-                    if (0x00 == info_ack)
-                        Log_Raise("Set connection successfull");
-                    else
-                        Log_Raise("Failed set connection");
-                    break;
-                /* start operate */
-                case CM.COMMAND.START_OPERATION_CMD:
-                    info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.START_OPERATION_CMD, result_byte_frame);
-                    if (0x00 == info_ack)
-                    {
-                        start_enable = true;
-                        Log_Raise("Starting read Tag ID");
-                        Receive_TagID_Handler();
-                        //ReadAsync(CM.COMMAND.REQUEST_TAG_ID_CMD);
-                    }
-                    else
-                        MessageBox.Show("Failed start operation!");
-                    break;
-                /* stop operate */
-                case CM.COMMAND.STOP_OPERATION_CMD:
-                    info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.STOP_OPERATION_CMD, result_byte_frame);
-                    if (0x00 == info_ack)
-                    {
-                        Log_Raise("Stop operate");
-                    }
-                    else
-                        MessageBox.Show("Failed stop operation!");
-                    break;
-                /*disconnect*/
-                case CM.COMMAND.DIS_CONNECT_CMD:
-                    info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.DIS_CONNECT_CMD, result_byte_frame);
-                    if (0x00 == info_ack)
-                        Log_Raise("Idle");
-                    else
-                        MessageBox.Show("Cannot disconnect!");
-                    break;
-                default:
-                    break;
-            }
-        }
+       
 
         private void Receive_TagID_Handler()
         {
@@ -638,21 +560,15 @@ namespace GatewayForm
                                     Buffer.BlockCopy(meta_sub, 0, result_byte_frame, result_byte_frame.Length - meta_sub.Length, meta_sub.Length);
                                 }
                                 /* TAG ID */
+                                CM.Data_Receive_Handler(result_byte_frame);
+                                result_byte_frame = new byte[0];
+                                raw_read_byte = new byte[0];
                                 if (!start_enable)
                                 {
-                                    Data_Handler(CM.COMMAND.STOP_OPERATION_CMD);
-                                    result_byte_frame = new byte[0];
-                                    raw_read_byte = new byte[0];
+                                    
                                 }
                                 else
                                 {
-                                    var messageReceived = TagID_Received;
-                                    byte[] byte_user = CM.Decode_Frame((byte)CM.COMMAND.REQUEST_TAG_ID_CMD, result_byte_frame);
-                                    respose = Encoding.ASCII.GetString(byte_user, 0, byte_user.Length);
-                                    if (!String.IsNullOrEmpty(respose))
-                                        messageReceived(respose);
-                                    raw_read_byte = new byte[0];
-                                    result_byte_frame = new byte[0];
                                     Receive_TagID_Handler();
                                 }
                             }
@@ -670,15 +586,8 @@ namespace GatewayForm
             }
             catch (ObjectDisposedException)
             {
-                Log_Raise("Abort connection");
+                CM.Log_Raise("Abort connection");
             }
-        }
-
-        private void Log_Raise(string log_str)
-        {
-            var logmsg = Log_Msg;
-            if (logmsg != null)
-                logmsg(log_str);
         }
 
         #endregion

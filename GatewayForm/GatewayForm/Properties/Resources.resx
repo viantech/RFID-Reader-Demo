@@ -139,4 +139,13 @@
   <data name="SELDAT_EXCEL_TITLE" xml:space="preserve">
     <value>GATEWAY DATA</value>
   </data>
+  <data name="ADDRESS_NODE" xml:space="preserve">
+    <value>000D6F000C68DF02</value>
+  </data>
+  <data name="ZIGBEE_BINARY" xml:space="preserve">
+    <value>AT+UCASTB:</value>
+  </data>
+  <data name="ZIGBEE_HEADER" xml:space="preserve">
+    <value>AT+UCAST:000D6F00059B7D98=</value>
+  </data>
 </root>

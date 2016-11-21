@@ -153,6 +153,7 @@
             this.label10 = new System.Windows.Forms.Label();
             this.Log_lb = new System.Windows.Forms.Label();
             this.ptimer_loghandle = new System.Windows.Forms.Timer(this.components);
+            this.set_port_btn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -506,11 +507,12 @@
             // 
             this.groupBox10.Controls.Add(this.label7);
             this.groupBox10.Controls.Add(this.Change_conntype_cbx);
+            this.groupBox10.Controls.Add(this.set_port_btn);
             this.groupBox10.Controls.Add(this.set_newconn_btn);
             this.groupBox10.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox10.Location = new System.Drawing.Point(25, 254);
             this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(368, 65);
+            this.groupBox10.Size = new System.Drawing.Size(451, 65);
             this.groupBox10.TabIndex = 30;
             this.groupBox10.TabStop = false;
             this.groupBox10.Text = "[Change protocol]";
@@ -545,12 +547,13 @@
             // 
             // set_newconn_btn
             // 
+            this.set_newconn_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.set_newconn_btn.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.set_newconn_btn.Location = new System.Drawing.Point(284, 25);
+            this.set_newconn_btn.Location = new System.Drawing.Point(370, 24);
             this.set_newconn_btn.Name = "set_newconn_btn";
             this.set_newconn_btn.Size = new System.Drawing.Size(75, 23);
             this.set_newconn_btn.TabIndex = 28;
-            this.set_newconn_btn.Text = "Set";
+            this.set_newconn_btn.Text = "Change";
             this.set_newconn_btn.UseVisualStyleBackColor = true;
             this.set_newconn_btn.Click += new System.EventHandler(this.set_newconn_btn_Click);
             // 
@@ -1454,7 +1457,7 @@
             this.ViewConn_btn.Name = "ViewConn_btn";
             this.ViewConn_btn.Size = new System.Drawing.Size(101, 23);
             this.ViewConn_btn.TabIndex = 3;
-            this.ViewConn_btn.Text = "View setting";
+            this.ViewConn_btn.Text = "Setting";
             this.ViewConn_btn.UseVisualStyleBackColor = true;
             this.ViewConn_btn.Click += new System.EventHandler(this.ViewConn_btn_Click);
             // 
@@ -1576,6 +1579,18 @@
             // ptimer_loghandle
             // 
             this.ptimer_loghandle.Tick += new System.EventHandler(this.ptimer_loghandle_Tick_1);
+            // 
+            // set_port_btn
+            // 
+            this.set_port_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.set_port_btn.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.set_port_btn.Location = new System.Drawing.Point(273, 24);
+            this.set_port_btn.Name = "set_port_btn";
+            this.set_port_btn.Size = new System.Drawing.Size(75, 23);
+            this.set_port_btn.TabIndex = 28;
+            this.set_port_btn.Text = "Set";
+            this.set_port_btn.UseVisualStyleBackColor = true;
+            this.set_port_btn.Click += new System.EventHandler(this.set_port_btn_Click);
             // 
             // Form1
             // 
@@ -1753,6 +1768,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
+        private System.Windows.Forms.Button set_port_btn;
     }
 }
 

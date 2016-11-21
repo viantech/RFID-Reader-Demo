@@ -12,11 +12,13 @@ namespace GatewayForm
 {
     public partial class Tcp_pop : Form
     {
-        public string address;
+        public string address = String.Empty;
         public string port;
         public bool automatic = true;
-        public int Length;
-        public int Timeout;
+        public string Length;
+        public string Timeout;
+        public string netmask;
+        public string gateway;
 
         public Tcp_pop()
         {
@@ -38,8 +40,10 @@ namespace GatewayForm
             address = this.TcpIP_tx.Text;
             port = this.TcpPort_tx.Text;
             automatic = this.dhcp_btn.Checked;
-            Length = int.Parse(this.Tcp_len_tx.Text);
-            Timeout = int.Parse(this.TcpTimeout_tx.Text);
+            Length = this.Tcp_len_tx.Text;
+            Timeout = this.TcpTimeout_tx.Text;
+            netmask = this.Subnet_tx.Text;
+            gateway = this.gateway_tx.Text;
             this.Close();
         }
 

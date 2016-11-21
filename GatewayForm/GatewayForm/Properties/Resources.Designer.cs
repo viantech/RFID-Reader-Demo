@@ -61,6 +61,15 @@ namespace GatewayForm.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 000D6F000C68DF02.
+        /// </summary>
+        internal static string ADDRESS_NODE {
+            get {
+                return ResourceManager.GetString("ADDRESS_NODE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to datastore.sqlite.
         /// </summary>
         internal static string DATABASE_NAME {
@@ -121,6 +130,24 @@ namespace GatewayForm.Properties {
         internal static string SELDAT_EXCEL_TITLE {
             get {
                 return ResourceManager.GetString("SELDAT_EXCEL_TITLE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AT+UCASTB:.
+        /// </summary>
+        internal static string ZIGBEE_BINARY {
+            get {
+                return ResourceManager.GetString("ZIGBEE_BINARY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AT+UCAST:000D6F00059B7D98=.
+        /// </summary>
+        internal static string ZIGBEE_HEADER {
+            get {
+                return ResourceManager.GetString("ZIGBEE_HEADER", resourceCulture);
             }
         }
     }

@@ -12,8 +12,12 @@ namespace GatewayForm
 {
     public partial class Wifi_pop : Form
     {
+        public string ssid_name = string.Empty;
+        public string passwd;
         public string address;
         public string port;
+        public string netmask;
+        public string gateway;
         public bool automatic = true;
         public int Length;
         public int Timeout;
@@ -34,9 +38,13 @@ namespace GatewayForm
 
         private void update_btn_Click(object sender, EventArgs e)
         {
+            ssid_name = this.ssid_name_tx.Text;
+            passwd = this.password_tx.Text;
             address = this.address_tx.Text;
             port = this.port_tx.Text;
             automatic = this.dhcp_btn.Checked;
+            netmask = this.Subnet_tx.Text;
+            gateway = this.gateway_tx.Text;
             Length = int.Parse(this.Tcp_len_tx.Text);
             Timeout = int.Parse(this.TcpTimeout_tx.Text);
             this.Close();

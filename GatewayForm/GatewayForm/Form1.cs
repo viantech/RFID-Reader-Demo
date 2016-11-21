@@ -137,6 +137,7 @@ namespace GatewayForm
                             //startcmdprocess(CM.COMMAND.DIS_CONNECT_CMD);
                             com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
                             com_type.Close();
+                            com_type = null;
                             com_type.Config_Msg -= GetConfig_Handler;
                             com_type.Log_Msg -= Log_Handler;
                             Disconnect_Behavior();
@@ -159,6 +160,7 @@ namespace GatewayForm
                                 Log_lb.Text = "Idle";
                                 com_type.Config_Msg -= GetConfig_Handler;
                                 com_type.Log_Msg -= Log_Handler;
+                                com_type = null;
                             }
                         }
                         else
@@ -167,6 +169,7 @@ namespace GatewayForm
                             com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
                             com_type.Receive_Command_Handler(CM.COMMAND.DIS_CONNECT_CMD);
                             com_type.Close();
+                            com_type = null;
                             com_type.Config_Msg -= GetConfig_Handler;
                             com_type.Log_Msg -= Log_Handler;
                             Disconnect_Behavior();
@@ -192,6 +195,7 @@ namespace GatewayForm
                                 Log_lb.Text = "Idle";
                                 com_type.Config_Msg -= GetConfig_Handler;
                                 com_type.Log_Msg -= Log_Handler;
+                                com_type = null;
                             }
                         }
                         else
@@ -200,6 +204,7 @@ namespace GatewayForm
                             com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
                             com_type.Receive_Command_Handler(CM.COMMAND.DIS_CONNECT_CMD);
                             com_type.Close();
+                            com_type = null;
                             com_type.Config_Msg -= GetConfig_Handler;
                             com_type.Log_Msg -= Log_Handler;
                             Disconnect_Behavior();
@@ -222,6 +227,8 @@ namespace GatewayForm
             status_btn.BackColor = Color.Blue;
             status_lb.Text = "Active";
             status_lb.ForeColor = Color.DarkBlue;
+            ViewConn_btn.Text = "View Port";
+            ViewConn_btn.FlatStyle = FlatStyle.Flat;
         }
         private void Disconnect_Behavior()
         {
@@ -230,6 +237,8 @@ namespace GatewayForm
             status_lb.Text = "Inactive";
             status_lb.ForeColor = SystemColors.ControlDark;
             ConnType_cbx.Enabled = true;
+            ViewConn_btn.Text = "Setting";
+            ViewConn_btn.FlatStyle = FlatStyle.Standard;
         }
         private void GetConfig_Handler(string config_msg)
         {
@@ -320,6 +329,7 @@ namespace GatewayForm
                 com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
                 com_type.Receive_Command_Handler(CM.COMMAND.DIS_CONNECT_CMD);
                 com_type.Close();
+                com_type = null;
                 com_type.Config_Msg -= GetConfig_Handler;
                 com_type.Log_Msg -= Log_Handler;
                 Disconnect_Behavior();
@@ -1018,6 +1028,73 @@ namespace GatewayForm
             freq_bytes[1] = (byte)(tari_cbx.SelectedIndex);
             com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_BLF_CMD, freq_bytes);
             com_type.Receive_Command_Handler(CM.COMMAND.SET_BLF_CMD);
+        }
+
+        private void set_port_btn_Click(object sender, EventArgs e)
+        {
+            switch (Change_conntype_cbx.SelectedIndex)
+            {
+                case 0:
+                    zigbee_form.ShowDialog();
+                    break;
+                case 1:
+                    wifi_form.ShowDialog();
+                    if (!String.IsNullOrEmpty(wifi_form.ssid_name))
+                    {
+                        String wifi_config = String.Empty;
+                        if (wifi_form.automatic)
+                            wifi_config = "gateway_wifi_configure = {\nssid = " + wifi_form.ssid_name
+                                          + "\npsk = " + wifi_form.passwd
+                                          + "\ninet = dhcp\n}";
+                        else
+                            wifi_config = "gateway_wifi_configure = {\nssid = " + wifi_form.ssid_name
+                                          + "\npsk = " + wifi_form.passwd
+                                          + "\ninet = static"
+                                          + "\naddress= " + wifi_form.address
+                                          + "\nnetmask= " + wifi_form.netmask
+                                          + "\ngateway= " + wifi_form.gateway
+                                          + "\n}";
+                        com_type.Set_Command_Send(CM.COMMAND.SET_PORT_PROPERTIES_CMD, wifi_config);
+                        com_type.Receive_Command_Handler(CM.COMMAND.SET_PORT_PROPERTIES_CMD);
+                    }
+                    else
+                        MessageBox.Show("Wifi Config was not confirm");
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    tcp_form.ShowDialog();
+                    if (!String.IsNullOrEmpty(tcp_form.address))
+                    {
+                        String tcp_config = String.Empty;
+                        if (wifi_form.automatic)
+                            tcp_config = "gateway_tcp_configure = {\nipaddress = " + tcp_form.address
+                                          + "\nhostname = " + Gateway_ID_tx.Text
+                                          + "\nport = " + tcp_form.port
+                                          + "\ntimeout= " + tcp_form.Timeout
+                                          + "\nmax_packet_length= " + tcp_form.Length
+                                          + "\n}";
+                        else
+                            tcp_config = "gateway_tcp_configure = {\nipaddress = " + tcp_form.address
+                                          + "\nhostname = " + Gateway_ID_tx.Text
+                                          + "\nport = " + tcp_form.port
+                                          + "\ntimeout= " + tcp_form.Timeout
+                                          + "\nmax_packet_length= " + tcp_form.Length
+                                          + "\nnetmask= " + tcp_form.netmask
+                                          + "\ngateway= " + tcp_form.gateway
+                                          + "\n}";
+                        com_type.Set_Command_Send(CM.COMMAND.SET_PORT_PROPERTIES_CMD, tcp_config);
+                        com_type.Receive_Command_Handler(CM.COMMAND.SET_PORT_PROPERTIES_CMD);
+                    }
+                    else
+                        MessageBox.Show("The Ethernet config was not confirm");
+                    break;
+                case 4:
+                    serial_form.ShowDialog();
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
