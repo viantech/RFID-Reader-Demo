@@ -117,7 +117,6 @@ namespace GatewayForm
         }*/
         private void Connect_btn_Click(object sender, EventArgs e)
         {
-
             try
             {
                 switch (ConnType_cbx.SelectedIndex)
@@ -137,7 +136,6 @@ namespace GatewayForm
                             //startcmdprocess(CM.COMMAND.DIS_CONNECT_CMD);
                             com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
                             com_type.Close();
-                            com_type = null;
                             com_type.Config_Msg -= GetConfig_Handler;
                             com_type.Log_Msg -= Log_Handler;
                             Disconnect_Behavior();
@@ -149,7 +147,6 @@ namespace GatewayForm
                         {
                             Log_lb.Text = "Connecting ...";
                             com_type = new Communication(CM.TYPECONNECT.HDR_WIFI);
-                            //startcmdprocess(CM.COMMAND.CONNECTION_REQUEST_CMD);
                             com_type.Config_Msg += GetConfig_Handler;
                             com_type.Log_Msg += Log_Handler;
                             com_type.Connect(wifi_form.address, int.Parse(wifi_form.port));
@@ -160,16 +157,13 @@ namespace GatewayForm
                                 Log_lb.Text = "Idle";
                                 com_type.Config_Msg -= GetConfig_Handler;
                                 com_type.Log_Msg -= Log_Handler;
-                                com_type = null;
                             }
                         }
                         else
                         {
-                            //startcmdprocess(CM.COMMAND.DIS_CONNECT_CMD);
                             com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
                             com_type.Receive_Command_Handler(CM.COMMAND.DIS_CONNECT_CMD);
                             com_type.Close();
-                            com_type = null;
                             com_type.Config_Msg -= GetConfig_Handler;
                             com_type.Log_Msg -= Log_Handler;
                             Disconnect_Behavior();
@@ -184,7 +178,6 @@ namespace GatewayForm
                         {
                             Log_lb.Text = "Connecting ...";
                             com_type = new Communication(CM.TYPECONNECT.HDR_ETHERNET);
-                            //startcmdprocess(CM.COMMAND.CONNECTION_REQUEST_CMD);
                             com_type.Config_Msg += GetConfig_Handler;
                             com_type.Log_Msg += Log_Handler;
                             com_type.Connect(tcp_form.address, int.Parse(tcp_form.port));
@@ -195,16 +188,13 @@ namespace GatewayForm
                                 Log_lb.Text = "Idle";
                                 com_type.Config_Msg -= GetConfig_Handler;
                                 com_type.Log_Msg -= Log_Handler;
-                                com_type = null;
                             }
                         }
                         else
                         {
-                            //startcmdprocess(CM.COMMAND.DIS_CONNECT_CMD);
                             com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
                             com_type.Receive_Command_Handler(CM.COMMAND.DIS_CONNECT_CMD);
                             com_type.Close();
-                            com_type = null;
                             com_type.Config_Msg -= GetConfig_Handler;
                             com_type.Log_Msg -= Log_Handler;
                             Disconnect_Behavior();
@@ -329,7 +319,6 @@ namespace GatewayForm
                 com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
                 com_type.Receive_Command_Handler(CM.COMMAND.DIS_CONNECT_CMD);
                 com_type.Close();
-                com_type = null;
                 com_type.Config_Msg -= GetConfig_Handler;
                 com_type.Log_Msg -= Log_Handler;
                 Disconnect_Behavior();
@@ -340,9 +329,9 @@ namespace GatewayForm
             {
                 if (couting == 0)
                 {
-                    if (config_str[1] == "250")
+                    if (config_str[1] == "0")
                         SetControl(freq_cbx, "0");
-                    else if (config_str[1] == "320")
+                    else if (config_str[1] == "2")
                         SetControl(freq_cbx, "1");
                     else
                         SetControl(freq_cbx, "2");
@@ -1054,6 +1043,7 @@ namespace GatewayForm
                                           + "\nnetmask= " + wifi_form.netmask
                                           + "\ngateway= " + wifi_form.gateway
                                           + "\n}";
+                        MessageBox.Show(wifi_config);
                         com_type.Set_Command_Send(CM.COMMAND.SET_PORT_PROPERTIES_CMD, wifi_config);
                         com_type.Receive_Command_Handler(CM.COMMAND.SET_PORT_PROPERTIES_CMD);
                     }
@@ -1083,6 +1073,7 @@ namespace GatewayForm
                                           + "\nnetmask= " + tcp_form.netmask
                                           + "\ngateway= " + tcp_form.gateway
                                           + "\n}";
+                        MessageBox.Show(tcp_config);
                         com_type.Set_Command_Send(CM.COMMAND.SET_PORT_PROPERTIES_CMD, tcp_config);
                         com_type.Receive_Command_Handler(CM.COMMAND.SET_PORT_PROPERTIES_CMD);
                     }

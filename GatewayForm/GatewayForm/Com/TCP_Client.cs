@@ -184,7 +184,6 @@ namespace GatewayForm
             }
             catch (SocketException)
             {
-                //connect_ok = false;
                 //connectDone.Set();
                 //MessageBox.Show(e.ToString()); //2
             }
@@ -309,7 +308,7 @@ namespace GatewayForm
             }
             catch (SocketException ex)
             {
-                sendDone.Set();
+                //sendDone.Set();
                 MessageBox.Show(ex.ToString()); //3
             }
             catch (ObjectDisposedException)
@@ -489,7 +488,6 @@ namespace GatewayForm
             {
                 connect_ok = true;
                 CM.Log_Raise("Accepted!");
-                //MessageBox.Show("Accepted!");
             }
             else
             {
@@ -506,9 +504,7 @@ namespace GatewayForm
                 {
                     CM.Log_Raise("Retry Failed. Closed Socket.");
                     retry_count = 3;
-                    tcp_client.Close();
-
-                    // Chua retry button duoc. form1.ConnectSocket_btn.Text = "Connect";
+                    Free();
                     return;
                 }
             }
@@ -549,13 +545,13 @@ namespace GatewayForm
                     }
                 }
             }
-            catch (IOException e)
-            {
-                MessageBox.Show(e.ToString());
-            }
             catch (SocketException se)
             {
                 MessageBox.Show(se.ToString());
+            }
+            catch (IOException e)
+            {
+                MessageBox.Show(e.ToString());
             }
             catch (ObjectDisposedException)
             {
@@ -653,6 +649,10 @@ namespace GatewayForm
                         }
                     }
                 }
+            }
+            catch (SocketException se)
+            {
+                MessageBox.Show(se.ToString());
             }
             catch (IOException e)
             {
