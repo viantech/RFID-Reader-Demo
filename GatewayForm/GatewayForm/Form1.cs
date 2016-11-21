@@ -317,7 +317,8 @@ namespace GatewayForm
                 else
                 {*/
                 com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
-                com_type.Receive_Command_Handler(CM.COMMAND.DIS_CONNECT_CMD);
+                //com_type.Receive_Command_Handler(CM.COMMAND.DIS_CONNECT_CMD);
+                Thread.Sleep(500);
                 com_type.Close();
                 com_type.Config_Msg -= GetConfig_Handler;
                 com_type.Log_Msg -= Log_Handler;
@@ -1032,16 +1033,16 @@ namespace GatewayForm
                     {
                         String wifi_config = String.Empty;
                         if (wifi_form.automatic)
-                            wifi_config = "gateway_wifi_configure = {\nssid = " + wifi_form.ssid_name
-                                          + "\npsk = " + wifi_form.passwd
-                                          + "\ninet = dhcp\n}";
+                            wifi_config = "gateway_wifi_configure = {\nssid =" + wifi_form.ssid_name
+                                          + "\npsk=" + wifi_form.passwd
+                                          + "\ninet=dhcp\n}";
                         else
-                            wifi_config = "gateway_wifi_configure = {\nssid = " + wifi_form.ssid_name
-                                          + "\npsk = " + wifi_form.passwd
-                                          + "\ninet = static"
-                                          + "\naddress= " + wifi_form.address
-                                          + "\nnetmask= " + wifi_form.netmask
-                                          + "\ngateway= " + wifi_form.gateway
+                            wifi_config = "gateway_wifi_configure = {\nssid =" + wifi_form.ssid_name
+                                          + "\npsk=" + wifi_form.passwd
+                                          + "\ninet=static"
+                                          + "\naddress=" + wifi_form.address
+                                          + "\nnetmask=" + wifi_form.netmask
+                                          + "\ngateway=" + wifi_form.gateway
                                           + "\n}";
                         MessageBox.Show(wifi_config);
                         com_type.Set_Command_Send(CM.COMMAND.SET_PORT_PROPERTIES_CMD, wifi_config);
@@ -1058,20 +1059,20 @@ namespace GatewayForm
                     {
                         String tcp_config = String.Empty;
                         if (wifi_form.automatic)
-                            tcp_config = "gateway_tcp_configure = {\nipaddress = " + tcp_form.address
-                                          + "\nhostname = " + Gateway_ID_tx.Text
-                                          + "\nport = " + tcp_form.port
-                                          + "\ntimeout= " + tcp_form.Timeout
-                                          + "\nmax_packet_length= " + tcp_form.Length
+                            tcp_config = "gateway_tcp_configure = {\nipaddress =" + tcp_form.address
+                                          + "\nhostname =" + Gateway_ID_tx.Text
+                                          + "\nport =" + tcp_form.port
+                                          + "\ntimeout=" + tcp_form.Timeout
+                                          + "\nmax_packet_length=" + tcp_form.Length
                                           + "\n}";
                         else
-                            tcp_config = "gateway_tcp_configure = {\nipaddress = " + tcp_form.address
-                                          + "\nhostname = " + Gateway_ID_tx.Text
-                                          + "\nport = " + tcp_form.port
-                                          + "\ntimeout= " + tcp_form.Timeout
-                                          + "\nmax_packet_length= " + tcp_form.Length
-                                          + "\nnetmask= " + tcp_form.netmask
-                                          + "\ngateway= " + tcp_form.gateway
+                            tcp_config = "gateway_tcp_configure = {\nipaddress =" + tcp_form.address
+                                          + "\nhostname =" + Gateway_ID_tx.Text
+                                          + "\nport =" + tcp_form.port
+                                          + "\ntimeout=" + tcp_form.Timeout
+                                          + "\nmax_packet_length=" + tcp_form.Length
+                                          + "\nnetmask=" + tcp_form.netmask
+                                          + "\ngateway=" + tcp_form.gateway
                                           + "\n}";
                         MessageBox.Show(tcp_config);
                         com_type.Set_Command_Send(CM.COMMAND.SET_PORT_PROPERTIES_CMD, tcp_config);
