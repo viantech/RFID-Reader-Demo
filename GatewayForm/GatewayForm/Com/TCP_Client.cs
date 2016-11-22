@@ -688,15 +688,20 @@ namespace GatewayForm
         /// </summary>
         public void Free()
         {
-            sendDone.Close();
-            receiveDone.Close();
-            connectDone.Close();
-            tcp_client.Shutdown(SocketShutdown.Both);
-            tcp_client.Disconnect(true);
-            tcp_client.Close();
-            connect_ok = false;
-            //pingTimer.Stop();
-            CM.Log_Raise("Disconnected");
+            try
+            {
+                sendDone.Close();
+                receiveDone.Close();
+                connectDone.Close();
+                tcp_client.Shutdown(SocketShutdown.Both);
+                tcp_client.Disconnect(true);
+                tcp_client.Close();
+                connect_ok = false;
+                //pingTimer.Stop();
+                CM.Log_Raise("Disconnected");
+            }
+            catch (ObjectDisposedException e)
+            { MessageBox.Show(e.ToString()); }
         }
 
         ~TCP_Client()
