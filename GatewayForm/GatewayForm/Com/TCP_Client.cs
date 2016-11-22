@@ -660,7 +660,7 @@ namespace GatewayForm
             }
             catch (ObjectDisposedException)
             {
-                CM.Log_Raise("Abort connection");
+                CM.Log_Raise("Abort due to close");
             }
         }
 

@@ -16,7 +16,6 @@ namespace GatewayForm
 
     public partial class Form1 : Form
     {
-
         Communication com_type;
         Zigbee_pop zigbee_form;
         Wifi_pop wifi_form;
@@ -44,6 +43,7 @@ namespace GatewayForm
                  "Stack light support={0}\n",
                  "Stack light GPIO={0}"
         };
+
         public Form1()
         {
             InitializeComponent();
@@ -59,7 +59,21 @@ namespace GatewayForm
                 plog.loadData2Table += LoadDatatoTablefromDBbrowser;
                 plog.CreateDBTable();
             }
+            CM.ConfigMessage += GetConfig_Handler;
+            CM.Log_Msg += Log_Handler;
+        }
 
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (com_type != null && com_type.getflagConnected_TCPIP())
+                com_type.Close();
+            zigbee_form.Dispose();
+            wifi_form.Dispose();
+            tcp_form.Dispose();
+            serial_form.Dispose();
+            CM.ConfigMessage -= GetConfig_Handler;
+            CM.Log_Msg -= Log_Handler;
+            plog.loadData2Table -= LoadDatatoTablefromDBbrowser;
         }
         /*public void startcmdprocess(CM.COMMAND CMD)
         {
@@ -125,9 +139,9 @@ namespace GatewayForm
                     case 0:
                         if (Connect_btn.Text == "Connect")
                         {
+                            Log_lb.Text = "Connecting ...";
                             com_type = new Communication(CM.TYPECONNECT.HDR_ZIGBEE);
-                            com_type.Config_Msg += GetConfig_Handler;
-                            com_type.Log_Msg += Log_Handler;
+                            
                             com_type.Connect(zigbee_form.ip_add, int.Parse(zigbee_form.port));
                             Connected_Behavior();
                         }
@@ -136,8 +150,6 @@ namespace GatewayForm
                             //startcmdprocess(CM.COMMAND.DIS_CONNECT_CMD);
                             com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
                             com_type.Close();
-                            com_type.Config_Msg -= GetConfig_Handler;
-                            com_type.Log_Msg -= Log_Handler;
                             Disconnect_Behavior();
                         }
                         break;
@@ -147,16 +159,13 @@ namespace GatewayForm
                         {
                             Log_lb.Text = "Connecting ...";
                             com_type = new Communication(CM.TYPECONNECT.HDR_WIFI);
-                            com_type.Config_Msg += GetConfig_Handler;
-                            com_type.Log_Msg += Log_Handler;
+                            
                             com_type.Connect(wifi_form.address, int.Parse(wifi_form.port));
                             if (com_type.getflagConnected_TCPIP())
                                 Connected_Behavior();
                             else
                             {
                                 Log_lb.Text = "Idle";
-                                com_type.Config_Msg -= GetConfig_Handler;
-                                com_type.Log_Msg -= Log_Handler;
                             }
                         }
                         else
@@ -164,8 +173,6 @@ namespace GatewayForm
                             com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
                             com_type.Receive_Command_Handler(CM.COMMAND.DIS_CONNECT_CMD);
                             com_type.Close();
-                            com_type.Config_Msg -= GetConfig_Handler;
-                            com_type.Log_Msg -= Log_Handler;
                             Disconnect_Behavior();
                         }
                         break;
@@ -178,16 +185,13 @@ namespace GatewayForm
                         {
                             Log_lb.Text = "Connecting ...";
                             com_type = new Communication(CM.TYPECONNECT.HDR_ETHERNET);
-                            com_type.Config_Msg += GetConfig_Handler;
-                            com_type.Log_Msg += Log_Handler;
+                            
                             com_type.Connect(tcp_form.address, int.Parse(tcp_form.port));
                             if (com_type.getflagConnected_TCPIP())
                                 Connected_Behavior();
                             else
                             {
                                 Log_lb.Text = "Idle";
-                                com_type.Config_Msg -= GetConfig_Handler;
-                                com_type.Log_Msg -= Log_Handler;
                             }
                         }
                         else
@@ -195,8 +199,6 @@ namespace GatewayForm
                             com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
                             com_type.Receive_Command_Handler(CM.COMMAND.DIS_CONNECT_CMD);
                             com_type.Close();
-                            com_type.Config_Msg -= GetConfig_Handler;
-                            com_type.Log_Msg -= Log_Handler;
                             Disconnect_Behavior();
                         }
                         break;
@@ -312,19 +314,14 @@ namespace GatewayForm
             else if (config_str[0].Contains("= {"))
             {
                 MessageBox.Show(config_msg);
-                /*if (ConnType_cbx.SelectedIndex == 3)
-                    startcmdprocess(CM.COMMAND.SET_CONN_TYPE_CMD);
-                else
-                {*/
+                
                 com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
                 //com_type.Receive_Command_Handler(CM.COMMAND.DIS_CONNECT_CMD);
                 Thread.Sleep(500);
                 com_type.Close();
-                com_type.Config_Msg -= GetConfig_Handler;
-                com_type.Log_Msg -= Log_Handler;
+                
                 Disconnect_Behavior();
                 ConnType_cbx.SelectedIndex = Change_conntype_cbx.SelectedIndex;
-                //}
             }
             else if (config_str[0] == "BLF Setting")
             {
@@ -362,7 +359,7 @@ namespace GatewayForm
                 //messageLoghandle = log_msg;
                 if (Log_lb.Text != "Inventory Mode")
                 {
-                    ptimer_loghandle.Interval = 3000;
+                    ptimer_loghandle.Interval = 2500;
                     ptimer_loghandle.Start();
                 }
             });
@@ -480,14 +477,14 @@ namespace GatewayForm
         {
             if (Start_Operate_btn.Text == "Start inventory")
             {
-                com_type.TagID_Msg += Read_handler;
+                CM.MessageReceived += Read_handler;
                 com_type.Get_Command_Send(CM.COMMAND.START_OPERATION_CMD);
                 com_type.Receive_Command_Handler(CM.COMMAND.START_OPERATION_CMD);
                 Stop_Behavior();
             }
             else
             {
-                com_type.TagID_Msg -= Read_handler;
+                CM.MessageReceived -= Read_handler;
                 com_type.Get_Command_Send(CM.COMMAND.STOP_OPERATION_CMD);
                 Start_Behavior();
             }
@@ -932,7 +929,6 @@ namespace GatewayForm
         {
             if (plog != null)
             {
-
                 SearchForm_Data psearchform = new SearchForm_Data();
                 psearchform.loaddatasearch += LoadDataSearch;
                 psearchform.Show();
@@ -975,7 +971,7 @@ namespace GatewayForm
             }*/
             if (Start_Operate_btn.Text == "Stop inventory")
                 Log_lb.Text = "Inventory Mode";
-            if (Log_lb.Text == "Disconnected")
+            if (Log_lb.Text == "Disconnected" || Log_lb.Text == "Abort due to close")
             {
                 Log_lb.Text = "Idle";
                 if (status_lb.Text == "Active")
@@ -1088,5 +1084,6 @@ namespace GatewayForm
                     break;
             }
         }
+
     }
 }

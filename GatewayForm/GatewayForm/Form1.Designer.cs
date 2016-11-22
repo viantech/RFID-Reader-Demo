@@ -63,6 +63,7 @@
             this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.label7 = new System.Windows.Forms.Label();
             this.Change_conntype_cbx = new System.Windows.Forms.ComboBox();
+            this.set_port_btn = new System.Windows.Forms.Button();
             this.set_newconn_btn = new System.Windows.Forms.Button();
             this.StackLight_ckb = new System.Windows.Forms.CheckBox();
             this.RFID_API_ckb = new System.Windows.Forms.CheckBox();
@@ -153,7 +154,6 @@
             this.label10 = new System.Windows.Forms.Label();
             this.Log_lb = new System.Windows.Forms.Label();
             this.ptimer_loghandle = new System.Windows.Forms.Timer(this.components);
-            this.set_port_btn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -544,6 +544,18 @@
             this.Change_conntype_cbx.Size = new System.Drawing.Size(106, 23);
             this.Change_conntype_cbx.TabIndex = 27;
             this.Change_conntype_cbx.Text = "Zigbee";
+            // 
+            // set_port_btn
+            // 
+            this.set_port_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.set_port_btn.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.set_port_btn.Location = new System.Drawing.Point(273, 24);
+            this.set_port_btn.Name = "set_port_btn";
+            this.set_port_btn.Size = new System.Drawing.Size(75, 23);
+            this.set_port_btn.TabIndex = 28;
+            this.set_port_btn.Text = "Set";
+            this.set_port_btn.UseVisualStyleBackColor = true;
+            this.set_port_btn.Click += new System.EventHandler(this.set_port_btn_Click);
             // 
             // set_newconn_btn
             // 
@@ -1580,18 +1592,6 @@
             // 
             this.ptimer_loghandle.Tick += new System.EventHandler(this.ptimer_loghandle_Tick_1);
             // 
-            // set_port_btn
-            // 
-            this.set_port_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.set_port_btn.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.set_port_btn.Location = new System.Drawing.Point(273, 24);
-            this.set_port_btn.Name = "set_port_btn";
-            this.set_port_btn.Size = new System.Drawing.Size(75, 23);
-            this.set_port_btn.TabIndex = 28;
-            this.set_port_btn.Text = "Set";
-            this.set_port_btn.UseVisualStyleBackColor = true;
-            this.set_port_btn.Click += new System.EventHandler(this.set_port_btn_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1605,6 +1605,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Text = "Seldat RFID GUI @ HW Team";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
