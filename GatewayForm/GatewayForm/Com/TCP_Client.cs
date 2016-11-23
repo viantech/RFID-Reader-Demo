@@ -690,13 +690,10 @@ namespace GatewayForm
         {
             try
             {
-                sendDone.Close();
-                receiveDone.Close();
-                connectDone.Close();
-                tcp_client.Shutdown(SocketShutdown.Both);
-                tcp_client.Disconnect(true);
-                tcp_client.Close();
                 connect_ok = false;
+                tcp_client.Shutdown(SocketShutdown.Both);
+                //tcp_client.Disconnect(true);
+                tcp_client.Close();
                 //pingTimer.Stop();
                 CM.Log_Raise("Disconnected");
             }

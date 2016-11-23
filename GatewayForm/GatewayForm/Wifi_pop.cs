@@ -52,6 +52,7 @@ namespace GatewayForm
 
         private void close_btn_Click(object sender, EventArgs e)
         {
+            ssid_name = String.Empty;
             this.Close();
         }
 

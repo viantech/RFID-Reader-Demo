@@ -544,6 +544,7 @@
             this.Change_conntype_cbx.Size = new System.Drawing.Size(106, 23);
             this.Change_conntype_cbx.TabIndex = 27;
             this.Change_conntype_cbx.Text = "Zigbee";
+            this.Change_conntype_cbx.SelectedIndexChanged += new System.EventHandler(this.Change_conntype_cbx_SelectedIndexChanged);
             // 
             // set_port_btn
             // 
@@ -559,7 +560,6 @@
             // 
             // set_newconn_btn
             // 
-            this.set_newconn_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.set_newconn_btn.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.set_newconn_btn.Location = new System.Drawing.Point(370, 24);
             this.set_newconn_btn.Name = "set_newconn_btn";
@@ -1437,7 +1437,7 @@
             // 
             // Connect_btn
             // 
-            this.Connect_btn.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.Connect_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Connect_btn.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Connect_btn.Location = new System.Drawing.Point(357, 16);
             this.Connect_btn.Name = "Connect_btn";

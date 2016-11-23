@@ -49,6 +49,7 @@ namespace GatewayForm
 
         private void close_btn_Click(object sender, EventArgs e)
         {
+            address = String.Empty;
             this.Close();
         }
 

@@ -1021,10 +1021,8 @@ namespace GatewayForm
             switch (Change_conntype_cbx.SelectedIndex)
             {
                 case 0:
-                    zigbee_form.ShowDialog();
                     break;
                 case 1:
-                    wifi_form.ShowDialog();
                     if (!String.IsNullOrEmpty(wifi_form.ssid_name))
                     {
                         String wifi_config = String.Empty;
@@ -1045,12 +1043,11 @@ namespace GatewayForm
                         com_type.Receive_Command_Handler(CM.COMMAND.SET_PORT_PROPERTIES_CMD);
                     }
                     else
-                        MessageBox.Show("Wifi Config was not confirm");
+                        MessageBox.Show("Wifi Config not confirm");
                     break;
                 case 2:
                     break;
                 case 3:
-                    tcp_form.ShowDialog();
                     if (!String.IsNullOrEmpty(tcp_form.address))
                     {
                         String tcp_config = String.Empty;
@@ -1075,7 +1072,29 @@ namespace GatewayForm
                         com_type.Receive_Command_Handler(CM.COMMAND.SET_PORT_PROPERTIES_CMD);
                     }
                     else
-                        MessageBox.Show("The Ethernet config was not confirm");
+                        MessageBox.Show("Ethernet config not confirm");
+                    break;
+                case 4:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void Change_conntype_cbx_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (Change_conntype_cbx.SelectedIndex)
+            {
+                case 0:
+                    zigbee_form.ShowDialog();
+                    break;
+                case 1:
+                    wifi_form.ShowDialog();
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    tcp_form.ShowDialog();
                     break;
                 case 4:
                     serial_form.ShowDialog();
