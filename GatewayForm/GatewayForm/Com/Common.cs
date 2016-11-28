@@ -52,6 +52,7 @@ namespace GatewayForm
             SET_CONN_TYPE_CMD = 0x13,
             SET_BLF_CMD = 0x14,
             GET_BLF_CMD = 0x15,
+            REBOOT_CMD = 0x16,
         };
 
         public enum HEADER
@@ -349,6 +350,14 @@ namespace GatewayForm
                         info_ack = Decode_Frame_ACK((byte)COMMAND.DIS_CONNECT_CMD, command_bytes);
                         if (0x00 != info_ack)
                             MessageBox.Show("Failed disconnect");
+                        break;
+                    /* start operate */
+                    case COMMAND.START_OPERATION_CMD:
+                        info_ack = Decode_Frame_ACK((byte)COMMAND.START_OPERATION_CMD, command_bytes);
+                        if (0x00 == info_ack)
+                            Log_Raise("Inventory Mode");
+                        else
+                            MessageBox.Show("Failed start operation");
                         break;
                     /* stop operate */
                     case COMMAND.STOP_OPERATION_CMD:

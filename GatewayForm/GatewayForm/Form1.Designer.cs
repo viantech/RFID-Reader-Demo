@@ -104,9 +104,7 @@
             this.set_power_mode_btn = new System.Windows.Forms.Button();
             this.get_power_mode_btn = new System.Windows.Forms.Button();
             this.power_mode_cbx = new System.Windows.Forms.ComboBox();
-            this.set_write_power_btn = new System.Windows.Forms.Button();
             this.set_power_btn = new System.Windows.Forms.Button();
-            this.get_write_power_btn = new System.Windows.Forms.Button();
             this.get_power_btn = new System.Windows.Forms.Button();
             this.write_power_lb = new System.Windows.Forms.Label();
             this.read_power_lb = new System.Windows.Forms.Label();
@@ -990,9 +988,7 @@
             this.groupBox9.Controls.Add(this.set_power_mode_btn);
             this.groupBox9.Controls.Add(this.get_power_mode_btn);
             this.groupBox9.Controls.Add(this.power_mode_cbx);
-            this.groupBox9.Controls.Add(this.set_write_power_btn);
             this.groupBox9.Controls.Add(this.set_power_btn);
-            this.groupBox9.Controls.Add(this.get_write_power_btn);
             this.groupBox9.Controls.Add(this.get_power_btn);
             this.groupBox9.Controls.Add(this.write_power_lb);
             this.groupBox9.Controls.Add(this.read_power_lb);
@@ -1049,21 +1045,10 @@
             this.power_mode_cbx.TabIndex = 10;
             this.power_mode_cbx.Text = "FULL MODE";
             // 
-            // set_write_power_btn
-            // 
-            this.set_write_power_btn.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.set_write_power_btn.Location = new System.Drawing.Point(351, 57);
-            this.set_write_power_btn.Name = "set_write_power_btn";
-            this.set_write_power_btn.Size = new System.Drawing.Size(59, 23);
-            this.set_write_power_btn.TabIndex = 9;
-            this.set_write_power_btn.Text = "Set";
-            this.set_write_power_btn.UseVisualStyleBackColor = true;
-            this.set_write_power_btn.Click += new System.EventHandler(this.set_write_power_btn_Click);
-            // 
             // set_power_btn
             // 
             this.set_power_btn.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.set_power_btn.Location = new System.Drawing.Point(351, 20);
+            this.set_power_btn.Location = new System.Drawing.Point(351, 39);
             this.set_power_btn.Name = "set_power_btn";
             this.set_power_btn.Size = new System.Drawing.Size(59, 23);
             this.set_power_btn.TabIndex = 9;
@@ -1071,21 +1056,10 @@
             this.set_power_btn.UseVisualStyleBackColor = true;
             this.set_power_btn.Click += new System.EventHandler(this.set_power_btn_Click);
             // 
-            // get_write_power_btn
-            // 
-            this.get_write_power_btn.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.get_write_power_btn.Location = new System.Drawing.Point(275, 59);
-            this.get_write_power_btn.Name = "get_write_power_btn";
-            this.get_write_power_btn.Size = new System.Drawing.Size(59, 23);
-            this.get_write_power_btn.TabIndex = 8;
-            this.get_write_power_btn.Text = "Get";
-            this.get_write_power_btn.UseVisualStyleBackColor = true;
-            this.get_write_power_btn.Click += new System.EventHandler(this.get_write_power_btn_Click);
-            // 
             // get_power_btn
             // 
             this.get_power_btn.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.get_power_btn.Location = new System.Drawing.Point(275, 20);
+            this.get_power_btn.Location = new System.Drawing.Point(275, 39);
             this.get_power_btn.Name = "get_power_btn";
             this.get_power_btn.Size = new System.Drawing.Size(59, 23);
             this.get_power_btn.TabIndex = 8;
@@ -1253,7 +1227,7 @@
             this.tari_cbx.Name = "tari_cbx";
             this.tari_cbx.Size = new System.Drawing.Size(73, 23);
             this.tari_cbx.TabIndex = 5;
-            this.tari_cbx.Text = "6.25";
+            this.tari_cbx.Text = "25";
             // 
             // label23
             // 
@@ -1437,7 +1411,7 @@
             // 
             // Connect_btn
             // 
-            this.Connect_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Connect_btn.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.Connect_btn.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Connect_btn.Location = new System.Drawing.Point(357, 16);
             this.Connect_btn.Name = "Connect_btn";
@@ -1749,8 +1723,6 @@
         private System.Windows.Forms.Button set_newconn_btn;
         private System.Windows.Forms.GroupBox groupBox10;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Button set_write_power_btn;
-        private System.Windows.Forms.Button get_write_power_btn;
         private System.Windows.Forms.TabPage tabPage5;
         private System.Windows.Forms.Button btn_downloadtabletoExcel;
         private System.Windows.Forms.DataGridView Table_dbbrowser_datagrid;

@@ -47,8 +47,8 @@ namespace GatewayForm
         //private System.Timers.Timer pingTimer = new System.Timers.Timer() { Interval = 10000 };
         private ManualResetEvent waiter = new ManualResetEvent(false);
         // Event Handler
-        private volatile bool start_enable = false;
-        public bool alive = true;
+        public bool recv_flag = false;
+        //public bool alive = true;
         private static int retry_count = 3;
 
         // The response from the remote device.
@@ -126,15 +126,11 @@ namespace GatewayForm
                 tcp_client.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), tcp_client);
                 if (connectDone.WaitOne(5000))
                 {
-                    //Send Connection Request
+                    connect_ok = true;
+                    Receive_Command_Handler();
+
                     Send_ConnectionRequest();
 
-                    //Receive the response status
-                    Receive_Command_Handler(CM.COMMAND.CONNECTION_REQUEST_CMD);
-
-                    //Get Gateway Configuration
-                    Get_Command_Send(CM.COMMAND.GET_CONFIGURATION_CMD);
-                    Receive_Command_Handler(CM.COMMAND.GET_CONFIGURATION_CMD);
                     /*pingTimer.Elapsed += (sender, e) =>
                         {
                             //pingsender.SendAsync(ipAddress, 120, icmp_test, options, waiter);
@@ -197,7 +193,7 @@ namespace GatewayForm
 
         #region Send
 
-        public bool IsConnected
+        /*public bool IsConnected
         {
             get
             {
@@ -226,19 +222,7 @@ namespace GatewayForm
                             //pingTimer.Interval = 10000;
                         }
                         // Detect if client disconnected
-                        /*if (tcp_client.Poll(0, SelectMode.SelectRead))
-                        {
-                            byte[] buff = new byte[1];
-                            if (tcp_client.Receive(buff, SocketFlags.Peek) == 0)
-                            {
-                                // Client disconnected
-                                return false;
-                            }
-                            else
-                            {
-                                return true;
-                            }
-                        }*/
+                        
                     }
                     else
                     {
@@ -270,7 +254,6 @@ namespace GatewayForm
                         alive = true;
                         if (!this.IsConnected)
                             CM.Log_Raise("Re-Connect.");
-                        receiveDone.Set();
                     }
                     else
                     {
@@ -282,7 +265,7 @@ namespace GatewayForm
             {
                 MessageBox.Show(e.ToString());
             }
-        }
+        }*/
 
         /// <summary>
         /// Send byte raw of frame data 
@@ -378,8 +361,6 @@ namespace GatewayForm
         /// <param name="command"></param>
         public void Get_Command_Send(CM.COMMAND command)
         {
-            if (command == CM.COMMAND.STOP_OPERATION_CMD)
-                start_enable = false;
             CM.SubFrameFormat sub_fmt_get = new CM.SubFrameFormat();
             CM.FrameFormat fmt_get = new CM.FrameFormat();
             fmt_get.command = (byte)command;
@@ -473,6 +454,54 @@ namespace GatewayForm
                 SendFrame(byte_tcp);
             }
         }
+        public async void Start_Command_Process(CM.COMMAND cmd)
+        {
+            int task = await Task.Run(() => Command_Process(cmd));
+        }
+        private int Command_Process(CM.COMMAND command)
+        {
+            switch (command)
+            {
+                case CM.COMMAND.GET_POWER_CMD:
+
+                    receiveDone.Reset();
+                    Get_Command_Power(CM.COMMAND.GET_POWER_CMD, 0);
+                    receiveDone.WaitOne(2000);
+                    receiveDone.Reset();
+                    Get_Command_Power(CM.COMMAND.GET_POWER_CMD, 1);
+                    receiveDone.WaitOne(2000);
+                    receiveDone.Reset();
+                    break;
+                case CM.COMMAND.GET_POWER_MODE_CMD:
+
+                    receiveDone.Reset();
+                    Get_Command_Power(CM.COMMAND.GET_POWER_CMD, 0);
+                    receiveDone.WaitOne(2000);
+                    receiveDone.Reset();
+                    Get_Command_Power(CM.COMMAND.GET_POWER_CMD, 1);
+                    receiveDone.WaitOne(2000);
+                    receiveDone.Reset();
+                    Get_Command_Send(CM.COMMAND.GET_POWER_MODE_CMD);
+                    receiveDone.WaitOne(2000);
+                    receiveDone.Reset();
+                    break;
+                case CM.COMMAND.GET_BLF_CMD:
+                    receiveDone.Reset();
+                    Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 0);
+                    receiveDone.WaitOne(2000);
+                    receiveDone.Reset();
+                    Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 1);
+                    receiveDone.WaitOne(2000);
+                    receiveDone.Reset();
+                    Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 2);
+                    receiveDone.WaitOne(2000);
+                    receiveDone.Reset();
+                    break;
+                default:
+                    break;
+            }
+            return 1;
+        }
 
         #endregion
 
@@ -486,8 +515,9 @@ namespace GatewayForm
         {
             if (0x00 == byte_receive[0])
             {
-                connect_ok = true;
                 CM.Log_Raise("Accepted!");
+                //Get Gateway Configuration
+                Get_Command_Send(CM.COMMAND.GET_CONFIGURATION_CMD);
             }
             else
             {
@@ -498,7 +528,6 @@ namespace GatewayForm
                     retry_count--;
 
                     Send_ConnectionRequest();
-                    Receive_Command_Handler(CM.COMMAND.CONNECTION_REQUEST_CMD);
                 }
                 else
                 {
@@ -518,11 +547,8 @@ namespace GatewayForm
         {
             try
             {
-                // Retrieve the state object and the client socket 
-                // from the asynchronous state object.
                 StateTCPClient state = (StateTCPClient)ar.AsyncState;
                 Socket client = state.workSocket;
-                //Thread.Sleep(1);
 
                 // Read data from the remote device.
                 int bytesRead = client.EndReceive(ar);
@@ -533,21 +559,39 @@ namespace GatewayForm
                     {
                         Array.Resize(ref result_data_byte, result_data_byte.Length + meta_sub.Length);
                         Buffer.BlockCopy(meta_sub, 0, result_data_byte, result_data_byte.Length - meta_sub.Length, meta_sub.Length);
-                        if (0x01 == state.buffer[bytesRead - 2])
-                            receiveDone.Set();
-                        else
+                        if (0x01 != state.buffer[bytesRead - 2])
                             client.BeginReceive(state.buffer, 0, StateTCPClient.BufferSize, 0,
                             new AsyncCallback(Receive_Command_Callback), state);
+                        else
+                        {
+                            if (result_data_byte != null)
+                            {
+                                receiveDone.Set();
+                                recv_flag = true;
+                                Receive_Command_Handler();
+                                if ((byte)CM.COMMAND.CONNECTION_REQUEST_CMD == result_data_byte[0])
+                                    Request_Connection_Handler(CM.Decode_Frame((byte)CM.COMMAND.CONNECTION_REQUEST_CMD, result_data_byte));
+
+                                else CM.Data_Receive_Handler(result_data_byte);
+                                result_data_byte = new byte[0];
+                                
+                                
+                            }
+                            else
+                                Receive_Command_Handler();
+                        }
                     }
                     else
                     {
                         MessageBox.Show("Wrong Message");
+                        Receive_Command_Handler();
                     }
                 }
             }
             catch (SocketException se)
             {
-                MessageBox.Show(se.ToString());
+                if (connect_ok)
+                    MessageBox.Show(se.ToString());
             }
             catch (IOException e)
             {
@@ -555,7 +599,8 @@ namespace GatewayForm
             }
             catch (ObjectDisposedException)
             {
-                CM.Log_Raise("Abort due to close");
+                if (connect_ok)
+                    CM.Log_Raise("Abort due to close");
             }
         }
 
@@ -563,8 +608,9 @@ namespace GatewayForm
         /// Receive Command Data Response.
         /// </summary>
         /// <param name="command_type"></param>
-        public void Receive_Command_Handler(CM.COMMAND command_type)
+        private void Receive_Command_Handler()
         {
+            recv_flag = false;
             // Create the state object.
             StateTCPClient state = new StateTCPClient();
             state.workSocket = tcp_client;
@@ -572,112 +618,9 @@ namespace GatewayForm
             // Begin receiving the data from the remote device.
             if (tcp_client.Connected)
             {
-                tcp_client.BeginReceive(state.buffer, 0, StateTCPClient.BufferSize, 0, new AsyncCallback(Receive_Command_Callback), state);
-                if (receiveDone.WaitOne(2000))
-                {
-                    receiveDone.Reset();
-
-                    // After received all packet
-                    if (result_data_byte != null)
-                    {
-                        if (CM.COMMAND.CONNECTION_REQUEST_CMD == command_type)
-                            Request_Connection_Handler(CM.Decode_Frame((byte)CM.COMMAND.CONNECTION_REQUEST_CMD, result_data_byte));
-                        else if (CM.COMMAND.START_OPERATION_CMD == command_type)
-                        {
-                            /* start operate */
-                            byte info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.START_OPERATION_CMD, result_data_byte);
-                            if (0x00 == info_ack)
-                            {
-                                start_enable = true;
-                                //pingTimer.Stop();
-                                CM.Log_Raise("Inventory Mode");
-                                Receive_Data_Handler();
-                            }
-                            else
-                                MessageBox.Show("Failed start operation");
-                        }
-                        else CM.Data_Receive_Handler(result_data_byte);
-
-                        result_data_byte = new byte[0];
-                    }
-                }
-                else
-                {
-                    receiveDone.Reset();
-                    result_data_byte = new byte[0];
-                }
-            }
-            else
-                connect_ok = false;
-        }
-
-        private void Receive_Data_Callback(IAsyncResult ar)
-        {
-            try
-            {
-                StateTCPClient state = (StateTCPClient)ar.AsyncState;
-                Socket client = state.workSocket;
-
-                // Read data from the remote device.
-                Thread.Sleep(1);
-                int bytesRead = client.EndReceive(ar);
-                if (bytesRead > 0)
-                {
-                    byte[] meta_sub = CM.Decode_SubFrame(state.buffer, bytesRead);
-                    if (meta_sub != null)
-                    {
-                        Array.Resize(ref result_data_byte, result_data_byte.Length + meta_sub.Length);
-                        Buffer.BlockCopy(meta_sub, 0, result_data_byte, result_data_byte.Length - meta_sub.Length, meta_sub.Length);
-                    }
-
-                    if (0x01 != state.buffer[bytesRead - 2])
-                        client.BeginReceive(state.buffer, 0, StateTCPClient.BufferSize, 0,
-                        new AsyncCallback(Receive_Data_Callback), state);
-                    else
-                    {
-                        if (result_data_byte != null)
-                        {
-                            CM.Data_Receive_Handler(result_data_byte);
-                            result_data_byte = new byte[0];
-                            if (!start_enable)
-                            {
-                            }
-                            else
-                            {
-                                Receive_Data_Handler();
-                            }
-                        }
-                    }
-                }
-            }
-            catch (SocketException se)
-            {
-                MessageBox.Show(se.ToString());
-            }
-            catch (IOException e)
-            {
-                MessageBox.Show(e.ToString());
-            }
-            catch (ObjectDisposedException)
-            {
-                CM.Log_Raise("Abort due to close");
-            }
-        }
-
-        /// <summary>
-        /// Receive Command Data Tag ID.
-        /// </summary>
-        /// <param name="command_type"></param>
-        public void Receive_Data_Handler()
-        {
-            // Create the state object.
-            StateTCPClient state = new StateTCPClient();
-            state.workSocket = tcp_client;
-
-            // Begin receiving the data from the remote device.
-            if (tcp_client.Connected)
                 tcp_client.BeginReceive(state.buffer, 0, StateTCPClient.BufferSize, 0,
-                    new AsyncCallback(Receive_Data_Callback), state);
+                    new AsyncCallback(Receive_Command_Callback), state);
+            }
             else
                 connect_ok = false;
         }

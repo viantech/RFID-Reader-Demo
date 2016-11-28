@@ -54,7 +54,14 @@ namespace GatewayForm
         {
             tcp.connect_ok = v;
         }
-
+        public Boolean getflagRecv()
+        {
+            return tcp.recv_flag;
+        }
+        public void setflagRecv(Boolean v)
+        {
+            tcp.recv_flag = v;
+        }
         public void Connect(string ip_addr, int port)
         {
             switch (type)
@@ -281,8 +288,46 @@ namespace GatewayForm
                     break;
             }
         }
+        public void StartCmd_Process(CM.COMMAND command_type)
+        {
+            switch (type)
+            {
+                case CM.TYPECONNECT.HDR_ZIGBEE:
+                    
+                    break;
+                case CM.TYPECONNECT.HDR_WIFI:
+                    if (tcp != null)
+                    {
+                        if (getflagConnected_TCPIP())
+                            tcp.Start_Command_Process(command_type);
+                        else
+                            tcp.Free();
+                    }
+                    break;
+                case CM.TYPECONNECT.HDR_BLUETOOTH:
+                    break;
+                case CM.TYPECONNECT.HDR_ETHERNET:
+                    if (tcp != null)
+                    {
+                        if (getflagConnected_TCPIP())
+                            tcp.Start_Command_Process(command_type);
+                        else
+                            tcp.Free();
+                    }
+                    /*if (pTcpipClient != null)
+                    {
+                        if(pTcpipClient.isconnected)
+                            pTcpipClient.Get_Command_Send(command_type);
+                    }*/
+                    break;
+                case CM.TYPECONNECT.HDR_RS232:
+                    break;
+                default:
+                    break;
+            }
+        }
 
-        public void Receive_Command_Handler(CM.COMMAND command_type)
+        /*public void Receive_Command_Handler(CM.COMMAND command_type)
         {
             switch (type)
             {
@@ -318,7 +363,7 @@ namespace GatewayForm
             }
         }
 
-        /*public void RFID_Process()
+        public void RFID_Process()
         {
             switch (type)
             {

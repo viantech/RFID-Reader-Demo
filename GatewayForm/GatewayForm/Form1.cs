@@ -22,7 +22,7 @@ namespace GatewayForm
         Tcp_pop tcp_form;
         Serial_pop serial_form;
         StringBuilder gateway_config = new StringBuilder();
-        byte read_write_bit;
+        //byte read_write_bit;
         //string messageLoghandle;
         LogIOData plog; // Declare Database Table
         string[] GW_Format = new string[16] {
@@ -75,7 +75,7 @@ namespace GatewayForm
             CM.Log_Msg -= Log_Handler;
             plog.loadData2Table -= LoadDatatoTablefromDBbrowser;
         }
-        /*public void startcmdprocess(CM.COMMAND CMD)
+        public void startcmdprocess(CM.COMMAND CMD)
         {
             Thread pThreadCmd = new Thread(() => cmdprocess(CMD));
             pThreadCmd.Start();
@@ -84,51 +84,61 @@ namespace GatewayForm
         {
             this.Invoke((MethodInvoker)delegate
             {
-
                 switch (CMD)
                 {
                     case CM.COMMAND.CONNECTION_REQUEST_CMD:
-                        com_type.Config_Msg += GetConfig_Handler;
-                        com_type.Log_Msg += Log_Handler;
-                        //com_type.Connect();
-                        if (com_type.getflagAccepted())
-                            Connected_Behavior();
-                        else
-                            Log_lb.Text = "Idle";
+
                         break;
                     case CM.COMMAND.SET_CONN_TYPE_CMD:
-                        com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
+                        //com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
+                        if (Change_conntype_cbx.SelectedIndex == 1)
+                            com_type.Get_Command_Power(CM.COMMAND.REBOOT_CMD, 2);
+                        else
+                            com_type.Get_Command_Power(CM.COMMAND.REBOOT_CMD, 1);
                         while (!com_type.getflagConnected_TCPIP()) ;
                         com_type.Close();
-                        com_type.Config_Msg -= GetConfig_Handler;
-                        com_type.Log_Msg -= Log_Handler;
                         Disconnect_Behavior();
                         com_type.setflagConnected_TCPIP(false);
                         ConnType_cbx.SelectedIndex = Change_conntype_cbx.SelectedIndex;
                         break;
                     case CM.COMMAND.DIS_CONNECT_CMD:
                         com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
-                        while (!com_type.getflagConnected_TCPIP()) ;
+                        while (!com_type.getflagRecv()) ;
                         com_type.Close();
-                        com_type.Config_Msg -= GetConfig_Handler;
-                        com_type.Log_Msg -= Log_Handler;
                         Disconnect_Behavior();
-                        com_type.setflagConnected_TCPIP(false);
                         break;
-                    case CM.COMMAND.GET_POWER_CMD:
-                        com_type.Get_Command_Power(CM.COMMAND.GET_POWER_CMD, 0);
-                        while (!com_type.getflagConnected_TCPIP()) ;
-                        com_type.Get_Command_Send(CM.COMMAND.GET_POWER_MODE_CMD);
-                        while (!com_type.getflagConnected_TCPIP()) ;
-                        com_type.Get_Command_Send(CM.COMMAND.GET_REGION_CMD);
-                        while (!com_type.getflagConnected_TCPIP()) ;
+                    case CM.COMMAND.SET_POWER_CMD:
+                        byte[] power_bytes = new byte[2];
+                        power_bytes[0] = 0;
+                        power_bytes[1] = (byte)trackBar2.Value;
+                        com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_POWER_CMD, power_bytes);
+                        while (!com_type.getflagRecv()) ;
+                        power_bytes[0] = 1;
+                        power_bytes[1] = (byte)trackBar3.Value;
+                        com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_POWER_CMD, power_bytes);
+                        break;
+                    case CM.COMMAND.SET_BLF_CMD:
+                        byte[] freq_bytes = new byte[2];
+                        freq_bytes[0] = 0;
+                        freq_bytes[1] = (byte)(2 * freq_cbx.SelectedIndex);
+                        com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_BLF_CMD, freq_bytes);
+                        while (!com_type.getflagRecv()) ;
+
+                        freq_bytes[0] = 1;
+                        freq_bytes[1] = (byte)(coding_cbx.SelectedIndex);
+                        com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_BLF_CMD, freq_bytes);
+                        while (!com_type.getflagRecv()) ;
+
+                        freq_bytes[0] = 2;
+                        freq_bytes[1] = (byte)(tari_cbx.SelectedIndex);
+                        com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_BLF_CMD, freq_bytes);
                         break;
                     default:
                         break;
 
                 }
             });
-        }*/
+        }
         private void Connect_btn_Click(object sender, EventArgs e)
         {
             try
@@ -141,16 +151,13 @@ namespace GatewayForm
                         {
                             Log_lb.Text = "Connecting ...";
                             com_type = new Communication(CM.TYPECONNECT.HDR_ZIGBEE);
-                            
+
                             com_type.Connect(zigbee_form.ip_add, int.Parse(zigbee_form.port));
                             Connected_Behavior();
                         }
                         else
                         {
-                            //startcmdprocess(CM.COMMAND.DIS_CONNECT_CMD);
-                            com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
-                            com_type.Close();
-                            Disconnect_Behavior();
+                            startcmdprocess(CM.COMMAND.DIS_CONNECT_CMD);
                         }
                         break;
                     //wifi
@@ -159,7 +166,6 @@ namespace GatewayForm
                         {
                             Log_lb.Text = "Connecting ...";
                             com_type = new Communication(CM.TYPECONNECT.HDR_WIFI);
-                            
                             com_type.Connect(wifi_form.address, int.Parse(wifi_form.port));
                             if (com_type.getflagConnected_TCPIP())
                                 Connected_Behavior();
@@ -170,10 +176,7 @@ namespace GatewayForm
                         }
                         else
                         {
-                            com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
-                            com_type.Receive_Command_Handler(CM.COMMAND.DIS_CONNECT_CMD);
-                            com_type.Close();
-                            Disconnect_Behavior();
+                            startcmdprocess(CM.COMMAND.DIS_CONNECT_CMD);
                         }
                         break;
                     //bluetooth
@@ -185,7 +188,6 @@ namespace GatewayForm
                         {
                             Log_lb.Text = "Connecting ...";
                             com_type = new Communication(CM.TYPECONNECT.HDR_ETHERNET);
-                            
                             com_type.Connect(tcp_form.address, int.Parse(tcp_form.port));
                             if (com_type.getflagConnected_TCPIP())
                                 Connected_Behavior();
@@ -196,10 +198,7 @@ namespace GatewayForm
                         }
                         else
                         {
-                            com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
-                            com_type.Receive_Command_Handler(CM.COMMAND.DIS_CONNECT_CMD);
-                            com_type.Close();
-                            Disconnect_Behavior();
+                            startcmdprocess(CM.COMMAND.DIS_CONNECT_CMD);
                         }
                         break;
                     //RS485
@@ -295,10 +294,18 @@ namespace GatewayForm
             }
             else if (config_str[0] == "Power RFID")
             {
-                if (read_write_bit == 0)
-                { SetControl(trackBar2, config_str[1]); Log_Handler("Get Read Power done"); }
-                else
-                { SetControl(trackBar3, config_str[1]); Log_Handler("Get Write Power done"); }
+                if (couting == 0)
+                {
+                    SetControl(trackBar2, config_str[1]);
+                    Log_Handler("Get Read Power done");
+                    couting++;
+                }
+                else if (couting == 1)
+                {
+                    SetControl(trackBar3, config_str[1]);
+                    Log_Handler("Get Write Power done");
+                    couting = 0;
+                }
 
             }
             else if (config_str[0] == "Region RFID")
@@ -314,14 +321,8 @@ namespace GatewayForm
             else if (config_str[0].Contains("= {"))
             {
                 MessageBox.Show(config_msg);
-                
-                com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
-                //com_type.Receive_Command_Handler(CM.COMMAND.DIS_CONNECT_CMD);
-                Thread.Sleep(500);
-                com_type.Close();
-                
-                Disconnect_Behavior();
-                ConnType_cbx.SelectedIndex = Change_conntype_cbx.SelectedIndex;
+
+                startcmdprocess(CM.COMMAND.SET_CONN_TYPE_CMD);
             }
             else if (config_str[0] == "BLF Setting")
             {
@@ -344,6 +345,7 @@ namespace GatewayForm
                 {
                     SetControl(tari_cbx, config_str[1]);
                     couting = 0;
+                    Log_Handler("Get BLF done");
                 }
 
             }
@@ -479,7 +481,6 @@ namespace GatewayForm
             {
                 CM.MessageReceived += Read_handler;
                 com_type.Get_Command_Send(CM.COMMAND.START_OPERATION_CMD);
-                com_type.Receive_Command_Handler(CM.COMMAND.START_OPERATION_CMD);
                 Stop_Behavior();
             }
             else
@@ -547,7 +548,6 @@ namespace GatewayForm
             if (com_type.getflagConnected_TCPIP())
             {
                 com_type.Get_Command_Send(CM.COMMAND.GET_CONFIGURATION_CMD);
-                com_type.Receive_Command_Handler(CM.COMMAND.GET_CONFIGURATION_CMD);
             }
             else
             {
@@ -599,7 +599,6 @@ namespace GatewayForm
                 }
                 gateway_config.AppendFormat(GW_Format[15], GPO_sets.Remove(GPO_sets.Length - 1));
                 com_type.Set_Command_Send(CM.COMMAND.SET_CONFIGURATION_CMD, gateway_config.ToString());
-                com_type.Receive_Command_Handler(CM.COMMAND.SET_CONFIGURATION_CMD);
             }
             else
             {
@@ -657,7 +656,6 @@ namespace GatewayForm
             if (com_type.getflagConnected_TCPIP())
             {
                 com_type.Get_Command_Send(CM.COMMAND.GET_RFID_CONFIGURATION_CMD);
-                com_type.Receive_Command_Handler(CM.COMMAND.GET_RFID_CONFIGURATION_CMD);
             }
             else
             {
@@ -693,9 +691,7 @@ namespace GatewayForm
         {
             if (com_type.getflagConnected_TCPIP())
             {
-                read_write_bit = 0;
-                com_type.Get_Command_Power(CM.COMMAND.GET_POWER_CMD, read_write_bit);
-                com_type.Receive_Command_Handler(CM.COMMAND.GET_POWER_CMD);
+                com_type.StartCmd_Process(CM.COMMAND.GET_POWER_CMD);
             }
             else
             {
@@ -708,12 +704,15 @@ namespace GatewayForm
         {
             if (com_type.getflagConnected_TCPIP())
             {
-                //Log_lb.Text = "Sending...";
-                byte[] power_bytes = new byte[2];
+                /*byte[] power_bytes = new byte[2];
                 power_bytes[0] = 0;
                 power_bytes[1] = (byte)trackBar2.Value;
                 com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_POWER_CMD, power_bytes);
-                com_type.Receive_Command_Handler(CM.COMMAND.SET_POWER_CMD);
+                Thread.Sleep(500);
+                power_bytes[0] = 1;
+                power_bytes[1] = (byte)trackBar3.Value;
+                com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_POWER_CMD, power_bytes);*/
+                startcmdprocess(CM.COMMAND.SET_POWER_CMD);
             }
             else
             {
@@ -721,14 +720,13 @@ namespace GatewayForm
                 Disconnect_Behavior();
             }
         }
-
+        /*
         private void get_write_power_btn_Click(object sender, EventArgs e)
         {
             if (com_type.getflagConnected_TCPIP())
             {
-                read_write_bit = 1;
-                com_type.Get_Command_Power(CM.COMMAND.GET_POWER_CMD, read_write_bit);
-                com_type.Receive_Command_Handler(CM.COMMAND.GET_POWER_CMD);
+                //read_write_bit = 1;
+                //com_type.Get_Command_Power(CM.COMMAND.GET_POWER_CMD, read_write_bit);
             }
             else
             {
@@ -745,21 +743,19 @@ namespace GatewayForm
                 power_bytes[0] = 1;
                 power_bytes[1] = (byte)trackBar3.Value;
                 com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_POWER_CMD, power_bytes);
-                com_type.Receive_Command_Handler(CM.COMMAND.SET_POWER_CMD);
             }
             else
             {
                 MessageBox.Show("Connection was disconnected\nPlease connect again!");
                 Disconnect_Behavior();
             }
-        }
+        }*/
 
         private void get_region_btn_Click(object sender, EventArgs e)
         {
             if (com_type.getflagConnected_TCPIP())
             {
                 com_type.Get_Command_Send(CM.COMMAND.GET_REGION_CMD);
-                com_type.Receive_Command_Handler(CM.COMMAND.GET_REGION_CMD);
             }
             else
             {
@@ -775,7 +771,6 @@ namespace GatewayForm
                 byte[] region_byte = new byte[1];
                 region_byte[0] = (byte)region_lst.SelectedIndex;
                 com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_REGION_CMD, region_byte);
-                com_type.Receive_Command_Handler(CM.COMMAND.SET_REGION_CMD);
             }
             else
             {
@@ -804,7 +799,6 @@ namespace GatewayForm
             if (com_type.getflagConnected_TCPIP())
             {
                 com_type.Get_Command_Send(CM.COMMAND.GET_POWER_MODE_CMD);
-                com_type.Receive_Command_Handler(CM.COMMAND.GET_POWER_MODE_CMD);
             }
             else
             {
@@ -820,7 +814,6 @@ namespace GatewayForm
                 byte[] pw_mode_byte = new byte[1];
                 pw_mode_byte[0] = (byte)power_mode_cbx.SelectedIndex;
                 com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_POWER_MODE_CMD, pw_mode_byte);
-                com_type.Receive_Command_Handler(CM.COMMAND.SET_POWER_MODE_CMD);
             }
             else
             {
@@ -852,7 +845,6 @@ namespace GatewayForm
                 byte[] conn_type_byte = new byte[1];
                 conn_type_byte[0] = (byte)Change_conntype_cbx.SelectedIndex;
                 com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_CONN_TYPE_CMD, conn_type_byte);
-                com_type.Receive_Command_Handler(CM.COMMAND.SET_CONN_TYPE_CMD);
             }
             else
             {
@@ -867,32 +859,15 @@ namespace GatewayForm
             {
                 if (trackBar2.Value == 5 && Start_Operate_btn.Text == "Start inventory" && Connect_btn.Text == "Disconnect")
                 {
-                    //com_type.RFID_Process();
-                    /*if (ConnType_cbx.SelectedIndex == 3)
-                        startcmdprocess(CM.COMMAND.GET_POWER_CMD);
-                    else //if (ConnType_cbx.SelectedIndex == 1)
-                    {*/
                     if (com_type.getflagConnected_TCPIP())
                     {
-                        read_write_bit = 0;
-                        com_type.Get_Command_Power(CM.COMMAND.GET_POWER_CMD, read_write_bit);
-                        com_type.Receive_Command_Handler(CM.COMMAND.GET_POWER_CMD);
-
-                        read_write_bit = 1;
-                        com_type.Get_Command_Power(CM.COMMAND.GET_POWER_CMD, read_write_bit);
-                        com_type.Receive_Command_Handler(CM.COMMAND.GET_POWER_CMD);
-
-                        com_type.Get_Command_Send(CM.COMMAND.GET_POWER_MODE_CMD);
-                        com_type.Receive_Command_Handler(CM.COMMAND.GET_POWER_MODE_CMD);
+                        com_type.StartCmd_Process(CM.COMMAND.GET_POWER_MODE_CMD);
                     }
                     else
                     {
                         MessageBox.Show("Connection was disconnected\nPlease connect again!");
                         Disconnect_Behavior();
                     }
-                    //com_type.Get_Command_Send(CM.COMMAND.GET_REGION_CMD);
-                    //com_type.Receive_Command_Handler(CM.COMMAND.GET_REGION_CMD);
-                    //}
                 }
             }
         }
@@ -957,18 +932,6 @@ namespace GatewayForm
         }
         private void ptimer_loghandle_Tick_1(object sender, EventArgs e)
         {
-            //SetControl(Log_lb, messageLoghandle);
-            //Log_lb.Text = messageLoghandle;
-            /*if (messageLoghandle == "No Connection")
-            {
-                SetControl(status_lb, "Inactive");
-                SetControl(status_btn, "Failed");
-            }
-            else if (messageLoghandle == "Connected")
-            {
-                SetControl(status_lb, "Active");
-                SetControl(status_btn, "True");
-            }*/
             if (Start_Operate_btn.Text == "Stop inventory")
                 Log_lb.Text = "Inventory Mode";
             if (Log_lb.Text == "Disconnected" || Log_lb.Text == "Abort due to close")
@@ -984,36 +947,28 @@ namespace GatewayForm
 
         private void get_protocol_btn_Click(object sender, EventArgs e)
         {
-            //MessageBox.Show("In Development.\nWait for the next version.");
-            com_type.Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 0);
-            com_type.Receive_Command_Handler(CM.COMMAND.GET_BLF_CMD);
-
-            com_type.Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 1);
-            com_type.Receive_Command_Handler(CM.COMMAND.GET_BLF_CMD);
-
-            com_type.Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 2);
-            com_type.Receive_Command_Handler(CM.COMMAND.GET_BLF_CMD);
+            if (com_type.getflagConnected_TCPIP())
+            {
+                com_type.StartCmd_Process(CM.COMMAND.GET_BLF_CMD);
+            }
+            else
+            {
+                MessageBox.Show("Connection was disconnected\nPlease connect again!");
+                Disconnect_Behavior();
+            }
         }
 
         private void set_protocol_btn_Click(object sender, EventArgs e)
         {
-            //MessageBox.Show("In Development.\nWait for the next version.");
-            byte[] freq_bytes = new byte[2];
-            freq_bytes[0] = 0;
-            freq_bytes[1] = (byte)(2 * freq_cbx.SelectedIndex);
-            com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_BLF_CMD, freq_bytes);
-            com_type.Receive_Command_Handler(CM.COMMAND.SET_BLF_CMD);
-
-            //freq_bytes = new byte[2];
-            freq_bytes[0] = 1;
-            freq_bytes[1] = (byte)(coding_cbx.SelectedIndex);
-            com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_BLF_CMD, freq_bytes);
-            com_type.Receive_Command_Handler(CM.COMMAND.SET_BLF_CMD);
-
-            freq_bytes[0] = 2;
-            freq_bytes[1] = (byte)(tari_cbx.SelectedIndex);
-            com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_BLF_CMD, freq_bytes);
-            com_type.Receive_Command_Handler(CM.COMMAND.SET_BLF_CMD);
+            if (com_type.getflagConnected_TCPIP())
+            {
+                startcmdprocess(CM.COMMAND.SET_BLF_CMD);
+            }
+            else
+            {
+                MessageBox.Show("Connection was disconnected\nPlease connect again!");
+                Disconnect_Behavior();
+            }
         }
 
         private void set_port_btn_Click(object sender, EventArgs e)
@@ -1021,6 +976,28 @@ namespace GatewayForm
             switch (Change_conntype_cbx.SelectedIndex)
             {
                 case 0:
+                    if (!String.IsNullOrEmpty(zigbee_form.PanID))
+                    {
+                        String zigbee_config = String.Empty;
+                        zigbee_config = "gateway_zigbee_configure = {\nbaudrate = 115200"
+                                        + "\nport_name = /dev/ttyO4"
+                                        + "\ntimeout = 50"
+                                        + "\nmax_packet_length = 73"
+                                        + "\nchannel = 25"
+                                        + "\npanid = 38CE"
+                                        + "\nepid = "
+                                        + "\ndeviceid = "
+                                        + "\n}";
+
+                        MessageBox.Show(zigbee_config);
+                        byte[] sd = Encoding.ASCII.GetBytes(zigbee_config);
+                        byte[] newArray = new byte[sd.Length + 1];
+                        sd.CopyTo(newArray, 1);
+                        newArray[0] = 0;
+                        com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_PORT_PROPERTIES_CMD, newArray);
+                    }
+                    else
+                        MessageBox.Show("Zigbee Config not confirm");
                     break;
                 case 1:
                     if (!String.IsNullOrEmpty(wifi_form.ssid_name))
@@ -1039,8 +1016,11 @@ namespace GatewayForm
                                           + "\ngateway=" + wifi_form.gateway
                                           + "\n}";
                         MessageBox.Show(wifi_config);
-                        com_type.Set_Command_Send(CM.COMMAND.SET_PORT_PROPERTIES_CMD, wifi_config);
-                        com_type.Receive_Command_Handler(CM.COMMAND.SET_PORT_PROPERTIES_CMD);
+                        byte[] sd = Encoding.ASCII.GetBytes(wifi_config);
+                        byte[] newArray = new byte[sd.Length + 1];
+                        sd.CopyTo(newArray, 1);
+                        newArray[0] = 1;
+                        com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_PORT_PROPERTIES_CMD, newArray);
                     }
                     else
                         MessageBox.Show("Wifi Config not confirm");
@@ -1068,8 +1048,11 @@ namespace GatewayForm
                                           + "\ngateway=" + tcp_form.gateway
                                           + "\n}";
                         MessageBox.Show(tcp_config);
-                        com_type.Set_Command_Send(CM.COMMAND.SET_PORT_PROPERTIES_CMD, tcp_config);
-                        com_type.Receive_Command_Handler(CM.COMMAND.SET_PORT_PROPERTIES_CMD);
+                        byte[] sd = Encoding.ASCII.GetBytes(tcp_config);
+                        byte[] newArray = new byte[sd.Length + 1];
+                        sd.CopyTo(newArray, 1);
+                        newArray[0] = 3;
+                        com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_PORT_PROPERTIES_CMD, newArray);
                     }
                     else
                         MessageBox.Show("Ethernet config not confirm");
