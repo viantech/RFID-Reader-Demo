@@ -107,6 +107,15 @@ namespace GatewayForm.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ds.
+        /// </summary>
+        internal static string NODE_MAC {
+            get {
+                return ResourceManager.GetString("NODE_MAC", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to \DataStore.
         /// </summary>
         internal static string SELDAT_DATABASE {
@@ -134,6 +143,15 @@ namespace GatewayForm.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to UCAST.
+        /// </summary>
+        internal static string UCAST_HEADER {
+            get {
+                return ResourceManager.GetString("UCAST_HEADER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to AT+UCASTB:.
         /// </summary>
         internal static string ZIGBEE_BINARY {
@@ -143,11 +161,11 @@ namespace GatewayForm.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to AT+UCAST:000D6F00059B7D98=.
+        ///   Looks up a localized string similar to AT+UCAST:.
         /// </summary>
-        internal static string ZIGBEE_HEADER {
+        internal static string ZIGBEE_SEND {
             get {
-                return ResourceManager.GetString("ZIGBEE_HEADER", resourceCulture);
+                return ResourceManager.GetString("ZIGBEE_SEND", resourceCulture);
             }
         }
     }

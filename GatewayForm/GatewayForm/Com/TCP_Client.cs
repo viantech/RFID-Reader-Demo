@@ -574,16 +574,15 @@ namespace GatewayForm
 
                                 else CM.Data_Receive_Handler(result_data_byte);
                                 result_data_byte = new byte[0];
-                                
-                                
                             }
                             else
-                                Receive_Command_Handler();
+                            { result_data_byte = new byte[0]; Receive_Command_Handler(); }
                         }
                     }
                     else
                     {
                         MessageBox.Show("Wrong Message");
+                        result_data_byte = new byte[0];
                         Receive_Command_Handler();
                     }
                 }

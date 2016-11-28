@@ -442,7 +442,7 @@ namespace GatewayForm
                             if (0x00 == byte_bits[0])
                                 Cmd_Raise("BLF Setting\n" + byte_bits[1].ToString() + "\n");
                             else
-                                Log_Raise("Fail get power");
+                                Log_Raise("Fail Get BLF");
                         }
                         break;
                     case COMMAND.SET_BLF_CMD:
@@ -451,6 +451,13 @@ namespace GatewayForm
                             Log_Raise("Set BLF done");
                         else
                             Log_Raise("Failed BLF");
+                        break;
+                    case COMMAND.REBOOT_CMD:
+                        info_ack = Decode_Frame_ACK((byte)COMMAND.REBOOT_CMD, command_bytes);
+                        if (0x00 == info_ack)
+                            Log_Raise("Rebooting ...");
+                        else
+                            Log_Raise("Failed Reboot");
                         break;
                     default:
                         break;

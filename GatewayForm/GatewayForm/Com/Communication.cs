@@ -103,7 +103,7 @@ namespace GatewayForm
             switch (type)
             {
                 case CM.TYPECONNECT.HDR_ZIGBEE:
-                    zigbee = null;
+                    zigbee.Free();
                     break;
                 case CM.TYPECONNECT.HDR_WIFI:
                     tcp.Free();

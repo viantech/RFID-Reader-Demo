@@ -145,7 +145,13 @@
   <data name="ZIGBEE_BINARY" xml:space="preserve">
     <value>AT+UCASTB:</value>
   </data>
-  <data name="ZIGBEE_HEADER" xml:space="preserve">
-    <value>AT+UCAST:000D6F00059B7D98=</value>
+  <data name="ZIGBEE_SEND" xml:space="preserve">
+    <value>AT+UCAST:</value>
+  </data>
+  <data name="NODE_MAC" xml:space="preserve">
+    <value>ds</value>
+  </data>
+  <data name="UCAST_HEADER" xml:space="preserve">
+    <value>UCAST</value>
   </data>
 </root>

@@ -26,19 +26,21 @@ namespace GatewayForm
 
     public class SocketClient
     {
-        private static byte[] zigbee_header_byte = Encoding.ASCII.GetBytes(Properties.Resources.ZIGBEE_HEADER);
+        private static byte[] zigbee_header_byte = Encoding.ASCII.GetBytes(Properties.Resources.ZIGBEE_SEND 
+                                                                  + Properties.Resources.ADDRESS_NODE + "=");
         private static byte[] zigbee_binary = Encoding.ASCII.GetBytes(Properties.Resources.ZIGBEE_BINARY);
         private static byte[] addr_node = Encoding.ASCII.GetBytes(Properties.Resources.ADDRESS_NODE);
+        private static byte[] ucast_header = Encoding.ASCII.GetBytes(Properties.Resources.UCAST_HEADER);
+        
         /*private static byte[] seq_header = Encoding.ASCII.GetBytes("SEQ");
         private static byte[] ack_header = Encoding.ASCII.GetBytes("ACK");
         private static byte[] nack_header = Encoding.ASCII.GetBytes("NACK");
         private static byte[] error_header = Encoding.ASCII.GetBytes("ERROR");*/
-        private static byte[] ucast_header = Encoding.ASCII.GetBytes("UCAST");
         private byte[] result_byte_frame = new byte[0];
         private byte[] raw_read_byte = new byte[0];
         //private string respose;
         private static int retry_count = 3;
-        private volatile bool start_enable = false;
+        //private volatile bool start_enable = false;
         private TcpClient client;
         private NetworkStream stream;
         //private Socket client_socket;
@@ -62,10 +64,8 @@ namespace GatewayForm
             {
                 MessageBox.Show(e.ToString());
             }
+            Receive_Handler();
             Send_ConnectionRequest();
-            ReadAsync(CM.COMMAND.CONNECTION_REQUEST_CMD);
-            Get_Command_Send(CM.COMMAND.GET_CONFIGURATION_CMD);
-            ReadAsync(CM.COMMAND.GET_CONFIGURATION_CMD);
         }
         private void OnConnect(IAsyncResult ar)
         {
@@ -117,8 +117,6 @@ namespace GatewayForm
         /// <param name="command"></param>
         public void Get_Command_Send(CM.COMMAND command)
         {
-            if (command == CM.COMMAND.STOP_OPERATION_CMD)
-                start_enable = false;
             CM.SubFrameFormat sub_fmt_get = new CM.SubFrameFormat();
             CM.FrameFormat fmt_get = new CM.FrameFormat();
             fmt_get.command = (byte)command;
@@ -204,7 +202,10 @@ namespace GatewayForm
                 byte[] byte_tcp = CM.Encode_SubFrame(sub_fmt_send);
                 Send_Binary(byte_tcp);
                 if (i < num_packet -1)
-                    WaitACK();
+                {
+                    receiveDone.WaitOne(2000);
+                    receiveDone.Reset();
+                }
             }
         }
 
@@ -237,7 +238,7 @@ namespace GatewayForm
             
         }
 
-        private void WaitACK()
+        /*private void WaitACK()
         {
             ZigbeeClient state = new ZigbeeClient();
 
@@ -275,7 +276,7 @@ namespace GatewayForm
             {
                 CM.Log_Raise("Abort due to close");
             }
-        }
+        }*/
 
         public void SendAsync(byte[] bytesSend)
         {
@@ -304,8 +305,6 @@ namespace GatewayForm
         }
         #endregion
 
-        #region Receive
-
         #region Request Connection Command
 
         private void Request_Connection_Handler(byte[] byte_receive)
@@ -317,6 +316,8 @@ namespace GatewayForm
             if (0x00 == byte_receive[0])
             {
                 CM.Log_Raise("Accepted!");
+
+                Get_Command_Send(CM.COMMAND.GET_CONFIGURATION_CMD);
             }
             else
             {
@@ -327,7 +328,7 @@ namespace GatewayForm
                     raw_read_byte = new byte[0];
                     retry_count--;
                     Send_ConnectionRequest();
-                    ReadAsync(CM.COMMAND.CONNECTION_REQUEST_CMD);
+                    //ReadAsync(CM.COMMAND.CONNECTION_REQUEST_CMD);
                 }
                 else
                 {
@@ -341,8 +342,6 @@ namespace GatewayForm
         }
 
         #endregion
-
-        #region Read Handler
 
         private static string ByteArrayToHexString(byte[] ba)
         {
@@ -398,121 +397,15 @@ namespace GatewayForm
         /// <param name="command_type"></param>
 
         #region Read Async
-        public void ReadAsync(CM.COMMAND type_command)
+
+        private void Receive_Handler()
         {
             ZigbeeClient state = new ZigbeeClient();
 
-            stream.BeginRead(state.buffer, 0, ZigbeeClient.ZigbeeSize, OnReadComplete, state);
-            receiveDone.WaitOne();
-            receiveDone.Reset();
-
-            int found_ucast = IndexOfByte(raw_read_byte, ucast_header) - 2;
-            if (found_ucast > 0)
-            {
-                byte[] data = raw_read_byte.Skip(found_ucast).ToArray();
-                UInt16 num_ucast, last_ucast, len_block;
-                UInt16 idx, len_stream;
-                idx = 0;
-                len_stream = (ushort)data.Length;
-                num_ucast = (ushort)(len_stream / (ushort)CM.LENGTH.MAX_SIZE_ZIGBEE_BLOCK);
-                last_ucast = (ushort)(len_stream % (ushort)CM.LENGTH.MAX_SIZE_ZIGBEE_BLOCK);
-                if (last_ucast > 0)
-                    num_ucast += 1;
-                len_block = (ushort)CM.LENGTH.MAX_SIZE_ZIGBEE_BLOCK;
-                for (int i = 0; i < num_ucast; i++)
-                {
-                    if (i == num_ucast - 1)
-                    {
-                        if (last_ucast > 0)
-                            len_block = last_ucast;
-                    }
-                    byte[] subframe_block = new byte[len_block - 30];
-                    Buffer.BlockCopy(data, idx + 28, subframe_block, 0, subframe_block.Length);
-                    idx += len_block;
-                    byte[] meta_sub = CM.Decode_SubFrame(subframe_block, subframe_block.Length);
-                    Array.Resize(ref result_byte_frame, result_byte_frame.Length + meta_sub.Length);
-                    Buffer.BlockCopy(meta_sub, 0, result_byte_frame, result_byte_frame.Length - meta_sub.Length, meta_sub.Length);
-                }
-                if (result_byte_frame.Length > 0)
-                {
-                    if (CM.COMMAND.CONNECTION_REQUEST_CMD == type_command)
-                        Request_Connection_Handler(CM.Decode_Frame((byte)CM.COMMAND.CONNECTION_REQUEST_CMD, result_byte_frame));
-                    else if (CM.COMMAND.START_OPERATION_CMD == type_command)
-                    {
-                        /* start operate */
-                        byte info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.START_OPERATION_CMD, result_byte_frame);
-                        if (0x00 == info_ack)
-                        {
-                            start_enable = true;
-                            //pingTimer.Stop();
-                            CM.Log_Raise("Inventory Mode");
-                            Receive_TagID_Handler();
-                        }
-                        else
-                            MessageBox.Show("Failed start operation");
-                    }
-                    else CM.Data_Receive_Handler(result_byte_frame);
-
-                    result_byte_frame = new byte[0];
-                }
-                raw_read_byte = new byte[0];
-            }
+            stream.BeginRead(state.buffer, 0, ZigbeeClient.ZigbeeSize, OnRead, state);
         }
 
-        private void OnReadComplete(IAsyncResult ar)
-        {
-            int bytesRead;
-            ZigbeeClient state = (ZigbeeClient)ar.AsyncState;
-            try
-            {
-                lock (stream)
-                {
-                    bytesRead = stream.EndRead(ar);
-                }
-                if (bytesRead < 1)
-                    return;
-                else
-                {
-                    Array.Resize(ref raw_read_byte, raw_read_byte.Length + bytesRead);
-                    Buffer.BlockCopy(state.buffer, 0, raw_read_byte, raw_read_byte.Length - bytesRead, bytesRead);
-
-                    if (bytesRead > 4)
-                    {
-                        if (state.buffer[bytesRead - 4] == 0x01)
-                        {
-                            if (state.buffer[bytesRead - 2] == 0x0d && state.buffer[bytesRead - 1] == 0x0a)
-                            {
-                                receiveDone.Set();
-                            }
-                            else stream.BeginRead(state.buffer, 0, ZigbeeClient.ZigbeeSize, OnReadComplete, state);
-                        }
-                        else stream.BeginRead(state.buffer, 0, ZigbeeClient.ZigbeeSize, OnReadComplete, state);
-                    }
-                    else stream.BeginRead(state.buffer, 0, ZigbeeClient.ZigbeeSize, OnReadComplete, state);
-                }
-            }
-            catch (IOException e)
-            {
-                MessageBox.Show(e.ToString());
-            }
-            catch (ObjectDisposedException)
-            {
-                CM.Log_Raise("Abort due to close");
-            }
-        }
-
-        #endregion
-
-       
-
-        private void Receive_TagID_Handler()
-        {
-            ZigbeeClient state = new ZigbeeClient();
-
-            stream.BeginRead(state.buffer, 0, ZigbeeClient.ZigbeeSize, OnReadIDComplete, state);
-        }
-
-        private void OnReadIDComplete(IAsyncResult ar)
+        private void OnRead(IAsyncResult ar)
         {
             int bytesRead;
             ZigbeeClient state = (ZigbeeClient)ar.AsyncState;
@@ -523,19 +416,19 @@ namespace GatewayForm
                 {
                     Array.Resize(ref raw_read_byte, raw_read_byte.Length + bytesRead);
                     Buffer.BlockCopy(state.buffer, 0, raw_read_byte, raw_read_byte.Length - bytesRead, bytesRead);
-
+                    string recv = Encoding.ASCII.GetString(state.buffer, 0, bytesRead);
+                    if (recv.Contains("ACK"))
+                    {
+                        receiveDone.Set();
+                    }
                     if (bytesRead > 4)
                     {
                         if (state.buffer[bytesRead - 4] == 0x01)
                         {
                             if (state.buffer[bytesRead - 2] == 0x0d && state.buffer[bytesRead - 1] == 0x0a)
                             {
-
-                                if (!start_enable)
-                                {
-                                    int found_ucast = IndexOfByte(raw_read_byte, ucast_header) - 2;
-                                    raw_read_byte = raw_read_byte.Skip(found_ucast).ToArray();
-                                }
+                                int found_ucast = IndexOfByte(raw_read_byte, ucast_header) - 2;
+                                raw_read_byte = raw_read_byte.Skip(found_ucast).ToArray();
                                 UInt16 num_ucast, last_ucast, len_block;
                                 UInt16 idx, len_stream;
                                 idx = 0;
@@ -556,27 +449,42 @@ namespace GatewayForm
                                     Buffer.BlockCopy(raw_read_byte, idx + 28, subframe_block, 0, subframe_block.Length);
                                     idx += len_block;
                                     byte[] meta_sub = CM.Decode_SubFrame(subframe_block, subframe_block.Length);
-                                    Array.Resize(ref result_byte_frame, result_byte_frame.Length + meta_sub.Length);
-                                    Buffer.BlockCopy(meta_sub, 0, result_byte_frame, result_byte_frame.Length - meta_sub.Length, meta_sub.Length);
+                                    if (meta_sub != null)
+                                    {
+                                        Array.Resize(ref result_byte_frame, result_byte_frame.Length + meta_sub.Length);
+                                        Buffer.BlockCopy(meta_sub, 0, result_byte_frame, result_byte_frame.Length - meta_sub.Length, meta_sub.Length);
+                                    }
+                                    else
+                                    {
+                                        MessageBox.Show("Wrong Message");
+                                        result_byte_frame = new byte[0];
+                                        raw_read_byte = new byte[0];
+                                        Receive_Handler();
+                                    }
+
                                 }
-                                /* TAG ID */
-                                CM.Data_Receive_Handler(result_byte_frame);
-                                result_byte_frame = new byte[0];
-                                raw_read_byte = new byte[0];
-                                if (!start_enable)
+                                if (result_byte_frame != null)
                                 {
-                                    
+                                    if ((byte)CM.COMMAND.CONNECTION_REQUEST_CMD == result_byte_frame[0])
+                                        Request_Connection_Handler(CM.Decode_Frame((byte)CM.COMMAND.CONNECTION_REQUEST_CMD, result_byte_frame));
+                                    else CM.Data_Receive_Handler(result_byte_frame);
+
+                                    result_byte_frame = new byte[0];
+                                    raw_read_byte = new byte[0];
+                                    Receive_Handler();
                                 }
                                 else
                                 {
-                                    Receive_TagID_Handler();
+                                    result_byte_frame = new byte[0];
+                                    raw_read_byte = new byte[0];
+                                    Receive_Handler();
                                 }
                             }
-                            else stream.BeginRead(state.buffer, 0, ZigbeeClient.ZigbeeSize, OnReadIDComplete, state); //make sure the last packet
+                            else stream.BeginRead(state.buffer, 0, ZigbeeClient.ZigbeeSize, OnRead, state); //make sure the last packet
                         }
-                        else stream.BeginRead(state.buffer, 0, ZigbeeClient.ZigbeeSize, OnReadIDComplete, state); // not the last packet
+                        else stream.BeginRead(state.buffer, 0, ZigbeeClient.ZigbeeSize, OnRead, state); // not the last packet
                     }
-                    else stream.BeginRead(state.buffer, 0, ZigbeeClient.ZigbeeSize, OnReadIDComplete, state); // read < 4bytes
+                    else stream.BeginRead(state.buffer, 0, ZigbeeClient.ZigbeeSize, OnRead, state); // read < 4bytes
                 }
 
             }
@@ -589,12 +497,15 @@ namespace GatewayForm
                 CM.Log_Raise("Abort connection");
             }
         }
-
-        #endregion
-
         #endregion
 
         #region Free resource
+        public void Free()
+        {
+            stream.Close();
+            //client_socket.Close();
+            client.Close();
+        }
         /*/// <summary>
         /// Free TCP resource
         /// </summary>
@@ -625,9 +536,7 @@ namespace GatewayForm
         }*/
         ~SocketClient()
         {
-            stream.Close();
-            //client_socket.Close();
-            client.Close();
+            
         }
         #endregion
 
