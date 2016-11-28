@@ -414,13 +414,14 @@ namespace GatewayForm
                 bytesRead = stream.EndRead(ar);
                 if (bytesRead > 0)
                 {
+                    if (state.buffer[bytesRead - 3] == 0x4B && state.buffer[bytesRead - 2] == 0x0d && state.buffer[bytesRead - 1] == 0x0a)
+                    {
+                        Receive_Handler();
+                        receiveDone.Set();
+                        return;
+                    }
                     Array.Resize(ref raw_read_byte, raw_read_byte.Length + bytesRead);
                     Buffer.BlockCopy(state.buffer, 0, raw_read_byte, raw_read_byte.Length - bytesRead, bytesRead);
-                    string recv = Encoding.ASCII.GetString(state.buffer, 0, bytesRead);
-                    if (recv.Contains("ACK"))
-                    {
-                        receiveDone.Set();
-                    }
                     if (bytesRead > 4)
                     {
                         if (state.buffer[bytesRead - 4] == 0x01)
