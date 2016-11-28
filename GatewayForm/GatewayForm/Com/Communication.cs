@@ -68,14 +68,11 @@ namespace GatewayForm
             {
                 case CM.TYPECONNECT.HDR_ZIGBEE:
 
-                    //zigbee.Connect(ip_addr, port);
+                    zigbee.Connect(ip_addr, port);
                     break;
                 case CM.TYPECONNECT.HDR_WIFI:
                     tcp.InitClient(ip_addr, port);
-                    if (!getflagConnected_TCPIP())
-                    {
-                        
-                    }
+                    
                     /*if (pTcpipClient != null)
                     {
                         pTcpipClient.CreateSocketConnection(ip_addr, port);
@@ -93,10 +90,7 @@ namespace GatewayForm
                     break;
                 case CM.TYPECONNECT.HDR_ETHERNET:
                     tcp.InitClient(ip_addr, port);
-                    if (!getflagConnected_TCPIP())
-                    {
-                       
-                    }
+                    
                     break;
                 case CM.TYPECONNECT.HDR_RS232:
                     break;

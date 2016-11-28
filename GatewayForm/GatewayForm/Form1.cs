@@ -95,10 +95,9 @@ namespace GatewayForm
                             com_type.Get_Command_Power(CM.COMMAND.REBOOT_CMD, 2);
                         else
                             com_type.Get_Command_Power(CM.COMMAND.REBOOT_CMD, 1);
-                        while (!com_type.getflagConnected_TCPIP()) ;
+                        while (!com_type.getflagRecv()) ;
                         com_type.Close();
                         Disconnect_Behavior();
-                        com_type.setflagConnected_TCPIP(false);
                         ConnType_cbx.SelectedIndex = Change_conntype_cbx.SelectedIndex;
                         break;
                     case CM.COMMAND.DIS_CONNECT_CMD:
