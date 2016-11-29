@@ -499,6 +499,7 @@ namespace GatewayForm
                     Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
                     receiveDone.WaitOne();
                     Free();
+                    break;
                 default:
                     break;
             }
