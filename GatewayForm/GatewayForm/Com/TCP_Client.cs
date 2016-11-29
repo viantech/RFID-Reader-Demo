@@ -463,40 +463,42 @@ namespace GatewayForm
             switch (command)
             {
                 case CM.COMMAND.GET_POWER_CMD:
-
                     receiveDone.Reset();
                     Get_Command_Power(CM.COMMAND.GET_POWER_CMD, 0);
                     receiveDone.WaitOne(2000);
-                    receiveDone.Reset();
                     Get_Command_Power(CM.COMMAND.GET_POWER_CMD, 1);
                     receiveDone.WaitOne(2000);
-                    receiveDone.Reset();
                     break;
                 case CM.COMMAND.GET_POWER_MODE_CMD:
-
+                    receiveDone.Reset();
+                    Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 0);
+                    receiveDone.WaitOne(2000);
+                    Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 1);
+                    receiveDone.WaitOne(2000);
+                    Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 2);
+                    receiveDone.WaitOne(2000);
                     receiveDone.Reset();
                     Get_Command_Power(CM.COMMAND.GET_POWER_CMD, 0);
                     receiveDone.WaitOne(2000);
-                    receiveDone.Reset();
                     Get_Command_Power(CM.COMMAND.GET_POWER_CMD, 1);
                     receiveDone.WaitOne(2000);
-                    receiveDone.Reset();
                     Get_Command_Send(CM.COMMAND.GET_POWER_MODE_CMD);
                     receiveDone.WaitOne(2000);
-                    receiveDone.Reset();
                     break;
                 case CM.COMMAND.GET_BLF_CMD:
                     receiveDone.Reset();
                     Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 0);
                     receiveDone.WaitOne(2000);
-                    receiveDone.Reset();
                     Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 1);
                     receiveDone.WaitOne(2000);
-                    receiveDone.Reset();
                     Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 2);
                     receiveDone.WaitOne(2000);
-                    receiveDone.Reset();
                     break;
+                case CM.COMMAND.DIS_CONNECT_CMD:
+                    receiveDone.Reset();
+                    Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
+                    receiveDone.WaitOne();
+                    Free();
                 default:
                     break;
             }
@@ -609,6 +611,7 @@ namespace GatewayForm
         /// <param name="command_type"></param>
         private void Receive_Command_Handler()
         {
+            receiveDone.Reset();
             recv_flag = false;
             // Create the state object.
             StateTCPClient state = new StateTCPClient();

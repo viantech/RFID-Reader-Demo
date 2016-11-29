@@ -101,9 +101,7 @@ namespace GatewayForm
                         ConnType_cbx.SelectedIndex = Change_conntype_cbx.SelectedIndex;
                         break;
                     case CM.COMMAND.DIS_CONNECT_CMD:
-                        com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
-                        while (!com_type.getflagRecv()) ;
-                        com_type.Close();
+                        com_type.StartCmd_Process(CM.COMMAND.DIS_CONNECT_CMD);
                         Disconnect_Behavior();
                         break;
                     case CM.COMMAND.SET_POWER_CMD:
@@ -157,6 +155,7 @@ namespace GatewayForm
                         else
                         {
                             startcmdprocess(CM.COMMAND.DIS_CONNECT_CMD);
+                            //com_type.StartCmd_Process(CM.COMMAND.DIS_CONNECT_CMD);
                         }
                         break;
                     //wifi
@@ -703,14 +702,6 @@ namespace GatewayForm
         {
             if (com_type.getflagConnected_TCPIP())
             {
-                /*byte[] power_bytes = new byte[2];
-                power_bytes[0] = 0;
-                power_bytes[1] = (byte)trackBar2.Value;
-                com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_POWER_CMD, power_bytes);
-                Thread.Sleep(500);
-                power_bytes[0] = 1;
-                power_bytes[1] = (byte)trackBar3.Value;
-                com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_POWER_CMD, power_bytes);*/
                 startcmdprocess(CM.COMMAND.SET_POWER_CMD);
             }
             else

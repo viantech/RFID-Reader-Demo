@@ -799,6 +799,7 @@
             "RS485"});
             this.ConnectionList_ck.Location = new System.Drawing.Point(183, 91);
             this.ConnectionList_ck.Name = "ConnectionList_ck";
+            this.ConnectionList_ck.SelectionMode = System.Windows.Forms.SelectionMode.None;
             this.ConnectionList_ck.Size = new System.Drawing.Size(75, 80);
             this.ConnectionList_ck.TabIndex = 7;
             // 
