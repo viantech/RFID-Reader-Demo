@@ -497,7 +497,7 @@ namespace GatewayForm
                 case CM.COMMAND.DIS_CONNECT_CMD:
                     receiveDone.Reset();
                     Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
-                    receiveDone.WaitOne();
+                    receiveDone.WaitOne(2000);
                     Free();
                     break;
                 default:
