@@ -54,13 +54,13 @@ namespace GatewayForm
         {
             tcp.connect_ok = v;
         }
-        public Boolean getflagRecv()
+        public Boolean waitflagRevTCP()
         {
-            return tcp.recv_flag;
+            return tcp.receiveDone.WaitOne(2000);
         }
-        public void setflagRecv(Boolean v)
+        public void resetflagRevTCP()
         {
-            tcp.recv_flag = v;
+            tcp.receiveDone.Reset();
         }
         public void Connect(string ip_addr, int port)
         {

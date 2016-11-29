@@ -40,14 +40,14 @@ namespace GatewayForm
         public bool connect_ok = false;
 
         // ManualResetEvent instances signal completion.
-        private ManualResetEvent connectDone = new ManualResetEvent(false);
+        public ManualResetEvent connectDone = new ManualResetEvent(false);
         private ManualResetEvent sendDone = new ManualResetEvent(false);
-        private ManualResetEvent receiveDone = new ManualResetEvent(false);
+        public ManualResetEvent receiveDone = new ManualResetEvent(false);
         //Ping connection
         //private System.Timers.Timer pingTimer = new System.Timers.Timer() { Interval = 10000 };
         private ManualResetEvent waiter = new ManualResetEvent(false);
         // Event Handler
-        public bool recv_flag = false;
+        //public bool recv_flag = false;
         //public bool alive = true;
         private static int retry_count = 3;
 
@@ -470,7 +470,6 @@ namespace GatewayForm
                     receiveDone.WaitOne(2000);
                     break;
                 case CM.COMMAND.GET_POWER_MODE_CMD:
-                    receiveDone.Reset();
                     Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 0);
                     receiveDone.WaitOne(2000);
                     Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 1);
@@ -570,7 +569,6 @@ namespace GatewayForm
                             if (result_data_byte != null)
                             {
                                 receiveDone.Set();
-                                recv_flag = true;
                                 Receive_Command_Handler();
                                 if ((byte)CM.COMMAND.CONNECTION_REQUEST_CMD == result_data_byte[0])
                                     Request_Connection_Handler(CM.Decode_Frame((byte)CM.COMMAND.CONNECTION_REQUEST_CMD, result_data_byte));
@@ -613,7 +611,6 @@ namespace GatewayForm
         private void Receive_Command_Handler()
         {
             receiveDone.Reset();
-            recv_flag = false;
             // Create the state object.
             StateTCPClient state = new StateTCPClient();
             state.workSocket = tcp_client;
@@ -643,8 +640,14 @@ namespace GatewayForm
                 //pingTimer.Stop();
                 CM.Log_Raise("Disconnected");
             }
+            catch (SocketException se)
+            {
+                MessageBox.Show(se.ToString());
+            }
             catch (ObjectDisposedException e)
-            { MessageBox.Show(e.ToString()); }
+            { 
+                MessageBox.Show(e.ToString()); 
+            }
         }
 
         ~TCP_Client()

@@ -90,45 +90,43 @@ namespace GatewayForm
 
                         break;
                     case CM.COMMAND.SET_CONN_TYPE_CMD:
-                        //com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
                         if (Change_conntype_cbx.SelectedIndex == 1)
                             com_type.Get_Command_Power(CM.COMMAND.REBOOT_CMD, 2);
                         else
                             com_type.Get_Command_Power(CM.COMMAND.REBOOT_CMD, 1);
-                        while (!com_type.getflagRecv()) ;
+                        com_type.waitflagRevTCP();
                         com_type.Close();
                         Disconnect_Behavior();
                         ConnType_cbx.SelectedIndex = Change_conntype_cbx.SelectedIndex;
-                        break;
-                    case CM.COMMAND.DIS_CONNECT_CMD:
-                        com_type.StartCmd_Process(CM.COMMAND.DIS_CONNECT_CMD);
-                        Disconnect_Behavior();
                         break;
                     case CM.COMMAND.SET_POWER_CMD:
                         byte[] power_bytes = new byte[2];
                         power_bytes[0] = 0;
                         power_bytes[1] = (byte)trackBar2.Value;
                         com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_POWER_CMD, power_bytes);
-                        while (!com_type.getflagRecv()) ;
+                        com_type.waitflagRevTCP();
+
                         power_bytes[0] = 1;
                         power_bytes[1] = (byte)trackBar3.Value;
                         com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_POWER_CMD, power_bytes);
+                        com_type.waitflagRevTCP();
                         break;
                     case CM.COMMAND.SET_BLF_CMD:
                         byte[] freq_bytes = new byte[2];
                         freq_bytes[0] = 0;
                         freq_bytes[1] = (byte)(2 * freq_cbx.SelectedIndex);
                         com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_BLF_CMD, freq_bytes);
-                        while (!com_type.getflagRecv()) ;
+                        com_type.waitflagRevTCP();
 
                         freq_bytes[0] = 1;
                         freq_bytes[1] = (byte)(coding_cbx.SelectedIndex);
                         com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_BLF_CMD, freq_bytes);
-                        while (!com_type.getflagRecv()) ;
+                        com_type.waitflagRevTCP();
 
                         freq_bytes[0] = 2;
                         freq_bytes[1] = (byte)(tari_cbx.SelectedIndex);
                         com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_BLF_CMD, freq_bytes);
+                        com_type.waitflagRevTCP();
                         break;
                     default:
                         break;
@@ -154,8 +152,9 @@ namespace GatewayForm
                         }
                         else
                         {
-                            startcmdprocess(CM.COMMAND.DIS_CONNECT_CMD);
-                            //com_type.StartCmd_Process(CM.COMMAND.DIS_CONNECT_CMD);
+                            com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
+                            com_type.Close();
+                            Disconnect_Behavior();
                         }
                         break;
                     //wifi
@@ -174,7 +173,10 @@ namespace GatewayForm
                         }
                         else
                         {
-                            startcmdprocess(CM.COMMAND.DIS_CONNECT_CMD);
+                            com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
+                            com_type.waitflagRevTCP();
+                            com_type.Close();
+                            Disconnect_Behavior();
                         }
                         break;
                     //bluetooth
@@ -196,7 +198,10 @@ namespace GatewayForm
                         }
                         else
                         {
-                            startcmdprocess(CM.COMMAND.DIS_CONNECT_CMD);
+                            com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
+                            com_type.waitflagRevTCP();
+                            com_type.Close();
+                            Disconnect_Behavior();
                         }
                         break;
                     //RS485
@@ -689,7 +694,10 @@ namespace GatewayForm
         {
             if (com_type.getflagConnected_TCPIP())
             {
-                com_type.StartCmd_Process(CM.COMMAND.GET_POWER_CMD);
+                com_type.Get_Command_Power(CM.COMMAND.GET_POWER_CMD, 0);
+                com_type.waitflagRevTCP();
+                com_type.Get_Command_Power(CM.COMMAND.GET_POWER_CMD, 1);
+                com_type.waitflagRevTCP();
             }
             else
             {
@@ -702,44 +710,22 @@ namespace GatewayForm
         {
             if (com_type.getflagConnected_TCPIP())
             {
-                startcmdprocess(CM.COMMAND.SET_POWER_CMD);
-            }
-            else
-            {
-                MessageBox.Show("Connection was disconnected\nPlease connect again!");
-                Disconnect_Behavior();
-            }
-        }
-        /*
-        private void get_write_power_btn_Click(object sender, EventArgs e)
-        {
-            if (com_type.getflagConnected_TCPIP())
-            {
-                //read_write_bit = 1;
-                //com_type.Get_Command_Power(CM.COMMAND.GET_POWER_CMD, read_write_bit);
-            }
-            else
-            {
-                MessageBox.Show("Connection was disconnected\nPlease connect again!");
-                Disconnect_Behavior();
-            }
-        }
-
-        private void set_write_power_btn_Click(object sender, EventArgs e)
-        {
-            if (com_type.getflagConnected_TCPIP())
-            {
                 byte[] power_bytes = new byte[2];
+                power_bytes[0] = 0;
+                power_bytes[1] = (byte)trackBar2.Value;
+                com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_POWER_CMD, power_bytes);
+                com_type.waitflagRevTCP();
                 power_bytes[0] = 1;
                 power_bytes[1] = (byte)trackBar3.Value;
                 com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_POWER_CMD, power_bytes);
+                com_type.waitflagRevTCP();
             }
             else
             {
                 MessageBox.Show("Connection was disconnected\nPlease connect again!");
                 Disconnect_Behavior();
             }
-        }*/
+        }
 
         private void get_region_btn_Click(object sender, EventArgs e)
         {
@@ -789,6 +775,7 @@ namespace GatewayForm
             if (com_type.getflagConnected_TCPIP())
             {
                 com_type.Get_Command_Send(CM.COMMAND.GET_POWER_MODE_CMD);
+                com_type.waitflagRevTCP();
             }
             else
             {
@@ -939,7 +926,12 @@ namespace GatewayForm
         {
             if (com_type.getflagConnected_TCPIP())
             {
-                com_type.StartCmd_Process(CM.COMMAND.GET_BLF_CMD);
+                com_type.Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 0);
+                com_type.waitflagRevTCP();
+                com_type.Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 1);
+                com_type.waitflagRevTCP();
+                com_type.Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 2);
+                com_type.waitflagRevTCP();
             }
             else
             {
@@ -952,7 +944,21 @@ namespace GatewayForm
         {
             if (com_type.getflagConnected_TCPIP())
             {
-                startcmdprocess(CM.COMMAND.SET_BLF_CMD);
+                byte[] freq_bytes = new byte[2];
+                freq_bytes[0] = 0;
+                freq_bytes[1] = (byte)(2 * freq_cbx.SelectedIndex);
+                com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_BLF_CMD, freq_bytes);
+                com_type.waitflagRevTCP();
+
+                freq_bytes[0] = 1;
+                freq_bytes[1] = (byte)(coding_cbx.SelectedIndex);
+                com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_BLF_CMD, freq_bytes);
+                com_type.waitflagRevTCP();
+
+                freq_bytes[0] = 2;
+                freq_bytes[1] = (byte)(tari_cbx.SelectedIndex);
+                com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_BLF_CMD, freq_bytes);
+                com_type.waitflagRevTCP();
             }
             else
             {
