@@ -22,8 +22,6 @@ namespace GatewayForm
         Tcp_pop tcp_form;
         Serial_pop serial_form;
         StringBuilder gateway_config = new StringBuilder();
-        //byte read_write_bit;
-        //string messageLoghandle;
         LogIOData plog; // Declare Database Table
         string[] GW_Format = new string[16] {
                  "Seldatinc gateway configuration=\n",
@@ -43,7 +41,7 @@ namespace GatewayForm
                  "Stack light support={0}\n",
                  "Stack light GPIO={0}"
         };
-
+        List<string> list_plan_name = new List<string>();
         public Form1()
         {
             InitializeComponent();
@@ -75,19 +73,22 @@ namespace GatewayForm
             CM.Log_Msg -= Log_Handler;
             plog.loadData2Table -= LoadDatatoTablefromDBbrowser;
         }
-        public void startcmdprocess(CM.COMMAND CMD)
+        private void startcmdprocess(CM.COMMAND CMD)
         {
             Thread pThreadCmd = new Thread(() => cmdprocess(CMD));
             pThreadCmd.Start();
         }
-        public void cmdprocess(CM.COMMAND CMD)
+        private void cmdprocess(CM.COMMAND CMD)
         {
             this.Invoke((MethodInvoker)delegate
             {
                 switch (CMD)
                 {
-                    case CM.COMMAND.CONNECTION_REQUEST_CMD:
-
+                    case CM.COMMAND.DIS_CONNECT_CMD:
+                        com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
+                        com_type.waitflagRevTCP();
+                        com_type.Close();
+                        Disconnect_Behavior();
                         break;
                     case CM.COMMAND.SET_CONN_TYPE_CMD:
                         if (Change_conntype_cbx.SelectedIndex == 1)
@@ -109,6 +110,10 @@ namespace GatewayForm
                         power_bytes[0] = 1;
                         power_bytes[1] = (byte)trackBar3.Value;
                         com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_POWER_CMD, power_bytes);
+                        com_type.waitflagRevTCP();
+                        break;
+                    case CM.COMMAND.GET_POWER_MODE_CMD:
+                        com_type.Get_Command_Send(CM.COMMAND.GET_POWER_MODE_CMD);
                         com_type.waitflagRevTCP();
                         break;
                     case CM.COMMAND.SET_BLF_CMD:
@@ -173,10 +178,7 @@ namespace GatewayForm
                         }
                         else
                         {
-                            com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
-                            com_type.waitflagRevTCP();
-                            com_type.Close();
-                            Disconnect_Behavior();
+                            startcmdprocess(CM.COMMAND.DIS_CONNECT_CMD);
                         }
                         break;
                     //bluetooth
@@ -198,10 +200,7 @@ namespace GatewayForm
                         }
                         else
                         {
-                            com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
-                            com_type.waitflagRevTCP();
-                            com_type.Close();
-                            Disconnect_Behavior();
+                            startcmdprocess(CM.COMMAND.DIS_CONNECT_CMD);
                         }
                         break;
                     //RS485
@@ -234,6 +233,8 @@ namespace GatewayForm
             ViewConn_btn.Text = "Setting";
             ViewConn_btn.FlatStyle = FlatStyle.Standard;
         }
+
+        int couting = 0;
         private void GetConfig_Handler(string config_msg)
         {
             string[] config_str = config_msg.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
@@ -295,38 +296,6 @@ namespace GatewayForm
                 else SetControl(RFID_API_ckb, "no");
                 Log_Handler("Get GW Config done");
             }
-            else if (config_str[0] == "Power RFID")
-            {
-                if (couting == 0)
-                {
-                    SetControl(trackBar2, config_str[1]);
-                    Log_Handler("Get Read Power done");
-                    couting++;
-                }
-                else if (couting == 1)
-                {
-                    SetControl(trackBar3, config_str[1]);
-                    Log_Handler("Get Write Power done");
-                    couting = 0;
-                }
-
-            }
-            else if (config_str[0] == "Region RFID")
-            {
-                SetControl(region_lst, config_str[1]);
-                Log_Handler("Get Region done");
-            }
-            else if (config_str[0] == "Power Mode RFID")
-            {
-                SetControl(power_mode_cbx, config_str[1]);
-                Log_Handler("Get Power Mode done");
-            }
-            else if (config_str[0].Contains("= {"))
-            {
-                MessageBox.Show(config_msg);
-
-                startcmdprocess(CM.COMMAND.SET_CONN_TYPE_CMD);
-            }
             else if (config_str[0] == "BLF Setting")
             {
                 if (couting == 0)
@@ -352,10 +321,101 @@ namespace GatewayForm
                 }
 
             }
+            else if (config_str[0] == "Power RFID")
+            {
+                if (couting == 0)
+                {
+                    SetControl(trackBar2, config_str[1]);
+                    Log_Handler("Get Read Power done");
+                    couting++;
+                }
+                else
+                {
+                    SetControl(trackBar3, config_str[1]);
+                    Log_Handler("Get Write Power done");
+                    couting = 0;
+                }
+
+            }
+            else if (config_str[0] == "Power Mode RFID")
+            {
+                SetControl(power_mode_cbx, config_str[1]);
+                Log_Handler("Get Power Mode done");
+            }
+            else if (config_str[0] == "Region RFID")
+            {
+                SetControl(region_lst, config_str[1]);
+                Log_Handler("Get Region done");
+            }
+            else if (config_str[0].IndexOf('/') == 0)
+            {
+                //freq
+                if (config_str[16].IndexOf("250", 15) != -1)
+                    SetControl(freq_cbx, "0");
+                else if (config_str[16].IndexOf("320", 15) != -1)
+                    SetControl(freq_cbx, "1");
+                else
+                    SetControl(freq_cbx, "2");
+                //coding
+                if (config_str[13].IndexOf('0', 15) != -1)
+                    SetControl(coding_cbx, "0");
+                else if (config_str[13].IndexOf('2', 15) != -1)
+                    SetControl(coding_cbx, "1");
+                else if (config_str[13].IndexOf('4', 15) != -1)
+                    SetControl(coding_cbx, "2");
+                else if (config_str[13].IndexOf('8', 15) != -1)
+                    SetControl(coding_cbx, "3");
+                //tari
+                if (config_str[17].IndexOf("6_25", 15) != -1)
+                    SetControl(tari_cbx, "2");
+                else if (config_str[17].IndexOf("12_5", 15) != -1)
+                    SetControl(tari_cbx, "1");
+                else
+                    SetControl(tari_cbx, "0");
+                //readpower
+                SetControl(trackBar2, config_str[23].Substring(config_str[23].IndexOf("=") + 1, 2));
+                //readpower
+                SetControl(trackBar3, config_str[24].Substring(config_str[24].IndexOf("=") + 1, 2));
+                //power mode
+                if (config_str[4].IndexOf("FULL") != -1)
+                    SetControl(power_mode_cbx, "0");
+                else if (config_str[4].IndexOf("MIN") != -1)
+                    SetControl(power_mode_cbx, "1");
+                else if (config_str[4].IndexOf("MED") != -1)
+                    SetControl(power_mode_cbx, "2");
+                else if (config_str[4].IndexOf("MAX") != -1)
+                    SetControl(power_mode_cbx, "3");
+                else
+                    SetControl(power_mode_cbx, "4");
+            }
+            else if (config_str[0] == "Antena RFID")
+            {
+                if (config_str[1].IndexOf('1') != -1)
+                    SetControl(Ant1_ckb, "yes");
+                else
+                    SetControl(Ant1_ckb, "no");
+                if (config_str[1].IndexOf('2') != -1)
+                    SetControl(Ant2_ckb, "yes");
+                else
+                    SetControl(Ant2_ckb, "no");
+                if (config_str[1].IndexOf('3') != -1)
+                    SetControl(Ant3_ckb, "yes");
+                else
+                    SetControl(Ant3_ckb, "no");
+                if (config_str[1].IndexOf('4') != -1)
+                    SetControl(Ant4_ckb, "yes");
+                else
+                    SetControl(Ant4_ckb, "no");
+            }
+            else if (config_str[0].Contains("= {"))
+            {
+                MessageBox.Show(config_msg);
+                startcmdprocess(CM.COMMAND.SET_CONN_TYPE_CMD);
+            }
             else
                 Log_Handler("Get command not defined");
         }
-        int couting = 0;
+
         private void Log_Handler(string log_msg)
         {
             this.Invoke((MethodInvoker)delegate
@@ -379,7 +439,64 @@ namespace GatewayForm
             }
             else
             {
-                switch (control.GetType().Name)
+                if (control is TextBox || control is Label)
+                    control.Text = config_tx;
+                else if (control is ComboBox)
+                    (control as ComboBox).SelectedIndex = int.Parse(config_tx);
+                else if (control is TrackBar)
+                {
+                    if ((control as TrackBar).Name.Contains("trackBar"))
+                    {
+                        (control as TrackBar).Value = int.Parse(config_tx);
+                    }
+                    else if ((control as TrackBar).Name == "AudioVolume_trb")
+                    {
+                        (control as TrackBar).Value = int.Parse(config_tx.Remove(config_tx.Length - 2));
+                    }
+                }
+                else if (control is CheckBox)
+                {
+                    if ("yes" == config_tx)
+                        (control as CheckBox).Checked = true;
+                    else
+                        (control as CheckBox).Checked = false;
+                }
+                else if (control is CheckedListBox)
+                {
+                    for (int i = 0; i < (control as CheckedListBox).Items.Count; i++)
+                        ConnectionList_ck.SetItemCheckState(i, CheckState.Checked);
+
+                    if (!config_tx.Contains("Zigbee"))
+                        (control as CheckedListBox).SetItemCheckState(0, CheckState.Unchecked);
+                    if (!config_tx.Contains("Wifi"))
+                        (control as CheckedListBox).SetItemCheckState(1, CheckState.Unchecked);
+                    if (!config_tx.Contains("Bluetooth"))
+                        (control as CheckedListBox).SetItemCheckState(2, CheckState.Unchecked);
+                    if (!config_tx.Contains("Ethernet"))
+                        (control as CheckedListBox).SetItemCheckState(3, CheckState.Unchecked);
+                    if (!config_tx.Contains("RS485"))
+                        (control as CheckedListBox).SetItemCheckState(4, CheckState.Unchecked);
+                }
+                else if (control is Button)
+                {
+                    if ("Failed" == config_tx)
+                        (control as Button).BackColor = Color.Red;
+                    else
+                        (control as Button).BackColor = Color.Blue;
+                }
+                else if (control is RadioButton)
+                {
+                    if ("yes" == config_tx)
+                        (control as RadioButton).Checked = true;
+                    else
+                        (control as RadioButton).Checked = false;
+                }
+                else
+                {
+                    MessageBox.Show("New type control");
+                }
+                #region sub
+                /*switch (control.GetType().Name)
                 {
                     case "TextBox":
                         control.Text = config_tx;
@@ -443,8 +560,8 @@ namespace GatewayForm
                         break;
                     default:
                         break;
-                }
-
+                }*/
+                #endregion
             }
         }
         private void Read_handler(string msg)// open and save
@@ -610,27 +727,6 @@ namespace GatewayForm
             }
         }
 
-        private void dataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
-        {
-            No_Tag_lb.Text = this.dataGridView1.RowCount.ToString();
-            if (this.dataGridView1.Rows.Count > 0)
-            {
-                switch (int.Parse(this.dataGridView1.Rows[this.dataGridView1.Rows.Count - 1].Cells[1].Value.ToString()))
-                {
-                    case 1: ANT1_Rbtn.Checked = true;
-                        break;
-                    case 2: ANT2_Rbtn.Checked = true;
-                        break;
-                    case 3: ANT3_Rbtn.Checked = true;
-                        break;
-                    case 4: ANT4_Rbtn.Checked = true;
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-
         private void ViewConn_btn_Click(object sender, EventArgs e)
         {
             switch (ConnType_cbx.SelectedIndex)
@@ -694,10 +790,11 @@ namespace GatewayForm
         {
             if (com_type.getflagConnected_TCPIP())
             {
-                com_type.Get_Command_Power(CM.COMMAND.GET_POWER_CMD, 0);
+                /*com_type.Get_Command_Power(CM.COMMAND.GET_POWER_CMD, 0);
                 com_type.waitflagRevTCP();
                 com_type.Get_Command_Power(CM.COMMAND.GET_POWER_CMD, 1);
-                com_type.waitflagRevTCP();
+                com_type.waitflagRevTCP();*/
+                com_type.StartCmd_Process(CM.COMMAND.GET_POWER_CMD);
             }
             else
             {
@@ -710,7 +807,7 @@ namespace GatewayForm
         {
             if (com_type.getflagConnected_TCPIP())
             {
-                byte[] power_bytes = new byte[2];
+                /*byte[] power_bytes = new byte[2];
                 power_bytes[0] = 0;
                 power_bytes[1] = (byte)trackBar2.Value;
                 com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_POWER_CMD, power_bytes);
@@ -718,7 +815,8 @@ namespace GatewayForm
                 power_bytes[0] = 1;
                 power_bytes[1] = (byte)trackBar3.Value;
                 com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_POWER_CMD, power_bytes);
-                com_type.waitflagRevTCP();
+                com_type.waitflagRevTCP();*/
+                startcmdprocess(CM.COMMAND.SET_POWER_CMD);
             }
             else
             {
@@ -774,8 +872,9 @@ namespace GatewayForm
         {
             if (com_type.getflagConnected_TCPIP())
             {
-                com_type.Get_Command_Send(CM.COMMAND.GET_POWER_MODE_CMD);
-                com_type.waitflagRevTCP();
+                /*com_type.Get_Command_Send(CM.COMMAND.GET_POWER_MODE_CMD);
+                com_type.waitflagRevTCP();*/
+                startcmdprocess(CM.COMMAND.GET_POWER_MODE_CMD);
             }
             else
             {
@@ -838,7 +937,7 @@ namespace GatewayForm
                 {
                     if (com_type.getflagConnected_TCPIP())
                     {
-                        com_type.StartCmd_Process(CM.COMMAND.GET_POWER_MODE_CMD);
+                        com_type.StartCmd_Process(CM.COMMAND.GET_RFID_CONFIGURATION_CMD);
                     }
                     else
                     {
@@ -898,11 +997,6 @@ namespace GatewayForm
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void Set_RFID_btn_Click(object sender, EventArgs e)
         {
 
@@ -926,12 +1020,13 @@ namespace GatewayForm
         {
             if (com_type.getflagConnected_TCPIP())
             {
-                com_type.Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 0);
+                /*com_type.Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 0);
                 com_type.waitflagRevTCP();
                 com_type.Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 1);
                 com_type.waitflagRevTCP();
                 com_type.Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 2);
-                com_type.waitflagRevTCP();
+                com_type.waitflagRevTCP();*/
+                com_type.StartCmd_Process(CM.COMMAND.GET_BLF_CMD);
             }
             else
             {
@@ -944,7 +1039,7 @@ namespace GatewayForm
         {
             if (com_type.getflagConnected_TCPIP())
             {
-                byte[] freq_bytes = new byte[2];
+                /*byte[] freq_bytes = new byte[2];
                 freq_bytes[0] = 0;
                 freq_bytes[1] = (byte)(2 * freq_cbx.SelectedIndex);
                 com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_BLF_CMD, freq_bytes);
@@ -958,7 +1053,8 @@ namespace GatewayForm
                 freq_bytes[0] = 2;
                 freq_bytes[1] = (byte)(tari_cbx.SelectedIndex);
                 com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_BLF_CMD, freq_bytes);
-                com_type.waitflagRevTCP();
+                com_type.waitflagRevTCP();*/
+                startcmdprocess(CM.COMMAND.SET_BLF_CMD);
             }
             else
             {
@@ -1082,6 +1178,50 @@ namespace GatewayForm
                     break;
             }
         }
+        private string New_Node()
+        {
+            if (list_plan_name.Count == 0)
+            {
+                list_plan_name.Add("Plan1");
+                return "Plan1";
+            }
+            else
+            {
+                for (int idx = 0; idx < list_plan_name.Count + 1; idx++)
+                {
+                    if (!list_plan_name.Contains("Plan" + (idx + 1).ToString()))
+                    {
+                        list_plan_name.Add("Plan" + (idx + 1).ToString());
+                        break;
+                    }
+                }
+                return list_plan_name[list_plan_name.Count - 1];
+            }
+        }
 
+        private void Add_plan_btn_Click(object sender, EventArgs e)
+        {
+            //TreeNode node;
+            //Plan_Node nodeplan = new Plan_Node();
+            //nodeplan.name = New_Node();
+            //node = new TreeNode();
+            treeView1.Nodes.Add(New_Node());
+        }
+
+        private void treeView1_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
+        {
+            list_plan_name.Add(e.Label);
+        }
+
+        private void treeView1_BeforeLabelEdit(object sender, NodeLabelEditEventArgs e)
+        {
+            list_plan_name.Remove(e.Node.Text);
+        }
+
+        private void Remove_plan_btn_Click(object sender, EventArgs e)
+        {
+            list_plan_name.Remove(treeView1.SelectedNode.Text);
+            treeView1.Nodes.Remove(treeView1.SelectedNode);
+        }
     }
 }

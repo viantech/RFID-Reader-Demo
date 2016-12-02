@@ -53,6 +53,7 @@ namespace GatewayForm
             SET_BLF_CMD = 0x14,
             GET_BLF_CMD = 0x15,
             REBOOT_CMD = 0x16,
+            ANTENA_CMD = 0x17,
         };
 
         public enum HEADER
@@ -148,6 +149,8 @@ namespace GatewayForm
             //int datalen_subfmt;
             /* Sub Frame Format*/
             // Header ignore
+            if (buffer == null || buffer.Length == 0)
+                return null;
             sub_fmt.header = buffer[0];
             if (buffer[0] != (byte)HEADER.RESP_PACKET_HDR)
             {
@@ -156,26 +159,19 @@ namespace GatewayForm
             }
             //Length
             sub_fmt.length = (ushort)(buffer[2] + (buffer[1] << 8)); // deduce 1 byte header
-            //datalen_subfmt = sub_fmt.length - 5;
             if (sub_fmt.length != len - 1)
-            {
-                //Console.WriteLine("len error {0} vs {1}", len, sub_fmt.length);
                 return null;
-            }
 
             //Check CRC
             sub_fmt.checksum = buffer[len - 1];
             if (sub_fmt.checksum != Chcksum(buffer.Skip(1).ToArray(), sub_fmt.length - 1))
-            {
-                //form1.SetLog("Error CRC Packet ");
                 return null;
-            }
 
             /*Data of TCP packet is part of Frame Format*/
             sub_fmt.metal_data = new byte[len - 6];
             Buffer.BlockCopy(buffer, 3, sub_fmt.metal_data, 0, len - 6);
             //Number of TCP packet be slpited in meta data
-            sub_fmt.truncate = (ushort)(buffer[len - 2] + (buffer[len - 3] << 8));
+            //sub_fmt.truncate = (ushort)(buffer[len - 2] + (buffer[len - 3] << 8));
 
             //return sub_fmt.metal_data;
             return sub_fmt.metal_data;
@@ -188,86 +184,72 @@ namespace GatewayForm
         public static byte[] Decode_Frame(byte command_option, byte[] meta_subframe)
         {
             FrameFormat fmt = new FrameFormat();
-            int datalen_fmt;
-            //byte[] meta_sub = meta_subframe;
+            //int datalen_fmt;
+            if (meta_subframe == null || meta_subframe.Length == 0)
+                return null;
             /* Frame Format*/
             //Command
             fmt.command = meta_subframe[0];
             if (fmt.command != command_option)
-            {
-                //form1.SetLog("Error Command Frame Format");
-                return null;
-            }
+                return new byte[] {0x01, 0x01};
 
             //Length
             fmt.length = (ushort)(meta_subframe[2] + (meta_subframe[1] << 8));
             if (fmt.length != meta_subframe.Length)
-            {
-                //form1.SetLog("Wrong User Data Length");
-                return null;
-            }
+                return new byte[] { 0x01, 0x01 };
 
             //CRC
             fmt.checksum = meta_subframe[fmt.length - 1];
             if (fmt.checksum != Chcksum(meta_subframe, fmt.length - 1))
-            {
-                //form1.SetLog("Error CRC Data User");
-                return null;
-            }
+                return new byte[] { 0x01, 0x01 };
 
             /* Data Frame Format*/
-            datalen_fmt = fmt.length - 4;
-            fmt.metal_data = new byte[datalen_fmt];
-            Buffer.BlockCopy(meta_subframe, 3, fmt.metal_data, 0, datalen_fmt);
+            fmt.metal_data = new byte[fmt.length - 4];
+            Buffer.BlockCopy(meta_subframe, 3, fmt.metal_data, 0, fmt.length - 4);
             return fmt.metal_data;
         }
 
         public static byte Decode_Frame_ACK(byte command_option, byte[] meta_subframe)
         {
             FrameFormat fmt = new FrameFormat();
-            byte[] meta_sub = meta_subframe;
+            if (meta_subframe == null || meta_subframe.Length == 0)
+                return 0x01;
             /* Frame Format*/
             //Command
-            fmt.command = meta_sub[0];
+            fmt.command = meta_subframe[0];
             if (fmt.command != command_option)
-            {
-                //form1.SetLog("Error Command Frame Format");
-                return 0;
-            }
+                return 0x01;
 
             //Length
-            fmt.length = (ushort)(meta_sub[2] + (meta_sub[1] << 8));
+            fmt.length = (ushort)(meta_subframe[2] + (meta_subframe[1] << 8));
             if (fmt.length != 5)
-            {
-                //form1.SetLog("Wrong User Data Length");
-                return 0;
-            }
+                return 0x01;
 
             //CRC
-            fmt.checksum = meta_sub[4];
-            if (fmt.checksum != Chcksum(meta_sub, 4))
-            {
-                //form1.SetLog("Error CRC Data User");
-                return 0;
-            }
+            fmt.checksum = meta_subframe[4];
+            if (fmt.checksum != Chcksum(meta_subframe, 4))
+                return 0x01;
 
-            return meta_sub[3];
+            return meta_subframe[3];
         }
         #endregion
 
         #region Get Data Command
         public static string Get_Data(byte[] byte_data)
         {
-            string info_data;
-            if (0x00 == byte_data[0])
+            if (byte_data != null && byte_data.Length > 0)
             {
-                info_data = Encoding.ASCII.GetString(byte_data.Skip(1).ToArray(), 0, byte_data.Length - 1);
+                if (0x00 == byte_data[0])
+                {
+                    return Encoding.ASCII.GetString(byte_data.Skip(1).ToArray(), 0, byte_data.Length - 1);
+                }
+                else
+                {
+                    return "NAK\n";
+                }
             }
             else
-            {
-                info_data = "NAK\n";
-            }
-            return info_data;
+                return String.Empty;
         }
         #endregion
 
@@ -323,7 +305,7 @@ namespace GatewayForm
                         data_response = Get_Data(Decode_Frame((byte)COMMAND.GET_RFID_CONFIGURATION_CMD, command_bytes));
                         if (data_response.Length > 0)
                             Cmd_Raise(data_response);
-                        MessageBox.Show(data_response);
+                        //MessageBox.Show(data_response);
                         break;
                     case COMMAND.SET_RFID_CONFIGURATION_CMD:
                         info_ack = Decode_Frame_ACK((byte)COMMAND.SET_RFID_CONFIGURATION_CMD, command_bytes);
@@ -371,9 +353,9 @@ namespace GatewayForm
                         break;
                     /*Tag ID */
                     case COMMAND.REQUEST_TAG_ID_CMD:
-                        byte[] byte_user = Decode_Frame((byte)COMMAND.REQUEST_TAG_ID_CMD, command_bytes);
-                        if (byte_user != null && byte_user.Length > 0)
-                            TagID_Raise(Encoding.ASCII.GetString(byte_user, 0, byte_user.Length));
+                        byte_bits = Decode_Frame((byte)COMMAND.REQUEST_TAG_ID_CMD, command_bytes);
+                        if (byte_bits != null && byte_bits.Length > 0)
+                            TagID_Raise(Encoding.ASCII.GetString(byte_bits, 0, byte_bits.Length));
                         break;
                     //Power RFID
                     case COMMAND.GET_POWER_CMD:
@@ -458,6 +440,11 @@ namespace GatewayForm
                             Log_Raise("Rebooting ...");
                         else
                             Log_Raise("Failed Reboot");
+                        break;
+                    case COMMAND.ANTENA_CMD:
+                        data_response = Get_Data(Decode_Frame((byte)COMMAND.ANTENA_CMD, command_bytes));
+                        if (data_response.Length > 0)
+                            Cmd_Raise("Antena RFID\n"+ data_response + "\n");
                         break;
                     default:
                         break;

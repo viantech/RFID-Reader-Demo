@@ -25,6 +25,8 @@ namespace GatewayForm
         public const int BufferSize = 1024;
         // Receive buffer.
         public byte[] buffer = new byte[BufferSize];
+        //public byte[] result_data_byte = new byte[0];
+        public byte[] result_data_byte = new byte[0];
     }
 
     //public delegate void SocketReceivedHandler(string msg);
@@ -36,7 +38,6 @@ namespace GatewayForm
         /// <summary>
         /// Byte Data of Frame Format
         /// </summary>
-        private byte[] result_data_byte = new byte[0];
         public bool connect_ok = false;
 
         // ManualResetEvent instances signal completion.
@@ -129,8 +130,7 @@ namespace GatewayForm
                     connect_ok = true;
                     Receive_Command_Handler();
 
-                    Send_ConnectionRequest();
-
+                    Start_Command_Process(CM.COMMAND.CONNECTION_REQUEST_CMD);
                     /*pingTimer.Elapsed += (sender, e) =>
                         {
                             //pingsender.SendAsync(ipAddress, 120, icmp_test, options, waiter);
@@ -462,8 +462,17 @@ namespace GatewayForm
         {
             switch (command)
             {
+                case CM.COMMAND.CONNECTION_REQUEST_CMD:
+                    Send_ConnectionRequest();
+                    receiveDone.WaitOne(2000);
+                    //Get Gateway Configuration
+                    Get_Command_Send(CM.COMMAND.GET_CONFIGURATION_CMD);
+                    receiveDone.WaitOne(2000);
+                    //Antena
+                    Get_Command_Send(CM.COMMAND.ANTENA_CMD);
+                    receiveDone.WaitOne(2000);
+                    break;
                 case CM.COMMAND.GET_POWER_CMD:
-                    receiveDone.Reset();
                     Get_Command_Power(CM.COMMAND.GET_POWER_CMD, 0);
                     receiveDone.WaitOne(2000);
                     Get_Command_Power(CM.COMMAND.GET_POWER_CMD, 1);
@@ -485,7 +494,6 @@ namespace GatewayForm
                     receiveDone.WaitOne(2000);
                     break;
                 case CM.COMMAND.GET_BLF_CMD:
-                    receiveDone.Reset();
                     Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 0);
                     receiveDone.WaitOne(2000);
                     Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 1);
@@ -493,8 +501,11 @@ namespace GatewayForm
                     Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 2);
                     receiveDone.WaitOne(2000);
                     break;
+                case CM.COMMAND.GET_RFID_CONFIGURATION_CMD:
+                    Get_Command_Send(CM.COMMAND.GET_RFID_CONFIGURATION_CMD);
+                    receiveDone.WaitOne(2000);
+                    break;
                 case CM.COMMAND.DIS_CONNECT_CMD:
-                    receiveDone.Reset();
                     Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
                     receiveDone.WaitOne(2000);
                     Free();
@@ -518,18 +529,14 @@ namespace GatewayForm
             if (0x00 == byte_receive[0])
             {
                 CM.Log_Raise("Accepted!");
-                //Get Gateway Configuration
-                Get_Command_Send(CM.COMMAND.GET_CONFIGURATION_CMD);
             }
             else
             {
                 if (retry_count > 0)
                 {
                     MessageBox.Show("Fail request connection\n Retry!");
-                    result_data_byte = new byte[0];
                     retry_count--;
-
-                    Send_ConnectionRequest();
+                    Start_Command_Process(CM.COMMAND.CONNECTION_REQUEST_CMD);
                 }
                 else
                 {
@@ -551,7 +558,6 @@ namespace GatewayForm
             {
                 StateTCPClient state = (StateTCPClient)ar.AsyncState;
                 Socket client = state.workSocket;
-
                 // Read data from the remote device.
                 int bytesRead = client.EndReceive(ar);
                 if (bytesRead > 0)
@@ -559,31 +565,33 @@ namespace GatewayForm
                     byte[] meta_sub = CM.Decode_SubFrame(state.buffer, bytesRead);
                     if (meta_sub != null)
                     {
-                        Array.Resize(ref result_data_byte, result_data_byte.Length + meta_sub.Length);
-                        Buffer.BlockCopy(meta_sub, 0, result_data_byte, result_data_byte.Length - meta_sub.Length, meta_sub.Length);
+                        Array.Resize(ref state.result_data_byte, state.result_data_byte.Length + meta_sub.Length);
+                        Buffer.BlockCopy(meta_sub, 0, state.result_data_byte, state.result_data_byte.Length - meta_sub.Length, meta_sub.Length);
                         if (0x01 != state.buffer[bytesRead - 2])
                             client.BeginReceive(state.buffer, 0, StateTCPClient.BufferSize, 0,
                             new AsyncCallback(Receive_Command_Callback), state);
                         else
                         {
-                            if (result_data_byte != null)
+                            if (state.result_data_byte != null && state.result_data_byte.Length > 0)
                             {
+                                if ((byte)CM.COMMAND.CONNECTION_REQUEST_CMD == state.result_data_byte[0])
+                                    Request_Connection_Handler(CM.Decode_Frame((byte)CM.COMMAND.CONNECTION_REQUEST_CMD, state.result_data_byte));
+
+                                else
+                                    CM.Data_Receive_Handler(state.result_data_byte);
+
                                 receiveDone.Set();
                                 Receive_Command_Handler();
-                                if ((byte)CM.COMMAND.CONNECTION_REQUEST_CMD == result_data_byte[0])
-                                    Request_Connection_Handler(CM.Decode_Frame((byte)CM.COMMAND.CONNECTION_REQUEST_CMD, result_data_byte));
-
-                                else CM.Data_Receive_Handler(result_data_byte);
-                                result_data_byte = new byte[0];
                             }
                             else
-                            { result_data_byte = new byte[0]; Receive_Command_Handler(); }
+                            { 
+                                Receive_Command_Handler();
+                            }
                         }
                     }
                     else
                     {
-                        MessageBox.Show("Wrong Message");
-                        result_data_byte = new byte[0];
+                        //MessageBox.Show("Wrong Message");
                         Receive_Command_Handler();
                     }
                 }
@@ -617,10 +625,8 @@ namespace GatewayForm
 
             // Begin receiving the data from the remote device.
             if (tcp_client.Connected)
-            {
                 tcp_client.BeginReceive(state.buffer, 0, StateTCPClient.BufferSize, 0,
                     new AsyncCallback(Receive_Command_Callback), state);
-            }
             else
                 connect_ok = false;
         }
