@@ -46,7 +46,8 @@ namespace GatewayForm
         public AutoResetEvent receiveDone = new AutoResetEvent(false);
         //Ping connection
         //private System.Timers.Timer pingTimer = new System.Timers.Timer() { Interval = 10000 };
-        private AutoResetEvent waiter = new AutoResetEvent(false);
+        //private AutoResetEvent waiter = new AutoResetEvent(false);
+        private bool File_Mode = false;
         // Event Handler
         //public bool recv_flag = false;
         //public bool alive = true;
@@ -335,7 +336,7 @@ namespace GatewayForm
 
             /* Byte data of Frame Format*/
             byte[] sub_fmt_byte = CM.Encode_Frame(fmt_set);
-            Send_Packets(sub_fmt_byte);
+            Send_Bytes_Stream(sub_fmt_byte);
         }
 
         public void Set_Command_Send_Bytes(CM.COMMAND command, byte[] user_bytes)
@@ -347,10 +348,53 @@ namespace GatewayForm
 
             /* Byte data of Frame Format*/
             byte[] sub_fmt_byte = CM.Encode_Frame(fmt_set);
+            Send_Bytes_Stream(sub_fmt_byte);
+        }
+
+        public void Send_File(byte[] file_stream)
+        {
+            File_Mode = true;
+            CM.FrameFormat fmt_set = new CM.FrameFormat();
+            fmt_set.command = (byte)CM.COMMAND.FIRMWARE_UPDATE_CMD;
+            fmt_set.length = (ushort)((ushort)CM.LENGTH.FRAME_NON_DATA + file_stream.Length);
+            fmt_set.metal_data = file_stream;
+
+            /* Byte data of Frame Format*/
+            byte[] sub_fmt_byte = CM.Encode_Frame(fmt_set);
             Send_Packets(sub_fmt_byte);
         }
 
-        public void Send_Packets(byte[] frame_data_byte)
+        private void Send_Bytes_Stream(byte[] frame_data_byte)
+        {
+            UInt16 num_packet, last_packet_byte, len_transmit;
+            UInt16 idx, len_byte_fmt;
+            idx = 0;
+            len_byte_fmt = (ushort)frame_data_byte.Length;
+            num_packet = (ushort)(len_byte_fmt / ((ushort)CM.LENGTH.MAX_SIZE_TCP_META_DATA));
+            last_packet_byte = (ushort)(len_byte_fmt % ((ushort)CM.LENGTH.MAX_SIZE_TCP_META_DATA));
+            if (last_packet_byte > 0)
+                num_packet += 1;
+            len_transmit = (ushort)CM.LENGTH.MAX_SIZE_TCP_META_DATA; //1024 - 6
+            for (int i = 0; i < num_packet; i++)
+            {
+                if (i == num_packet - 1)
+                {
+                    if (last_packet_byte > 0)
+                        len_transmit = (ushort)last_packet_byte;
+                }
+                CM.SubFrameFormat sub_fmt_send = new CM.SubFrameFormat();
+                sub_fmt_send.header = (byte)CM.HEADER.PACKET_HDR;
+                sub_fmt_send.length = (ushort)(len_transmit + 5);
+                sub_fmt_send.metal_data = new byte[len_transmit];
+                Buffer.BlockCopy(frame_data_byte, idx, sub_fmt_send.metal_data, 0, len_transmit);
+                idx += len_transmit;
+                sub_fmt_send.truncate = (ushort)(num_packet - i);
+                byte[] byte_tcp = CM.Encode_SubFrame(sub_fmt_send);
+                SendFrame(byte_tcp);
+            }
+        }
+
+        private void Send_Packets(byte[] frame_data_byte)
         {
             UInt16 num_packet, last_packet_byte, len_transmit;
             UInt16 idx, len_byte_fmt, percent;
@@ -378,11 +422,15 @@ namespace GatewayForm
                 percent = (ushort)((i + 1)*(100 / num_packet));
                 byte[] byte_tcp = CM.Encode_SubFrame(sub_fmt_send);
                 SendFrame(byte_tcp);
-                if (!waiter.WaitOne(2000))
-                    break;
+                if (!receiveDone.WaitOne(2000))
+                { 
+                    CM.Log_Raise("Failed to update. Please try again!");
+                    break; 
+                }
                 else
                     CM.Cmd_Raise("Update FW\n" + percent.ToString() + "\n");
             }
+            File_Mode = false;
         }
 
         public async void Start_Command_Process(CM.COMMAND cmd)
@@ -497,28 +545,45 @@ namespace GatewayForm
                     byte[] meta_sub = CM.Decode_SubFrame(state.buffer, bytesRead);
                     if (meta_sub != null)
                     {
-                        Array.Resize(ref state.result_data_byte, state.result_data_byte.Length + meta_sub.Length);
-                        Buffer.BlockCopy(meta_sub, 0, state.result_data_byte, state.result_data_byte.Length - meta_sub.Length, meta_sub.Length);
-                        waiter.Set();
-                        if (0x01 != state.buffer[bytesRead - 2])
-                            client.BeginReceive(state.buffer, 0, StateTCPClient.BufferSize, 0,
-                               new AsyncCallback(Receive_Command_Callback), state);
+                        if (File_Mode)
+                        {
+                            byte ack_file = CM.Decode_Frame_ACK((byte)CM.COMMAND.FIRMWARE_UPDATE_CMD, meta_sub);
+                            if (0x00 == ack_file)
+                                receiveDone.Set();
+                            Receive_Command_Handler();
+                        }
                         else
                         {
-                            if (state.result_data_byte != null && state.result_data_byte.Length > 0)
-                            {
-                                if ((byte)CM.COMMAND.CONNECTION_REQUEST_CMD == state.result_data_byte[0])
-                                    Request_Connection_Handler(CM.Decode_Frame((byte)CM.COMMAND.CONNECTION_REQUEST_CMD, state.result_data_byte));
-
-                                else
-                                    CM.Data_Receive_Handler(state.result_data_byte);
-
-                                receiveDone.Set();
-                                Receive_Command_Handler();
-                            }
+                            Array.Resize(ref state.result_data_byte, state.result_data_byte.Length + meta_sub.Length);
+                            Buffer.BlockCopy(meta_sub, 0, state.result_data_byte, state.result_data_byte.Length - meta_sub.Length, meta_sub.Length);
+                            if (0x01 != state.buffer[bytesRead - 2])
+                                client.BeginReceive(state.buffer, 0, StateTCPClient.BufferSize, 0,
+                                   new AsyncCallback(Receive_Command_Callback), state);
                             else
                             {
-                                Receive_Command_Handler();
+                                if (state.result_data_byte != null && state.result_data_byte.Length > 0)
+                                {
+                                    if ((byte)CM.COMMAND.CONNECTION_REQUEST_CMD == state.result_data_byte[0])
+                                        Request_Connection_Handler(CM.Decode_Frame((byte)CM.COMMAND.CONNECTION_REQUEST_CMD, state.result_data_byte));
+                                    /*else if ((byte)CM.COMMAND.FIRMWARE_UPDATE_CMD == state.result_data_byte[0])
+                                    {
+                                        byte byte_ack = state.result_data_byte[state.result_data_byte.Length - 2];
+                                        if (0x00 == byte_ack)
+                                        {
+                                            waiter.Set();
+                                            CM.Log_Raise("Update FW Success");
+                                        }
+                                    }*/
+                                    else
+                                        CM.Data_Receive_Handler(state.result_data_byte);
+
+                                    receiveDone.Set();
+                                    Receive_Command_Handler();
+                                }
+                                else
+                                {
+                                    Receive_Command_Handler();
+                                }
                             }
                         }
                     }

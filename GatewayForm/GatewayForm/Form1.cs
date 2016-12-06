@@ -1033,7 +1033,7 @@ namespace GatewayForm
             }
             else if (Log_lb.Text == "Sending ...")
             {
-
+                Log_lb.Text = "Sending ...";
             }
             else
                 Log_lb.Text = "Ready!";
@@ -1261,7 +1261,8 @@ namespace GatewayForm
                 byte[] bytesFile = System.IO.File.ReadAllBytes(firware_file.FileName);
                 MessageBox.Show("Sending File...");
                 Log_Handler("Sending ...");
-                com_type.Set_Command_Send_Bytes(CM.COMMAND.FIRMWARE_UPDATE_CMD, bytesFile);
+                progressBar1.Value = 0;
+                com_type.Update_File(bytesFile);
                 //com_type.waitflagRevTCP();
             }
         }

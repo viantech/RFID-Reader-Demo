@@ -447,13 +447,6 @@ namespace GatewayForm
                         if (data_response.Length > 0)
                             Cmd_Raise("Antena RFID\n"+ data_response + "\n");
                         break;
-                    case COMMAND.FIRMWARE_UPDATE_CMD:
-                        info_ack = command_bytes[command_bytes.Length - 2];
-                        if (0x00 == info_ack)
-                            Log_Raise("Update FW Success");
-                        else
-                            Log_Raise("Failed to update. Please try again!");
-                        break;
                     default:
                         break;
                 }

@@ -317,7 +317,44 @@ namespace GatewayForm
                     break;
             }
         }
+        public void Update_File(byte[] file_bytes)
+        {
+            switch (type)
+            {
+                case CM.TYPECONNECT.HDR_ZIGBEE:
 
+                    break;
+                case CM.TYPECONNECT.HDR_WIFI:
+                    if (tcp != null)
+                    {
+                        if (getflagConnected_TCPIP())
+                            tcp.Send_File(file_bytes);
+                        else
+                            tcp.Free();
+                    }
+                    break;
+                case CM.TYPECONNECT.HDR_BLUETOOTH:
+                    break;
+                case CM.TYPECONNECT.HDR_ETHERNET:
+                    if (tcp != null)
+                    {
+                        if (getflagConnected_TCPIP())
+                            tcp.Send_File(file_bytes);
+                        else
+                            tcp.Free();
+                    }
+                    /*if (pTcpipClient != null)
+                    {
+                        if(pTcpipClient.isconnected)
+                            pTcpipClient.Get_Command_Send(command_type);
+                    }*/
+                    break;
+                case CM.TYPECONNECT.HDR_RS232:
+                    break;
+                default:
+                    break;
+            }
+        }
         /*public void Receive_Command_Handler(CM.COMMAND command_type)
         {
             switch (type)
