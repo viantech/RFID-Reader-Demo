@@ -72,3 +72,7 @@ C:\Users\Quang Do\Downloads\seldatsoftwaredemo-luat - Copy\GatewayForm\GatewayFo
 C:\Users\Quang Do\Downloads\seldatsoftwaredemo-luat - Copy\GatewayForm\GatewayForm\obj\Debug\GatewayForm.Properties.Resources.resources
 C:\Users\Quang Do\Downloads\seldatsoftwaredemo-luat - Copy\GatewayForm\GatewayForm\obj\Debug\GatewayForm.csproj.GenerateResource.Cache
 C:\Users\Quang Do\Downloads\seldatsoftwaredemo-luat - Copy\GatewayForm\GatewayForm\obj\Debug\GatewayForm.csprojResolveAssemblyReference.cache
+D:\GUI\guidesign\GatewayForm\GatewayForm\bin\Debug\System.Data.SQLite.dll
+D:\GUI\guidesign\GatewayForm\GatewayForm\obj\Debug\GatewayForm.SearchForm_Data.resources
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Debug\System.Data.SQLite.dll
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\GatewayForm.SearchForm_Data.resources

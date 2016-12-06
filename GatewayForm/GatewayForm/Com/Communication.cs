@@ -58,10 +58,7 @@ namespace GatewayForm
         {
             return tcp.receiveDone.WaitOne(2000);
         }
-        public void resetflagRevTCP()
-        {
-            tcp.receiveDone.Reset();
-        }
+       
         public void Connect(string ip_addr, int port)
         {
             switch (type)

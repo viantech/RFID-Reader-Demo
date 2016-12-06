@@ -73,6 +73,7 @@
             this.set_port_btn = new System.Windows.Forms.Button();
             this.set_newconn_btn = new System.Windows.Forms.Button();
             this.StackLight_ckb = new System.Windows.Forms.CheckBox();
+            this.update_fw_btn = new System.Windows.Forms.Button();
             this.RFID_API_ckb = new System.Windows.Forms.CheckBox();
             this.Offline_ckb = new System.Windows.Forms.CheckBox();
             this.LED_Support_ckb = new System.Windows.Forms.CheckBox();
@@ -101,6 +102,23 @@
             this.label12 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.groupBox14 = new System.Windows.Forms.GroupBox();
+            this.weight_tx = new System.Windows.Forms.TextBox();
+            this.groupBox16 = new System.Windows.Forms.GroupBox();
+            this.TID_filter_tx = new System.Windows.Forms.TextBox();
+            this.Memory_filter_tx = new System.Windows.Forms.TextBox();
+            this.EPC_filter_tx = new System.Windows.Forms.TextBox();
+            this.label39 = new System.Windows.Forms.Label();
+            this.label38 = new System.Windows.Forms.Label();
+            this.label37 = new System.Windows.Forms.Label();
+            this.protocol_plan_cbx = new System.Windows.Forms.ComboBox();
+            this.label40 = new System.Windows.Forms.Label();
+            this.label30 = new System.Windows.Forms.Label();
+            this.groupBox15 = new System.Windows.Forms.GroupBox();
+            this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
+            this.Ant1_plan_ckb = new System.Windows.Forms.CheckBox();
+            this.Ant2_plan_ckb = new System.Windows.Forms.CheckBox();
+            this.Ant3_plan_ckb = new System.Windows.Forms.CheckBox();
+            this.Ant4_plan_ckb = new System.Windows.Forms.CheckBox();
             this.Remove_plan_btn = new System.Windows.Forms.Button();
             this.Add_plan_btn = new System.Windows.Forms.Button();
             this.treeView1 = new System.Windows.Forms.TreeView();
@@ -175,23 +193,13 @@
             this.label10 = new System.Windows.Forms.Label();
             this.Log_lb = new System.Windows.Forms.Label();
             this.ptimer_loghandle = new System.Windows.Forms.Timer(this.components);
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.groupBox15 = new System.Windows.Forms.GroupBox();
-            this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
-            this.checkBox4 = new System.Windows.Forms.CheckBox();
-            this.label30 = new System.Windows.Forms.Label();
-            this.protocol_plan_cbx = new System.Windows.Forms.ComboBox();
-            this.groupBox16 = new System.Windows.Forms.GroupBox();
-            this.label37 = new System.Windows.Forms.Label();
-            this.label38 = new System.Windows.Forms.Label();
-            this.label39 = new System.Windows.Forms.Label();
-            this.EPC_filter_tx = new System.Windows.Forms.TextBox();
-            this.Memory_filter_tx = new System.Windows.Forms.TextBox();
-            this.TID_filter_tx = new System.Windows.Forms.TextBox();
-            this.label40 = new System.Windows.Forms.Label();
-            this.weight_tx = new System.Windows.Forms.TextBox();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
+            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+            this.tabControl2 = new System.Windows.Forms.TabControl();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -209,6 +217,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.AudioVolume_trb)).BeginInit();
             this.tabPage3.SuspendLayout();
             this.groupBox14.SuspendLayout();
+            this.groupBox16.SuspendLayout();
+            this.groupBox15.SuspendLayout();
+            this.flowLayoutPanel3.SuspendLayout();
             this.groupBox11.SuspendLayout();
             this.groupBox9.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar4)).BeginInit();
@@ -223,9 +234,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
-            this.groupBox15.SuspendLayout();
-            this.flowLayoutPanel3.SuspendLayout();
-            this.groupBox16.SuspendLayout();
+            this.tableLayoutPanel3.SuspendLayout();
+            this.flowLayoutPanel4.SuspendLayout();
+            this.tableLayoutPanel4.SuspendLayout();
+            this.tabControl2.SuspendLayout();
+            this.tabPage4.SuspendLayout();
             this.SuspendLayout();
             // 
             // dataGridView1
@@ -244,7 +257,7 @@
             this.dataGridView1.Location = new System.Drawing.Point(3, 3);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersVisible = false;
-            this.dataGridView1.Size = new System.Drawing.Size(715, 495);
+            this.dataGridView1.Size = new System.Drawing.Size(706, 478);
             this.dataGridView1.TabIndex = 0;
             // 
             // Column1
@@ -279,18 +292,16 @@
             // 
             // tabControl1
             // 
-            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage5);
+            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tabControl1.Location = new System.Drawing.Point(6, 102);
+            this.tabControl1.Location = new System.Drawing.Point(3, 88);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(976, 535);
+            this.tabControl1.Size = new System.Drawing.Size(964, 518);
             this.tabControl1.TabIndex = 1;
             this.tabControl1.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabControl1_Selecting);
             // 
@@ -302,7 +313,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 24);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(968, 507);
+            this.tabPage1.Size = new System.Drawing.Size(956, 490);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Tag read";
             // 
@@ -318,7 +329,7 @@
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(962, 501);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(950, 484);
             this.tableLayoutPanel1.TabIndex = 13;
             // 
             // tableLayoutPanel2
@@ -330,14 +341,14 @@
             this.tableLayoutPanel2.Controls.Add(this.groupBox2, 0, 1);
             this.tableLayoutPanel2.Controls.Add(this.groupBox1, 0, 3);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(724, 3);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(715, 3);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 4;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 19.5614F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 34.12323F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 23.09486F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 23.2205F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(235, 495);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(232, 478);
             this.tableLayoutPanel2.TabIndex = 1;
             // 
             // Start_Operate_btn
@@ -357,9 +368,9 @@
             this.groupBox7.Controls.Add(this.flowLayoutPanel2);
             this.groupBox7.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.groupBox7.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox7.Location = new System.Drawing.Point(3, 300);
+            this.groupBox7.Location = new System.Drawing.Point(3, 288);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(229, 75);
+            this.groupBox7.Size = new System.Drawing.Size(226, 75);
             this.groupBox7.TabIndex = 12;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "[GPO Set]";
@@ -374,7 +385,7 @@
             this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 18);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(223, 54);
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(220, 54);
             this.flowLayoutPanel2.TabIndex = 11;
             // 
             // GPO0_ckb
@@ -441,9 +452,9 @@
             this.groupBox2.Controls.Add(this.label2);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox2.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox2.Location = new System.Drawing.Point(3, 99);
+            this.groupBox2.Location = new System.Drawing.Point(3, 96);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(229, 85);
+            this.groupBox2.Size = new System.Drawing.Size(226, 85);
             this.groupBox2.TabIndex = 9;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "[Inventory Result]";
@@ -503,9 +514,9 @@
             this.groupBox1.Controls.Add(this.flowLayoutPanel1);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.groupBox1.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(3, 418);
+            this.groupBox1.Location = new System.Drawing.Point(3, 401);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(229, 74);
+            this.groupBox1.Size = new System.Drawing.Size(226, 74);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "[Antenna Detected]";
@@ -519,11 +530,12 @@
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 18);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(223, 53);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(220, 53);
             this.flowLayoutPanel1.TabIndex = 8;
             // 
             // Ant1_ckb
             // 
+            this.Ant1_ckb.AutoCheck = false;
             this.Ant1_ckb.AutoSize = true;
             this.Ant1_ckb.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Ant1_ckb.Location = new System.Drawing.Point(3, 3);
@@ -535,6 +547,7 @@
             // 
             // Ant2_ckb
             // 
+            this.Ant2_ckb.AutoCheck = false;
             this.Ant2_ckb.AutoSize = true;
             this.Ant2_ckb.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Ant2_ckb.Location = new System.Drawing.Point(67, 3);
@@ -546,6 +559,7 @@
             // 
             // Ant3_ckb
             // 
+            this.Ant3_ckb.AutoCheck = false;
             this.Ant3_ckb.AutoSize = true;
             this.Ant3_ckb.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Ant3_ckb.Location = new System.Drawing.Point(131, 3);
@@ -557,6 +571,7 @@
             // 
             // Ant4_ckb
             // 
+            this.Ant4_ckb.AutoCheck = false;
             this.Ant4_ckb.AutoSize = true;
             this.Ant4_ckb.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Ant4_ckb.Location = new System.Drawing.Point(3, 29);
@@ -571,6 +586,7 @@
             this.tabPage2.BackColor = System.Drawing.SystemColors.Control;
             this.tabPage2.Controls.Add(this.groupBox10);
             this.tabPage2.Controls.Add(this.StackLight_ckb);
+            this.tabPage2.Controls.Add(this.update_fw_btn);
             this.tabPage2.Controls.Add(this.RFID_API_ckb);
             this.tabPage2.Controls.Add(this.Offline_ckb);
             this.tabPage2.Controls.Add(this.LED_Support_ckb);
@@ -593,7 +609,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 24);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(968, 507);
+            this.tabPage2.Size = new System.Drawing.Size(956, 490);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Gateway configuration";
             // 
@@ -674,6 +690,18 @@
             this.StackLight_ckb.Text = "Stack Light Support";
             this.StackLight_ckb.UseVisualStyleBackColor = true;
             // 
+            // update_fw_btn
+            // 
+            this.update_fw_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.update_fw_btn.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.update_fw_btn.Location = new System.Drawing.Point(281, 38);
+            this.update_fw_btn.Name = "update_fw_btn";
+            this.update_fw_btn.Size = new System.Drawing.Size(119, 27);
+            this.update_fw_btn.TabIndex = 28;
+            this.update_fw_btn.Text = "Update Firmware";
+            this.update_fw_btn.UseVisualStyleBackColor = true;
+            this.update_fw_btn.Click += new System.EventHandler(this.update_fw_btn_Click);
+            // 
             // RFID_API_ckb
             // 
             this.RFID_API_ckb.AutoSize = true;
@@ -711,7 +739,7 @@
             // 
             this.Set_GW_Config_btn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.Set_GW_Config_btn.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Set_GW_Config_btn.Location = new System.Drawing.Point(817, 482);
+            this.Set_GW_Config_btn.Location = new System.Drawing.Point(800, 450);
             this.Set_GW_Config_btn.Name = "Set_GW_Config_btn";
             this.Set_GW_Config_btn.Size = new System.Drawing.Size(80, 23);
             this.Set_GW_Config_btn.TabIndex = 19;
@@ -723,7 +751,7 @@
             // 
             this.Get_GW_Config_btn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.Get_GW_Config_btn.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Get_GW_Config_btn.Location = new System.Drawing.Point(687, 482);
+            this.Get_GW_Config_btn.Location = new System.Drawing.Point(680, 450);
             this.Get_GW_Config_btn.Name = "Get_GW_Config_btn";
             this.Get_GW_Config_btn.Size = new System.Drawing.Size(80, 23);
             this.Get_GW_Config_btn.TabIndex = 18;
@@ -981,7 +1009,7 @@
             this.tabPage3.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tabPage3.Location = new System.Drawing.Point(4, 24);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(968, 507);
+            this.tabPage3.Size = new System.Drawing.Size(956, 490);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "RFID configuration";
             // 
@@ -999,10 +1027,186 @@
             this.groupBox14.Font = new System.Drawing.Font("Arial", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox14.Location = new System.Drawing.Point(458, 3);
             this.groupBox14.Name = "groupBox14";
-            this.groupBox14.Size = new System.Drawing.Size(504, 467);
+            this.groupBox14.Size = new System.Drawing.Size(504, 446);
             this.groupBox14.TabIndex = 6;
             this.groupBox14.TabStop = false;
             this.groupBox14.Text = "[Read Plan]";
+            // 
+            // weight_tx
+            // 
+            this.weight_tx.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.weight_tx.Location = new System.Drawing.Point(286, 339);
+            this.weight_tx.Name = "weight_tx";
+            this.weight_tx.Size = new System.Drawing.Size(199, 22);
+            this.weight_tx.TabIndex = 1;
+            // 
+            // groupBox16
+            // 
+            this.groupBox16.Controls.Add(this.TID_filter_tx);
+            this.groupBox16.Controls.Add(this.Memory_filter_tx);
+            this.groupBox16.Controls.Add(this.EPC_filter_tx);
+            this.groupBox16.Controls.Add(this.label39);
+            this.groupBox16.Controls.Add(this.label38);
+            this.groupBox16.Controls.Add(this.label37);
+            this.groupBox16.Location = new System.Drawing.Point(207, 173);
+            this.groupBox16.Name = "groupBox16";
+            this.groupBox16.Size = new System.Drawing.Size(291, 143);
+            this.groupBox16.TabIndex = 6;
+            this.groupBox16.TabStop = false;
+            this.groupBox16.Text = "[Filter]";
+            // 
+            // TID_filter_tx
+            // 
+            this.TID_filter_tx.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TID_filter_tx.Location = new System.Drawing.Point(77, 98);
+            this.TID_filter_tx.Name = "TID_filter_tx";
+            this.TID_filter_tx.Size = new System.Drawing.Size(199, 22);
+            this.TID_filter_tx.TabIndex = 1;
+            // 
+            // Memory_filter_tx
+            // 
+            this.Memory_filter_tx.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Memory_filter_tx.Location = new System.Drawing.Point(77, 64);
+            this.Memory_filter_tx.Name = "Memory_filter_tx";
+            this.Memory_filter_tx.Size = new System.Drawing.Size(199, 22);
+            this.Memory_filter_tx.TabIndex = 1;
+            // 
+            // EPC_filter_tx
+            // 
+            this.EPC_filter_tx.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.EPC_filter_tx.Location = new System.Drawing.Point(77, 30);
+            this.EPC_filter_tx.Name = "EPC_filter_tx";
+            this.EPC_filter_tx.Size = new System.Drawing.Size(199, 22);
+            this.EPC_filter_tx.TabIndex = 1;
+            // 
+            // label39
+            // 
+            this.label39.AutoSize = true;
+            this.label39.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label39.Location = new System.Drawing.Point(12, 103);
+            this.label39.Name = "label39";
+            this.label39.Size = new System.Drawing.Size(29, 15);
+            this.label39.TabIndex = 0;
+            this.label39.Text = "TID:";
+            // 
+            // label38
+            // 
+            this.label38.AutoSize = true;
+            this.label38.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label38.Location = new System.Drawing.Point(9, 67);
+            this.label38.Name = "label38";
+            this.label38.Size = new System.Drawing.Size(53, 15);
+            this.label38.TabIndex = 0;
+            this.label38.Text = "Memory:";
+            // 
+            // label37
+            // 
+            this.label37.AutoSize = true;
+            this.label37.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label37.Location = new System.Drawing.Point(10, 33);
+            this.label37.Name = "label37";
+            this.label37.Size = new System.Drawing.Size(35, 15);
+            this.label37.TabIndex = 0;
+            this.label37.Text = "EPC:";
+            // 
+            // protocol_plan_cbx
+            // 
+            this.protocol_plan_cbx.Font = new System.Drawing.Font("Arial", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.protocol_plan_cbx.FormattingEnabled = true;
+            this.protocol_plan_cbx.Items.AddRange(new object[] {
+            "GEN2",
+            "Lam mau"});
+            this.protocol_plan_cbx.Location = new System.Drawing.Point(338, 113);
+            this.protocol_plan_cbx.Name = "protocol_plan_cbx";
+            this.protocol_plan_cbx.Size = new System.Drawing.Size(101, 24);
+            this.protocol_plan_cbx.TabIndex = 5;
+            this.protocol_plan_cbx.Text = "GEN2";
+            // 
+            // label40
+            // 
+            this.label40.AutoSize = true;
+            this.label40.Font = new System.Drawing.Font("Arial", 11.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label40.Location = new System.Drawing.Point(204, 340);
+            this.label40.Name = "label40";
+            this.label40.Size = new System.Drawing.Size(62, 17);
+            this.label40.TabIndex = 4;
+            this.label40.Text = "Weight:";
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Font = new System.Drawing.Font("Arial", 11.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label30.Location = new System.Drawing.Point(207, 115);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(73, 17);
+            this.label30.TabIndex = 4;
+            this.label30.Text = "Protocol:";
+            // 
+            // groupBox15
+            // 
+            this.groupBox15.Controls.Add(this.flowLayoutPanel3);
+            this.groupBox15.Location = new System.Drawing.Point(207, 34);
+            this.groupBox15.Name = "groupBox15";
+            this.groupBox15.Size = new System.Drawing.Size(291, 66);
+            this.groupBox15.TabIndex = 3;
+            this.groupBox15.TabStop = false;
+            this.groupBox15.Text = "[Antena]";
+            // 
+            // flowLayoutPanel3
+            // 
+            this.flowLayoutPanel3.Controls.Add(this.Ant1_plan_ckb);
+            this.flowLayoutPanel3.Controls.Add(this.Ant2_plan_ckb);
+            this.flowLayoutPanel3.Controls.Add(this.Ant3_plan_ckb);
+            this.flowLayoutPanel3.Controls.Add(this.Ant4_plan_ckb);
+            this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel3.Location = new System.Drawing.Point(3, 18);
+            this.flowLayoutPanel3.Name = "flowLayoutPanel3";
+            this.flowLayoutPanel3.Size = new System.Drawing.Size(285, 45);
+            this.flowLayoutPanel3.TabIndex = 0;
+            // 
+            // Ant1_plan_ckb
+            // 
+            this.Ant1_plan_ckb.AutoSize = true;
+            this.Ant1_plan_ckb.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Ant1_plan_ckb.Location = new System.Drawing.Point(3, 3);
+            this.Ant1_plan_ckb.Name = "Ant1_plan_ckb";
+            this.Ant1_plan_ckb.Size = new System.Drawing.Size(58, 20);
+            this.Ant1_plan_ckb.TabIndex = 2;
+            this.Ant1_plan_ckb.Text = "Ant.1";
+            this.Ant1_plan_ckb.UseVisualStyleBackColor = true;
+            // 
+            // Ant2_plan_ckb
+            // 
+            this.Ant2_plan_ckb.AutoSize = true;
+            this.Ant2_plan_ckb.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Ant2_plan_ckb.Location = new System.Drawing.Point(67, 3);
+            this.Ant2_plan_ckb.Name = "Ant2_plan_ckb";
+            this.Ant2_plan_ckb.Size = new System.Drawing.Size(58, 20);
+            this.Ant2_plan_ckb.TabIndex = 2;
+            this.Ant2_plan_ckb.Text = "Ant.2";
+            this.Ant2_plan_ckb.UseVisualStyleBackColor = true;
+            // 
+            // Ant3_plan_ckb
+            // 
+            this.Ant3_plan_ckb.AutoSize = true;
+            this.Ant3_plan_ckb.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Ant3_plan_ckb.Location = new System.Drawing.Point(131, 3);
+            this.Ant3_plan_ckb.Name = "Ant3_plan_ckb";
+            this.Ant3_plan_ckb.Size = new System.Drawing.Size(58, 20);
+            this.Ant3_plan_ckb.TabIndex = 2;
+            this.Ant3_plan_ckb.Text = "Ant.3";
+            this.Ant3_plan_ckb.UseVisualStyleBackColor = true;
+            // 
+            // Ant4_plan_ckb
+            // 
+            this.Ant4_plan_ckb.AutoSize = true;
+            this.Ant4_plan_ckb.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Ant4_plan_ckb.Location = new System.Drawing.Point(195, 3);
+            this.Ant4_plan_ckb.Name = "Ant4_plan_ckb";
+            this.Ant4_plan_ckb.Size = new System.Drawing.Size(58, 20);
+            this.Ant4_plan_ckb.TabIndex = 2;
+            this.Ant4_plan_ckb.Text = "Ant.4";
+            this.Ant4_plan_ckb.UseVisualStyleBackColor = true;
             // 
             // Remove_plan_btn
             // 
@@ -1041,7 +1245,7 @@
             treeNode2.Text = "[Plans]";
             this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
             treeNode2});
-            this.treeView1.Size = new System.Drawing.Size(170, 402);
+            this.treeView1.Size = new System.Drawing.Size(170, 385);
             this.treeView1.TabIndex = 0;
             this.treeView1.BeforeLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeView1_BeforeLabelEdit);
             this.treeView1.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeView1_AfterLabelEdit);
@@ -1050,7 +1254,7 @@
             // 
             this.Set_RFID_btn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.Set_RFID_btn.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Set_RFID_btn.Location = new System.Drawing.Point(817, 482);
+            this.Set_RFID_btn.Location = new System.Drawing.Point(800, 450);
             this.Set_RFID_btn.Name = "Set_RFID_btn";
             this.Set_RFID_btn.Size = new System.Drawing.Size(80, 23);
             this.Set_RFID_btn.TabIndex = 5;
@@ -1062,7 +1266,7 @@
             // 
             this.Get_RFID_btn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.Get_RFID_btn.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Get_RFID_btn.Location = new System.Drawing.Point(687, 482);
+            this.Get_RFID_btn.Location = new System.Drawing.Point(680, 450);
             this.Get_RFID_btn.Name = "Get_RFID_btn";
             this.Get_RFID_btn.Size = new System.Drawing.Size(80, 23);
             this.Get_RFID_btn.TabIndex = 4;
@@ -1183,16 +1387,11 @@
             this.Antena_cbx.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.Antena_cbx.Font = new System.Drawing.Font("Arial", 11.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Antena_cbx.FormattingEnabled = true;
-            this.Antena_cbx.Items.AddRange(new object[] {
-            "ANT1",
-            "ANT2",
-            "ANT3",
-            "ANT4"});
             this.Antena_cbx.Location = new System.Drawing.Point(7, 167);
             this.Antena_cbx.Name = "Antena_cbx";
             this.Antena_cbx.Size = new System.Drawing.Size(66, 25);
             this.Antena_cbx.TabIndex = 12;
-            this.Antena_cbx.Text = "ANT1";
+            this.Antena_cbx.Text = "ANTx";
             // 
             // set_power_mode_btn
             // 
@@ -1613,7 +1812,7 @@
             this.tabPage5.Controls.Add(this.groupBox12);
             this.tabPage5.Location = new System.Drawing.Point(4, 24);
             this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(968, 507);
+            this.tabPage5.Size = new System.Drawing.Size(956, 490);
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "Data Store";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -1738,9 +1937,9 @@
             this.groupBox3.Controls.Add(this.Connect_btn);
             this.groupBox3.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.groupBox3.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox3.Location = new System.Drawing.Point(6, 6);
+            this.groupBox3.Location = new System.Drawing.Point(3, 3);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(480, 75);
+            this.groupBox3.Size = new System.Drawing.Size(476, 73);
             this.groupBox3.TabIndex = 3;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "[Connection Information]";
@@ -1836,15 +2035,16 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox4.Controls.Add(this.Gateway_ID_lb);
             this.groupBox4.Controls.Add(this.status_lb);
             this.groupBox4.Controls.Add(this.label6);
             this.groupBox4.Controls.Add(this.status_btn);
             this.groupBox4.Controls.Add(this.label8);
             this.groupBox4.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox4.Location = new System.Drawing.Point(593, 6);
+            this.groupBox4.Location = new System.Drawing.Point(553, 3);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(348, 75);
+            this.groupBox4.Size = new System.Drawing.Size(408, 73);
             this.groupBox4.TabIndex = 9;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "[Reader Information]";
@@ -1854,7 +2054,7 @@
             this.label10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(696, 641);
+            this.label10.Location = new System.Drawing.Point(309, 2);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(94, 15);
             this.label10.TabIndex = 10;
@@ -1865,7 +2065,7 @@
             this.Log_lb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.Log_lb.AutoSize = true;
             this.Log_lb.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Log_lb.Location = new System.Drawing.Point(816, 641);
+            this.Log_lb.Location = new System.Drawing.Point(409, 2);
             this.Log_lb.Name = "Log_lb";
             this.Log_lb.Size = new System.Drawing.Size(28, 15);
             this.Log_lb.TabIndex = 11;
@@ -1875,192 +2075,95 @@
             // 
             this.ptimer_loghandle.Tick += new System.EventHandler(this.ptimer_loghandle_Tick_1);
             // 
-            // checkBox1
+            // tableLayoutPanel3
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBox1.Location = new System.Drawing.Point(3, 3);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(58, 20);
-            this.checkBox1.TabIndex = 2;
-            this.checkBox1.Text = "Ant.1";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.tableLayoutPanel3.ColumnCount = 1;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel3.Controls.Add(this.tabControl1, 0, 1);
+            this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel4, 0, 2);
+            this.tableLayoutPanel3.Controls.Add(this.tableLayoutPanel4, 0, 0);
+            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.tableLayoutPanel3.RowCount = 3;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 85F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(970, 629);
+            this.tableLayoutPanel3.TabIndex = 12;
             // 
-            // groupBox15
+            // flowLayoutPanel4
             // 
-            this.groupBox15.Controls.Add(this.flowLayoutPanel3);
-            this.groupBox15.Location = new System.Drawing.Point(207, 34);
-            this.groupBox15.Name = "groupBox15";
-            this.groupBox15.Size = new System.Drawing.Size(291, 66);
-            this.groupBox15.TabIndex = 3;
-            this.groupBox15.TabStop = false;
-            this.groupBox15.Text = "[Antena]";
+            this.flowLayoutPanel4.Controls.Add(this.progressBar1);
+            this.flowLayoutPanel4.Controls.Add(this.label10);
+            this.flowLayoutPanel4.Controls.Add(this.Log_lb);
+            this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel4.Location = new System.Drawing.Point(3, 612);
+            this.flowLayoutPanel4.Name = "flowLayoutPanel4";
+            this.flowLayoutPanel4.Size = new System.Drawing.Size(964, 14);
+            this.flowLayoutPanel4.TabIndex = 2;
             // 
-            // flowLayoutPanel3
+            // tableLayoutPanel4
             // 
-            this.flowLayoutPanel3.Controls.Add(this.checkBox1);
-            this.flowLayoutPanel3.Controls.Add(this.checkBox2);
-            this.flowLayoutPanel3.Controls.Add(this.checkBox3);
-            this.flowLayoutPanel3.Controls.Add(this.checkBox4);
-            this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel3.Location = new System.Drawing.Point(3, 18);
-            this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-            this.flowLayoutPanel3.Size = new System.Drawing.Size(285, 45);
-            this.flowLayoutPanel3.TabIndex = 0;
+            this.tableLayoutPanel4.ColumnCount = 2;
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel4.Controls.Add(this.groupBox3, 0, 0);
+            this.tableLayoutPanel4.Controls.Add(this.groupBox4, 1, 0);
+            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
+            this.tableLayoutPanel4.RowCount = 1;
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(964, 79);
+            this.tableLayoutPanel4.TabIndex = 3;
             // 
-            // checkBox2
+            // tabControl2
             // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBox2.Location = new System.Drawing.Point(67, 3);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(58, 20);
-            this.checkBox2.TabIndex = 2;
-            this.checkBox2.Text = "Ant.2";
-            this.checkBox2.UseVisualStyleBackColor = true;
+            this.tabControl2.Controls.Add(this.tabPage4);
+            this.tabControl2.Controls.Add(this.tabPage6);
+            this.tabControl2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl2.Location = new System.Drawing.Point(0, 0);
+            this.tabControl2.Name = "tabControl2";
+            this.tabControl2.SelectedIndex = 0;
+            this.tabControl2.Size = new System.Drawing.Size(984, 661);
+            this.tabControl2.TabIndex = 13;
             // 
-            // checkBox3
+            // tabPage4
             // 
-            this.checkBox3.AutoSize = true;
-            this.checkBox3.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBox3.Location = new System.Drawing.Point(131, 3);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(58, 20);
-            this.checkBox3.TabIndex = 2;
-            this.checkBox3.Text = "Ant.3";
-            this.checkBox3.UseVisualStyleBackColor = true;
+            this.tabPage4.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage4.Controls.Add(this.tableLayoutPanel3);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(976, 635);
+            this.tabPage4.TabIndex = 0;
+            this.tabPage4.Text = "READER";
             // 
-            // checkBox4
+            // tabPage6
             // 
-            this.checkBox4.AutoSize = true;
-            this.checkBox4.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBox4.Location = new System.Drawing.Point(195, 3);
-            this.checkBox4.Name = "checkBox4";
-            this.checkBox4.Size = new System.Drawing.Size(58, 20);
-            this.checkBox4.TabIndex = 2;
-            this.checkBox4.Text = "Ant.4";
-            this.checkBox4.UseVisualStyleBackColor = true;
+            this.tabPage6.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage6.Location = new System.Drawing.Point(4, 22);
+            this.tabPage6.Name = "tabPage6";
+            this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage6.Size = new System.Drawing.Size(976, 635);
+            this.tabPage6.TabIndex = 1;
+            this.tabPage6.Text = "ROBOT";
             // 
-            // label30
+            // progressBar1
             // 
-            this.label30.AutoSize = true;
-            this.label30.Font = new System.Drawing.Font("Arial", 11.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label30.Location = new System.Drawing.Point(207, 115);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(73, 17);
-            this.label30.TabIndex = 4;
-            this.label30.Text = "Protocol:";
-            // 
-            // protocol_plan_cbx
-            // 
-            this.protocol_plan_cbx.Font = new System.Drawing.Font("Arial", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.protocol_plan_cbx.FormattingEnabled = true;
-            this.protocol_plan_cbx.Items.AddRange(new object[] {
-            "GEN2",
-            "Lam mau"});
-            this.protocol_plan_cbx.Location = new System.Drawing.Point(338, 113);
-            this.protocol_plan_cbx.Name = "protocol_plan_cbx";
-            this.protocol_plan_cbx.Size = new System.Drawing.Size(101, 24);
-            this.protocol_plan_cbx.TabIndex = 5;
-            this.protocol_plan_cbx.Text = "GEN2";
-            // 
-            // groupBox16
-            // 
-            this.groupBox16.Controls.Add(this.TID_filter_tx);
-            this.groupBox16.Controls.Add(this.Memory_filter_tx);
-            this.groupBox16.Controls.Add(this.EPC_filter_tx);
-            this.groupBox16.Controls.Add(this.label39);
-            this.groupBox16.Controls.Add(this.label38);
-            this.groupBox16.Controls.Add(this.label37);
-            this.groupBox16.Location = new System.Drawing.Point(207, 173);
-            this.groupBox16.Name = "groupBox16";
-            this.groupBox16.Size = new System.Drawing.Size(291, 143);
-            this.groupBox16.TabIndex = 6;
-            this.groupBox16.TabStop = false;
-            this.groupBox16.Text = "[Filter]";
-            // 
-            // label37
-            // 
-            this.label37.AutoSize = true;
-            this.label37.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label37.Location = new System.Drawing.Point(10, 33);
-            this.label37.Name = "label37";
-            this.label37.Size = new System.Drawing.Size(35, 15);
-            this.label37.TabIndex = 0;
-            this.label37.Text = "EPC:";
-            // 
-            // label38
-            // 
-            this.label38.AutoSize = true;
-            this.label38.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label38.Location = new System.Drawing.Point(9, 67);
-            this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(53, 15);
-            this.label38.TabIndex = 0;
-            this.label38.Text = "Memory:";
-            // 
-            // label39
-            // 
-            this.label39.AutoSize = true;
-            this.label39.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label39.Location = new System.Drawing.Point(12, 103);
-            this.label39.Name = "label39";
-            this.label39.Size = new System.Drawing.Size(29, 15);
-            this.label39.TabIndex = 0;
-            this.label39.Text = "TID:";
-            // 
-            // EPC_filter_tx
-            // 
-            this.EPC_filter_tx.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.EPC_filter_tx.Location = new System.Drawing.Point(77, 30);
-            this.EPC_filter_tx.Name = "EPC_filter_tx";
-            this.EPC_filter_tx.Size = new System.Drawing.Size(199, 22);
-            this.EPC_filter_tx.TabIndex = 1;
-            // 
-            // Memory_filter_tx
-            // 
-            this.Memory_filter_tx.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Memory_filter_tx.Location = new System.Drawing.Point(77, 64);
-            this.Memory_filter_tx.Name = "Memory_filter_tx";
-            this.Memory_filter_tx.Size = new System.Drawing.Size(199, 22);
-            this.Memory_filter_tx.TabIndex = 1;
-            // 
-            // TID_filter_tx
-            // 
-            this.TID_filter_tx.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TID_filter_tx.Location = new System.Drawing.Point(77, 98);
-            this.TID_filter_tx.Name = "TID_filter_tx";
-            this.TID_filter_tx.Size = new System.Drawing.Size(199, 22);
-            this.TID_filter_tx.TabIndex = 1;
-            // 
-            // label40
-            // 
-            this.label40.AutoSize = true;
-            this.label40.Font = new System.Drawing.Font("Arial", 11.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label40.Location = new System.Drawing.Point(204, 340);
-            this.label40.Name = "label40";
-            this.label40.Size = new System.Drawing.Size(62, 17);
-            this.label40.TabIndex = 4;
-            this.label40.Text = "Weight:";
-            // 
-            // weight_tx
-            // 
-            this.weight_tx.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.weight_tx.Location = new System.Drawing.Point(286, 339);
-            this.weight_tx.Name = "weight_tx";
-            this.weight_tx.Size = new System.Drawing.Size(199, 22);
-            this.weight_tx.TabIndex = 1;
+            this.progressBar1.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.progressBar1.Location = new System.Drawing.Point(3, 3);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(300, 11);
+            this.progressBar1.TabIndex = 12;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(984, 661);
-            this.Controls.Add(this.Log_lb);
-            this.Controls.Add(this.groupBox4);
-            this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.label10);
-            this.Controls.Add(this.tabControl1);
+            this.Controls.Add(this.tabControl2);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Text = "Seldat RFID GUI @ HW Team";
@@ -2090,6 +2193,11 @@
             this.tabPage3.ResumeLayout(false);
             this.groupBox14.ResumeLayout(false);
             this.groupBox14.PerformLayout();
+            this.groupBox16.ResumeLayout(false);
+            this.groupBox16.PerformLayout();
+            this.groupBox15.ResumeLayout(false);
+            this.flowLayoutPanel3.ResumeLayout(false);
+            this.flowLayoutPanel3.PerformLayout();
             this.groupBox11.ResumeLayout(false);
             this.groupBox11.PerformLayout();
             this.groupBox9.ResumeLayout(false);
@@ -2109,13 +2217,13 @@
             this.groupBox3.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
-            this.groupBox15.ResumeLayout(false);
-            this.flowLayoutPanel3.ResumeLayout(false);
-            this.flowLayoutPanel3.PerformLayout();
-            this.groupBox16.ResumeLayout(false);
-            this.groupBox16.PerformLayout();
+            this.tableLayoutPanel3.ResumeLayout(false);
+            this.flowLayoutPanel4.ResumeLayout(false);
+            this.flowLayoutPanel4.PerformLayout();
+            this.tableLayoutPanel4.ResumeLayout(false);
+            this.tabControl2.ResumeLayout(false);
+            this.tabPage4.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -2264,10 +2372,10 @@
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.GroupBox groupBox15;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel3;
-        private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.CheckBox checkBox2;
-        private System.Windows.Forms.CheckBox checkBox3;
-        private System.Windows.Forms.CheckBox checkBox4;
+        private System.Windows.Forms.CheckBox Ant1_plan_ckb;
+        private System.Windows.Forms.CheckBox Ant2_plan_ckb;
+        private System.Windows.Forms.CheckBox Ant3_plan_ckb;
+        private System.Windows.Forms.CheckBox Ant4_plan_ckb;
         private System.Windows.Forms.TextBox weight_tx;
         private System.Windows.Forms.GroupBox groupBox16;
         private System.Windows.Forms.TextBox TID_filter_tx;
@@ -2277,6 +2385,14 @@
         private System.Windows.Forms.Label label38;
         private System.Windows.Forms.Label label37;
         private System.Windows.Forms.Label label40;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel4;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
+        private System.Windows.Forms.TabControl tabControl2;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.TabPage tabPage6;
+        private System.Windows.Forms.Button update_fw_btn;
+        private System.Windows.Forms.ProgressBar progressBar1;
     }
 }
 

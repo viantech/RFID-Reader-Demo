@@ -407,10 +407,14 @@ namespace GatewayForm
                 else
                     SetControl(Ant4_ckb, "no");
             }
-            else if (config_str[0].Contains("= {"))
+            else if (config_str[0].IndexOf("= {") != -1)
             {
                 MessageBox.Show(config_msg);
                 startcmdprocess(CM.COMMAND.SET_CONN_TYPE_CMD);
+            }
+            else if (config_str[0] == "Update FW")
+            {
+                SetControl(progressBar1, config_str[1]);
             }
             else
                 Log_Handler("Get command not defined");
@@ -490,6 +494,10 @@ namespace GatewayForm
                         (control as RadioButton).Checked = true;
                     else
                         (control as RadioButton).Checked = false;
+                }
+                else if (control is ProgressBar)
+                {
+                    (control as ProgressBar).Value = int.Parse(config_tx);
                 }
                 else
                 {
@@ -591,7 +599,7 @@ namespace GatewayForm
                     cells = rows[i].Split(new string[] { "\t" }, StringSplitOptions.None);
                     table.Rows.Add(cells[0], cells[1], cells[2], cells[3], cells[4]);
                 }
-
+                SetControl(No_Tag_lb, rows.Length.ToString());
             }
         }
 
@@ -872,8 +880,7 @@ namespace GatewayForm
         {
             if (com_type.getflagConnected_TCPIP())
             {
-                /*com_type.Get_Command_Send(CM.COMMAND.GET_POWER_MODE_CMD);
-                com_type.waitflagRevTCP();*/
+                //com_type.Get_Command_Send(CM.COMMAND.GET_POWER_MODE_CMD);
                 startcmdprocess(CM.COMMAND.GET_POWER_MODE_CMD);
             }
             else
@@ -938,6 +945,19 @@ namespace GatewayForm
                     if (com_type.getflagConnected_TCPIP())
                     {
                         com_type.StartCmd_Process(CM.COMMAND.GET_RFID_CONFIGURATION_CMD);
+                        for (int i = 1; i <= 4; i++)
+                        {
+                            if((flowLayoutPanel1.Controls[i -1] as CheckBox).Checked)
+                            {
+                                Antena_cbx.Items.Add("ANT" + i.ToString());
+                                (flowLayoutPanel3.Controls[i - 1] as CheckBox).CheckState = CheckState.Checked;
+                                (flowLayoutPanel3.Controls[i - 1] as CheckBox).Enabled = true;
+                            }
+                            else
+                            {
+                                (flowLayoutPanel3.Controls[i - 1] as CheckBox).Enabled = false;
+                            }
+                        }
                     }
                     else
                     {
@@ -1010,6 +1030,10 @@ namespace GatewayForm
                 Log_lb.Text = "Idle";
                 if (status_lb.Text == "Active")
                     Disconnect_Behavior();
+            }
+            else if (Log_lb.Text == "Sending ...")
+            {
+
             }
             else
                 Log_lb.Text = "Ready!";
@@ -1222,6 +1246,24 @@ namespace GatewayForm
         {
             list_plan_name.Remove(treeView1.SelectedNode.Text);
             treeView1.Nodes.Remove(treeView1.SelectedNode);
+        }
+
+        private void update_fw_btn_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog firware_file = new OpenFileDialog();
+            firware_file.Filter = "Bin file (*.*)|*.*";
+            firware_file.FilterIndex = 1;
+            firware_file.Multiselect = false;
+            firware_file.RestoreDirectory = true;
+            //DCM_file.InitialDirectory = DCM_file_tx.Text;
+            if (firware_file.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                byte[] bytesFile = System.IO.File.ReadAllBytes(firware_file.FileName);
+                MessageBox.Show("Sending File...");
+                Log_Handler("Sending ...");
+                com_type.Set_Command_Send_Bytes(CM.COMMAND.FIRMWARE_UPDATE_CMD, bytesFile);
+                //com_type.waitflagRevTCP();
+            }
         }
     }
 }

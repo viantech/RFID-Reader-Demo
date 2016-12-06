@@ -54,6 +54,7 @@ namespace GatewayForm
             GET_BLF_CMD = 0x15,
             REBOOT_CMD = 0x16,
             ANTENA_CMD = 0x17,
+            FIRMWARE_UPDATE_CMD = 0x20,
         };
 
         public enum HEADER
@@ -445,6 +446,13 @@ namespace GatewayForm
                         data_response = Get_Data(Decode_Frame((byte)COMMAND.ANTENA_CMD, command_bytes));
                         if (data_response.Length > 0)
                             Cmd_Raise("Antena RFID\n"+ data_response + "\n");
+                        break;
+                    case COMMAND.FIRMWARE_UPDATE_CMD:
+                        info_ack = command_bytes[command_bytes.Length - 2];
+                        if (0x00 == info_ack)
+                            Log_Raise("Update FW Success");
+                        else
+                            Log_Raise("Failed to update. Please try again!");
                         break;
                     default:
                         break;
