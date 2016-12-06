@@ -499,12 +499,10 @@ namespace GatewayForm
                     {
                         Array.Resize(ref state.result_data_byte, state.result_data_byte.Length + meta_sub.Length);
                         Buffer.BlockCopy(meta_sub, 0, state.result_data_byte, state.result_data_byte.Length - meta_sub.Length, meta_sub.Length);
+                        waiter.Set();
                         if (0x01 != state.buffer[bytesRead - 2])
-                        {
-                            waiter.Set();
                             client.BeginReceive(state.buffer, 0, StateTCPClient.BufferSize, 0,
                                new AsyncCallback(Receive_Command_Callback), state);
-                        }
                         else
                         {
                             if (state.result_data_byte != null && state.result_data_byte.Length > 0)
