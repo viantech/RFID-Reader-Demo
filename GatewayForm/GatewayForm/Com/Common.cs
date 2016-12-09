@@ -28,7 +28,97 @@ namespace GatewayForm
             public UInt16 truncate;
             public byte checksum;
         };
+        [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Explicit)]
+        struct TcpKeepAlive
+        {
+            [System.Runtime.InteropServices.FieldOffset(0)]
+            //[System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.ByValArray, SizeConst = 12)]
+            private unsafe fixed byte Bytes[12];
 
+            [System.Runtime.InteropServices.FieldOffset(0)]
+            public uint On_Off;
+
+            [System.Runtime.InteropServices.FieldOffset(4)]
+            public uint KeepaLiveTime;
+
+            [System.Runtime.InteropServices.FieldOffset(8)]
+            public uint KeepaLiveInterval;
+            public byte[] ToArray()
+            {
+                unsafe
+                {
+                    fixed (byte* ptr = Bytes)
+                    {
+                        IntPtr p = new IntPtr(ptr);
+                        byte[] BytesArray = new byte[12];
+
+                        System.Runtime.InteropServices.Marshal.Copy(p, BytesArray, 0, BytesArray.Length);
+                        return BytesArray;
+                    }
+                }
+            }
+        }
+
+        public static int SetKeepAliveValues(System.Net.Sockets.Socket Socket, bool On_Off, uint KeepaLiveTime, uint KeepaLiveInterval)
+        {
+            int Result = -1;
+
+            unsafe
+            {
+                TcpKeepAlive KeepAliveValues = new TcpKeepAlive();
+
+                KeepAliveValues.On_Off = Convert.ToUInt32(On_Off);
+                KeepAliveValues.KeepaLiveTime = KeepaLiveTime;
+                KeepAliveValues.KeepaLiveInterval = KeepaLiveInterval;
+                
+                /*byte[] InValue = new byte[12];
+
+                for (int I = 0; I < 12; I++)
+                    InValue[I] = KeepAliveValues.Bytes[I];*/
+
+                Result = Socket.IOControl(System.Net.Sockets.IOControlCode.KeepAliveValues, KeepAliveValues.ToArray(), null);
+            }
+
+            return Result;
+        }
+        /*public static bool SetKeepAlive(System.Net.Sockets.Socket sock, ulong time, ulong interval)
+        {
+            try
+            {
+                // resulting structure
+                byte[] SIO_KEEPALIVE_VALS = new byte[3 * 4];
+
+                // array to hold input values
+                ulong[] input = new ulong[3];
+
+                // put input arguments in input array
+                if (time == 0 || interval == 0) // enable disable keep-alive
+                    input[0] = (0UL); // off
+                else
+                    input[0] = (1UL); // on
+
+                input[1] = (time); // time millis
+                input[2] = (interval); // interval millis
+
+                // pack input into byte struct
+                for (int i = 0; i < input.Length; i++)
+                {
+                    SIO_KEEPALIVE_VALS[i * 4 + 3] = (byte)(input[i] >> ((4 - 1) * 4) & 0xff);
+                    SIO_KEEPALIVE_VALS[i * 4 + 2] = (byte)(input[i] >> ((4 - 2) * 4) & 0xff);
+                    SIO_KEEPALIVE_VALS[i * 4 + 1] = (byte)(input[i] >> ((4 - 3) * 4) & 0xff);
+                    SIO_KEEPALIVE_VALS[i * 4 + 0] = (byte)(input[i] >> ((4 - 4) * 4) & 0xff);
+                }
+                // create bytestruct for result (bytes pending on server socket)
+                byte[] result = BitConverter.GetBytes(0);
+                // write SIO_VALS to Socket IOControl
+                sock.IOControl(System.Net.Sockets.IOControlCode.KeepAliveValues, SIO_KEEPALIVE_VALS, result);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
+        }*/
         public enum COMMAND
         {
             CONNECTION_REQUEST_CMD = 0x01,
@@ -54,7 +144,7 @@ namespace GatewayForm
             GET_BLF_CMD = 0x15,
             REBOOT_CMD = 0x16,
             ANTENA_CMD = 0x17,
-            FIRMWARE_UPDATE_CMD = 0x20,
+            FIRMWARE_UPDATE_CMD = 0x1B,
         };
 
         public enum HEADER
@@ -71,6 +161,7 @@ namespace GatewayForm
             MAX_SIZE_TCP_META_DATA = 0x03FA, // 1024 - 6
             MAX_SIZE_ZIGBEE_META_DATA = 0x42, //72 -6
             MAX_SIZE_ZIGBEE_BLOCK = 0x66, //102
+            CHUNK_SIZE_FILE = 0xFFDC, //65500
         };
 
         public enum TYPECONNECT
@@ -192,7 +283,7 @@ namespace GatewayForm
             //Command
             fmt.command = meta_subframe[0];
             if (fmt.command != command_option)
-                return new byte[] {0x01, 0x01};
+                return new byte[] { 0x01, 0x01 };
 
             //Length
             fmt.length = (ushort)(meta_subframe[2] + (meta_subframe[1] << 8));
@@ -338,7 +429,9 @@ namespace GatewayForm
                     case COMMAND.START_OPERATION_CMD:
                         info_ack = Decode_Frame_ACK((byte)COMMAND.START_OPERATION_CMD, command_bytes);
                         if (0x00 == info_ack)
+                        {
                             Log_Raise("Inventory Mode");
+                        }
                         else
                             MessageBox.Show("Failed start operation");
                         break;
@@ -347,7 +440,7 @@ namespace GatewayForm
                         info_ack = Decode_Frame_ACK((byte)COMMAND.STOP_OPERATION_CMD, command_bytes);
                         if (0x00 == info_ack)
                         {
-                            Log_Raise("Stop operate");
+                            Log_Raise("Stop Inventory");
                         }
                         else
                             MessageBox.Show("Failed stop operation!");
@@ -445,7 +538,7 @@ namespace GatewayForm
                     case COMMAND.ANTENA_CMD:
                         data_response = Get_Data(Decode_Frame((byte)COMMAND.ANTENA_CMD, command_bytes));
                         if (data_response.Length > 0)
-                            Cmd_Raise("Antena RFID\n"+ data_response + "\n");
+                            Cmd_Raise("Antena RFID\n" + data_response + "\n");
                         break;
                     default:
                         break;

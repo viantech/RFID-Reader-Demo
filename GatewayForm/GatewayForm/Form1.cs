@@ -86,7 +86,7 @@ namespace GatewayForm
                 {
                     case CM.COMMAND.DIS_CONNECT_CMD:
                         com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
-                        com_type.waitflagRevTCP();
+                        //com_type.waitflagRevTCP();
                         com_type.Close();
                         Disconnect_Behavior();
                         break;
@@ -132,6 +132,20 @@ namespace GatewayForm
                         freq_bytes[1] = (byte)(tari_cbx.SelectedIndex);
                         com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_BLF_CMD, freq_bytes);
                         com_type.waitflagRevTCP();
+                        break;
+                    case CM.COMMAND.CHECK_READER_STT_CMD:
+                        com_type.Close();
+                        Disconnect_Behavior();
+                        DialogResult result = MessageBox.Show("The connection closed. Please check your connection.\nIf you want re-connect, Click \"Yes\"",
+                                                              "Confirmation", MessageBoxButtons.YesNo);
+                        if (result == DialogResult.Yes)
+                        {
+                            Connect_btn.PerformClick();
+                        }
+                        else
+                        {
+                            //no...
+                        }
                         break;
                     default:
                         break;
@@ -238,8 +252,46 @@ namespace GatewayForm
         private void GetConfig_Handler(string config_msg)
         {
             string[] config_str = config_msg.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
-            if (config_str[0] == "NAK")
-                Log_Handler("Failed Get Config");
+
+            if (config_str[0] == "BLF Setting")
+            {
+                if (couting == 0)
+                {
+                    if (config_str[1] == "0")
+                        SetControl(freq_cbx, "0");
+                    else if (config_str[1] == "2")
+                        SetControl(freq_cbx, "1");
+                    else
+                        SetControl(freq_cbx, "2");
+                    couting++;
+                }
+                else if (couting == 1)
+                {
+                    SetControl(coding_cbx, config_str[1]);
+                    couting++;
+                }
+                else
+                {
+                    SetControl(tari_cbx, config_str[1]);
+                    couting = 0;
+                    Log_Handler("Get BLF done");
+                }
+            }
+            else if (config_str[0] == "Power RFID")
+            {
+                if (couting == 0)
+                {
+                    SetControl(trackBar2, config_str[1]);
+                    Log_Handler("Get Read Power done");
+                    couting++;
+                }
+                else
+                {
+                    SetControl(trackBar3, config_str[1]);
+                    Log_Handler("Get Write Power done");
+                    couting = 0;
+                }
+            }
             else if (config_str[0] == "Seldatinc gateway configuration=")
             {
                 //Gateway serial
@@ -296,46 +348,24 @@ namespace GatewayForm
                 else SetControl(RFID_API_ckb, "no");
                 Log_Handler("Get GW Config done");
             }
-            else if (config_str[0] == "BLF Setting")
+            else if (config_str[0] == "Antena RFID")
             {
-                if (couting == 0)
-                {
-                    if (config_str[1] == "0")
-                        SetControl(freq_cbx, "0");
-                    else if (config_str[1] == "2")
-                        SetControl(freq_cbx, "1");
-                    else
-                        SetControl(freq_cbx, "2");
-                    couting++;
-                }
-                else if (couting == 1)
-                {
-                    SetControl(coding_cbx, config_str[1]);
-                    couting++;
-                }
+                if (config_str[1].IndexOf('1') != -1)
+                    SetControl(Ant1_ckb, "yes");
                 else
-                {
-                    SetControl(tari_cbx, config_str[1]);
-                    couting = 0;
-                    Log_Handler("Get BLF done");
-                }
-
-            }
-            else if (config_str[0] == "Power RFID")
-            {
-                if (couting == 0)
-                {
-                    SetControl(trackBar2, config_str[1]);
-                    Log_Handler("Get Read Power done");
-                    couting++;
-                }
+                    SetControl(Ant1_ckb, "no");
+                if (config_str[1].IndexOf('2') != -1)
+                    SetControl(Ant2_ckb, "yes");
                 else
-                {
-                    SetControl(trackBar3, config_str[1]);
-                    Log_Handler("Get Write Power done");
-                    couting = 0;
-                }
-
+                    SetControl(Ant2_ckb, "no");
+                if (config_str[1].IndexOf('3') != -1)
+                    SetControl(Ant3_ckb, "yes");
+                else
+                    SetControl(Ant3_ckb, "no");
+                if (config_str[1].IndexOf('4') != -1)
+                    SetControl(Ant4_ckb, "yes");
+                else
+                    SetControl(Ant4_ckb, "no");
             }
             else if (config_str[0] == "Power Mode RFID")
             {
@@ -388,25 +418,6 @@ namespace GatewayForm
                 else
                     SetControl(power_mode_cbx, "4");
             }
-            else if (config_str[0] == "Antena RFID")
-            {
-                if (config_str[1].IndexOf('1') != -1)
-                    SetControl(Ant1_ckb, "yes");
-                else
-                    SetControl(Ant1_ckb, "no");
-                if (config_str[1].IndexOf('2') != -1)
-                    SetControl(Ant2_ckb, "yes");
-                else
-                    SetControl(Ant2_ckb, "no");
-                if (config_str[1].IndexOf('3') != -1)
-                    SetControl(Ant3_ckb, "yes");
-                else
-                    SetControl(Ant3_ckb, "no");
-                if (config_str[1].IndexOf('4') != -1)
-                    SetControl(Ant4_ckb, "yes");
-                else
-                    SetControl(Ant4_ckb, "no");
-            }
             else if (config_str[0].IndexOf("= {") != -1)
             {
                 MessageBox.Show(config_msg);
@@ -416,6 +427,12 @@ namespace GatewayForm
             {
                 SetControl(progressBar1, config_str[1]);
             }
+            else if (config_str[0] == "Keep Alive Timeout")
+            {
+                startcmdprocess(CM.COMMAND.CHECK_READER_STT_CMD);
+            }
+            else if (config_str[0] == "NAK")
+                Log_Handler("Failed Get Config");
             else
                 Log_Handler("Get command not defined");
         }
@@ -425,8 +442,17 @@ namespace GatewayForm
             this.Invoke((MethodInvoker)delegate
             {
                 Log_lb.Text = log_msg;
-                //messageLoghandle = log_msg;
-                if (Log_lb.Text != "Inventory Mode")
+                if (log_msg == "Inventory Mode")
+                {
+                    Stop_Behavior();
+                }
+                else if (log_msg == "Stop Inventory")
+                {
+                    Start_Behavior();
+                    ptimer_loghandle.Interval = 2000;
+                    ptimer_loghandle.Start();
+                }
+                else
                 {
                     ptimer_loghandle.Interval = 2500;
                     ptimer_loghandle.Start();
@@ -609,13 +635,12 @@ namespace GatewayForm
             {
                 CM.MessageReceived += Read_handler;
                 com_type.Get_Command_Send(CM.COMMAND.START_OPERATION_CMD);
-                Stop_Behavior();
+
             }
             else
             {
                 CM.MessageReceived -= Read_handler;
                 com_type.Get_Command_Send(CM.COMMAND.STOP_OPERATION_CMD);
-                Start_Behavior();
             }
         }
 
@@ -720,7 +745,7 @@ namespace GatewayForm
                     gateway_config.AppendFormat(GW_Format[14], "yes");
                 else gateway_config.AppendFormat(GW_Format[14], "no");
                 string GPO_sets = String.Empty;
-                foreach (CheckBox GPOs_ckb in groupBox7.Controls.OfType<CheckBox>())
+                foreach (CheckBox GPOs_ckb in flowLayoutPanel2.Controls)
                 {
                     if (GPOs_ckb.Checked)
                         GPO_sets += GPOs_ckb.Text.ToLower() + ",";
@@ -947,7 +972,7 @@ namespace GatewayForm
                         com_type.StartCmd_Process(CM.COMMAND.GET_RFID_CONFIGURATION_CMD);
                         for (int i = 1; i <= 4; i++)
                         {
-                            if((flowLayoutPanel1.Controls[i -1] as CheckBox).Checked)
+                            if ((flowLayoutPanel1.Controls[i - 1] as CheckBox).Checked)
                             {
                                 Antena_cbx.Items.Add("ANT" + i.ToString());
                                 (flowLayoutPanel3.Controls[i - 1] as CheckBox).CheckState = CheckState.Checked;
@@ -1023,20 +1048,17 @@ namespace GatewayForm
         }
         private void ptimer_loghandle_Tick_1(object sender, EventArgs e)
         {
-            if (Start_Operate_btn.Text == "Stop inventory")
-                Log_lb.Text = "Inventory Mode";
             if (Log_lb.Text == "Disconnected" || Log_lb.Text == "Abort due to close")
             {
                 Log_lb.Text = "Idle";
                 if (status_lb.Text == "Active")
                     Disconnect_Behavior();
             }
-            else if (Log_lb.Text == "Sending ...")
-            {
-                Log_lb.Text = "Sending ...";
-            }
+
             else
+            {
                 Log_lb.Text = "Ready!";
+            }
             ptimer_loghandle.Stop();
         }
 
@@ -1258,11 +1280,12 @@ namespace GatewayForm
             //DCM_file.InitialDirectory = DCM_file_tx.Text;
             if (firware_file.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
+                FileInfo fileinfo = new FileInfo(firware_file.FileName);
                 byte[] bytesFile = System.IO.File.ReadAllBytes(firware_file.FileName);
-                MessageBox.Show("Sending File...");
+                string info_file = "[" + fileinfo.Name + "]" + "[" + fileinfo.Length.ToString() + "]";
                 Log_Handler("Sending ...");
                 progressBar1.Value = 0;
-                com_type.Update_File(bytesFile);
+                com_type.Update_File(bytesFile, info_file);
                 //com_type.waitflagRevTCP();
             }
         }

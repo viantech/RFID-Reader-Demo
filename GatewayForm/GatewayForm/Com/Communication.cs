@@ -317,7 +317,7 @@ namespace GatewayForm
                     break;
             }
         }
-        public void Update_File(byte[] file_bytes)
+        public void Update_File(byte[] file_bytes, string info)
         {
             switch (type)
             {
@@ -328,7 +328,7 @@ namespace GatewayForm
                     if (tcp != null)
                     {
                         if (getflagConnected_TCPIP())
-                            tcp.Send_File(file_bytes);
+                            tcp.Send_File(file_bytes, info);
                         else
                             tcp.Free();
                     }
@@ -339,7 +339,7 @@ namespace GatewayForm
                     if (tcp != null)
                     {
                         if (getflagConnected_TCPIP())
-                            tcp.Send_File(file_bytes);
+                            tcp.Send_File(file_bytes, info);
                         else
                             tcp.Free();
                     }

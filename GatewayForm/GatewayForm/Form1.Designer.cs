@@ -29,9 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Simple Plan");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("[Plans]", new System.Windows.Forms.TreeNode[] {
-            treeNode1});
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("[Plans]");
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
@@ -195,11 +193,11 @@
             this.ptimer_loghandle = new System.Windows.Forms.Timer(this.components);
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tabPage6 = new System.Windows.Forms.TabPage();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -694,7 +692,7 @@
             // 
             this.update_fw_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.update_fw_btn.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.update_fw_btn.Location = new System.Drawing.Point(281, 38);
+            this.update_fw_btn.Location = new System.Drawing.Point(30, 338);
             this.update_fw_btn.Name = "update_fw_btn";
             this.update_fw_btn.Size = new System.Drawing.Size(119, 27);
             this.update_fw_btn.TabIndex = 28;
@@ -1239,12 +1237,10 @@
             this.treeView1.LabelEdit = true;
             this.treeView1.Location = new System.Drawing.Point(18, 55);
             this.treeView1.Name = "treeView1";
-            treeNode1.Name = "Plan0";
-            treeNode1.Text = "Simple Plan";
-            treeNode2.Name = "Root";
-            treeNode2.Text = "[Plans]";
+            treeNode1.Name = "Root";
+            treeNode1.Text = "[Plans]";
             this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode2});
+            treeNode1});
             this.treeView1.Size = new System.Drawing.Size(170, 385);
             this.treeView1.TabIndex = 0;
             this.treeView1.BeforeLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeView1_BeforeLabelEdit);
@@ -2026,10 +2022,11 @@
             // status_lb
             // 
             this.status_lb.AutoSize = true;
+            this.status_lb.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.status_lb.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.status_lb.Location = new System.Drawing.Point(131, 49);
+            this.status_lb.Location = new System.Drawing.Point(138, 49);
             this.status_lb.Name = "status_lb";
-            this.status_lb.Size = new System.Drawing.Size(51, 15);
+            this.status_lb.Size = new System.Drawing.Size(64, 18);
             this.status_lb.TabIndex = 8;
             this.status_lb.Text = "Inactive";
             // 
@@ -2051,10 +2048,10 @@
             // 
             // label10
             // 
-            this.label10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label10.AutoSize = true;
+            this.label10.Dock = System.Windows.Forms.DockStyle.Top;
             this.label10.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(309, 2);
+            this.label10.Location = new System.Drawing.Point(309, 0);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(94, 15);
             this.label10.TabIndex = 10;
@@ -2062,10 +2059,10 @@
             // 
             // Log_lb
             // 
-            this.Log_lb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.Log_lb.AutoSize = true;
+            this.Log_lb.Dock = System.Windows.Forms.DockStyle.Top;
             this.Log_lb.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Log_lb.Location = new System.Drawing.Point(409, 2);
+            this.Log_lb.Location = new System.Drawing.Point(409, 0);
             this.Log_lb.Name = "Log_lb";
             this.Log_lb.Size = new System.Drawing.Size(28, 15);
             this.Log_lb.TabIndex = 11;
@@ -2102,6 +2099,14 @@
             this.flowLayoutPanel4.Name = "flowLayoutPanel4";
             this.flowLayoutPanel4.Size = new System.Drawing.Size(964, 14);
             this.flowLayoutPanel4.TabIndex = 2;
+            // 
+            // progressBar1
+            // 
+            this.progressBar1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.progressBar1.Location = new System.Drawing.Point(3, 3);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(300, 11);
+            this.progressBar1.TabIndex = 12;
             // 
             // tableLayoutPanel4
             // 
@@ -2149,14 +2154,6 @@
             this.tabPage6.Size = new System.Drawing.Size(976, 635);
             this.tabPage6.TabIndex = 1;
             this.tabPage6.Text = "ROBOT";
-            // 
-            // progressBar1
-            // 
-            this.progressBar1.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.progressBar1.Location = new System.Drawing.Point(3, 3);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(300, 11);
-            this.progressBar1.TabIndex = 12;
             // 
             // Form1
             // 

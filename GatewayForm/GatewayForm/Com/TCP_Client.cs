@@ -20,7 +20,7 @@ namespace GatewayForm
     public class StateTCPClient
     {
         // Client socket.
-        public Socket workSocket = null;
+        //public Socket workSocket = null;
         // Size of receive buffer.
         public const int BufferSize = 1024;
         // Receive buffer.
@@ -117,17 +117,17 @@ namespace GatewayForm
                 // Connect to a remote device.
                 IPEndPoint remoteEP;
                 IPAddress ipAddress = Dns.GetHostAddresses(ip_server)[0];
-                //IPAddress ipAddress = ipHostInfo.AddressList[0];
-                //ipAddress = IPAddress.Parse(ip_server);
                 remoteEP = new IPEndPoint(ipAddress, port);
 
                 // Create a TCP/IP socket.
                 tcp_client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 tcp_client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
+
                 // Connect to the remote endpoint.
                 tcp_client.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), tcp_client);
                 if (connectDone.WaitOne(5000))
                 {
+                    CM.SetKeepAliveValues(tcp_client, true, 2000, 1000);
                     connect_ok = true;
                     Receive_Command_Handler();
 
@@ -200,46 +200,34 @@ namespace GatewayForm
         /// <param name="b_frame"></param> byte array of sending frame
         private void SendFrame(byte[] b_frame)
         {
-            try
+            if (!tcp_client.Connected)
             {
-                // Begin sending the packet to the remote device.
-                if (tcp_client.Connected)
-                {
-                    tcp_client.BeginSend(b_frame, 0, b_frame.Length, 0, new AsyncCallback(SendCallback), tcp_client);
-                    sendDone.WaitOne();
-                }
-                else
-                    connect_ok = false;
+                // Connection is terminated, either by force or willingly
+                MessageBox.Show("Error send because socket is terminated");
+                connect_ok = false;
+                return;
             }
-            catch (IOException ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
-            catch (SocketException ex)
-            {
-                //sendDone.Set();
-                MessageBox.Show(ex.ToString()); //3
-            }
-            catch (ObjectDisposedException)
-            {
-                CM.Log_Raise("Abort due to close");
-            }
+            tcp_client.BeginSend(b_frame, 0, b_frame.Length, 0, new AsyncCallback(SendCallback), tcp_client);
+            sendDone.WaitOne();
         }
 
         private void SendCallback(IAsyncResult ar)
         {
             try
             {
-                // Complete sending the data to the remote device.
-                if (((Socket)ar.AsyncState).Connected)
+                // Check connection
+                if (!tcp_client.Connected)
                 {
-                    ((Socket)ar.AsyncState).EndSend(ar);
-
-                    // Signal that all bytes have been sent.
-                    sendDone.Set();
-                }
-                else
+                    // Connection is terminated, either by force or willingly
+                    MessageBox.Show("Error sending because socket is terminated");
                     connect_ok = false;
+                    return;
+                }
+                // Complete sending the data to the remote device.
+                ((Socket)ar.AsyncState).EndSend(ar);
+
+                // Signal that all bytes have been sent.
+                sendDone.Set();
             }
             catch (IOException e)
             {
@@ -351,19 +339,6 @@ namespace GatewayForm
             Send_Bytes_Stream(sub_fmt_byte);
         }
 
-        public void Send_File(byte[] file_stream)
-        {
-            File_Mode = true;
-            CM.FrameFormat fmt_set = new CM.FrameFormat();
-            fmt_set.command = (byte)CM.COMMAND.FIRMWARE_UPDATE_CMD;
-            fmt_set.length = (ushort)((ushort)CM.LENGTH.FRAME_NON_DATA + file_stream.Length);
-            fmt_set.metal_data = file_stream;
-
-            /* Byte data of Frame Format*/
-            byte[] sub_fmt_byte = CM.Encode_Frame(fmt_set);
-            Send_Packets(sub_fmt_byte);
-        }
-
         private void Send_Bytes_Stream(byte[] frame_data_byte)
         {
             UInt16 num_packet, last_packet_byte, len_transmit;
@@ -394,10 +369,57 @@ namespace GatewayForm
             }
         }
 
+        public void Send_File(byte[] file_stream, string info)
+        {
+            File_Mode = true;
+            //Part 0 (Info)
+            Set_Command_Send(CM.COMMAND.FIRMWARE_UPDATE_CMD, info);
+            if (receiveDone.WaitOne(3000))
+            {
+                //Part file
+                byte[] part_byte;
+                UInt16 num_part, id = 0, len_last_part, len_part, percent;
+                len_part = (ushort)CM.LENGTH.CHUNK_SIZE_FILE;
+                num_part = (ushort)(file_stream.Length / len_part);
+                len_last_part = (ushort)(file_stream.Length % len_part);
+                if (len_last_part > 0)
+                    num_part += 1;
+                for (int ip = 0; ip < num_part; ip++)
+                {
+                    if (ip == num_part - 1)
+                    {
+                        if (len_last_part > 0)
+                            len_part = (ushort)len_last_part;
+                    }
+                    part_byte = new byte[len_part];
+                    Buffer.BlockCopy(file_stream, id, part_byte, 0, len_part);
+                    id += len_part;
+                    CM.FrameFormat fmt_set = new CM.FrameFormat();
+                    fmt_set.command = (byte)CM.COMMAND.FIRMWARE_UPDATE_CMD;
+                    fmt_set.length = (ushort)((ushort)CM.LENGTH.FRAME_NON_DATA + part_byte.Length);
+                    fmt_set.metal_data = part_byte;
+                    percent = (ushort)((ip + 1) * (100 / num_part));
+                    /* Byte data of Frame Format*/
+                    byte[] sub_fmt_byte = CM.Encode_Frame(fmt_set);
+                    Send_Packets(sub_fmt_byte);
+                    if (!receiveDone.WaitOne(7000))
+                    {
+                        CM.Log_Raise("Failed to update.");
+                        break;
+                    }
+                    else
+                        CM.Cmd_Raise("Update FW\n" + percent.ToString() + "\n");
+                }
+            }
+            else
+                MessageBox.Show("Wrong File Info");
+            File_Mode = false;
+        }
+
         private void Send_Packets(byte[] frame_data_byte)
         {
             UInt16 num_packet, last_packet_byte, len_transmit;
-            UInt16 idx, len_byte_fmt, percent;
+            UInt16 idx, len_byte_fmt;
             idx = 0;
             len_byte_fmt = (ushort)frame_data_byte.Length;
             num_packet = (ushort)(len_byte_fmt / ((ushort)CM.LENGTH.MAX_SIZE_TCP_META_DATA));
@@ -419,18 +441,10 @@ namespace GatewayForm
                 Buffer.BlockCopy(frame_data_byte, idx, sub_fmt_send.metal_data, 0, len_transmit);
                 idx += len_transmit;
                 sub_fmt_send.truncate = (ushort)(num_packet - i);
-                percent = (ushort)((i + 1)*(100 / num_packet));
+
                 byte[] byte_tcp = CM.Encode_SubFrame(sub_fmt_send);
                 SendFrame(byte_tcp);
-                if (!receiveDone.WaitOne(2000))
-                { 
-                    CM.Log_Raise("Failed to update. Please try again!");
-                    break; 
-                }
-                else
-                    CM.Cmd_Raise("Update FW\n" + percent.ToString() + "\n");
             }
-            File_Mode = false;
         }
 
         public async void Start_Command_Process(CM.COMMAND cmd)
@@ -537,10 +551,11 @@ namespace GatewayForm
             try
             {
                 StateTCPClient state = (StateTCPClient)ar.AsyncState;
-                Socket client = state.workSocket;
+                //Socket client = state.workSocket;
+
                 // Read data from the remote device.
-                int bytesRead = client.EndReceive(ar);
-                if (bytesRead > 0)
+                int bytesRead = tcp_client.EndReceive(ar);
+                if (bytesRead != 0)
                 {
                     byte[] meta_sub = CM.Decode_SubFrame(state.buffer, bytesRead);
                     if (meta_sub != null)
@@ -550,6 +565,8 @@ namespace GatewayForm
                             byte ack_file = CM.Decode_Frame_ACK((byte)CM.COMMAND.FIRMWARE_UPDATE_CMD, meta_sub);
                             if (0x00 == ack_file)
                                 receiveDone.Set();
+                            else
+                                MessageBox.Show("Failed to update. Please try again!");
                             Receive_Command_Handler();
                         }
                         else
@@ -557,47 +574,41 @@ namespace GatewayForm
                             Array.Resize(ref state.result_data_byte, state.result_data_byte.Length + meta_sub.Length);
                             Buffer.BlockCopy(meta_sub, 0, state.result_data_byte, state.result_data_byte.Length - meta_sub.Length, meta_sub.Length);
                             if (0x01 != state.buffer[bytesRead - 2])
-                                client.BeginReceive(state.buffer, 0, StateTCPClient.BufferSize, 0,
+                                tcp_client.BeginReceive(state.buffer, 0, StateTCPClient.BufferSize, 0,
                                    new AsyncCallback(Receive_Command_Callback), state);
                             else
                             {
-                                if (state.result_data_byte != null && state.result_data_byte.Length > 0)
-                                {
-                                    if ((byte)CM.COMMAND.CONNECTION_REQUEST_CMD == state.result_data_byte[0])
-                                        Request_Connection_Handler(CM.Decode_Frame((byte)CM.COMMAND.CONNECTION_REQUEST_CMD, state.result_data_byte));
-                                    /*else if ((byte)CM.COMMAND.FIRMWARE_UPDATE_CMD == state.result_data_byte[0])
-                                    {
-                                        byte byte_ack = state.result_data_byte[state.result_data_byte.Length - 2];
-                                        if (0x00 == byte_ack)
-                                        {
-                                            waiter.Set();
-                                            CM.Log_Raise("Update FW Success");
-                                        }
-                                    }*/
-                                    else
-                                        CM.Data_Receive_Handler(state.result_data_byte);
+                                if ((byte)CM.COMMAND.CONNECTION_REQUEST_CMD == state.result_data_byte[0])
+                                    Request_Connection_Handler(CM.Decode_Frame((byte)CM.COMMAND.CONNECTION_REQUEST_CMD, state.result_data_byte));
 
-                                    receiveDone.Set();
-                                    Receive_Command_Handler();
-                                }
                                 else
-                                {
-                                    Receive_Command_Handler();
-                                }
+                                    CM.Data_Receive_Handler(state.result_data_byte);
+
+                                receiveDone.Set();
+                                Receive_Command_Handler();
                             }
                         }
                     }
                     else
                     {
-                        //MessageBox.Show("Wrong Message");
+                        MessageBox.Show("Wrong Message");
                         Receive_Command_Handler();
                     }
+                }
+                else
+                {
+                    MessageBox.Show("Server closed\nNo more data will be sent.");
+                    Free();
                 }
             }
             catch (SocketException se)
             {
                 if (connect_ok)
+                {
                     MessageBox.Show(se.ToString());
+                    if (se.ErrorCode == 10061)
+                        CM.Cmd_Raise("Keep Alive Timeout\n");
+                }
             }
             catch (IOException e)
             {
@@ -616,16 +627,21 @@ namespace GatewayForm
         /// <param name="command_type"></param>
         private void Receive_Command_Handler()
         {
-            // Create the state object.
-            StateTCPClient state = new StateTCPClient();
-            state.workSocket = tcp_client;
-
-            // Begin receiving the data from the remote device.
             if (tcp_client.Connected)
+            {
+                // Create the state object.
+                StateTCPClient state = new StateTCPClient();
+
+                // Begin receiving the data from the remote device.
                 tcp_client.BeginReceive(state.buffer, 0, StateTCPClient.BufferSize, 0,
                     new AsyncCallback(Receive_Command_Callback), state);
+            }
             else
+            {
+                MessageBox.Show("Error receive because socket is terminated");
                 connect_ok = false;
+            }
+
         }
 
         #endregion
@@ -648,8 +664,8 @@ namespace GatewayForm
                 MessageBox.Show(se.ToString());
             }
             catch (ObjectDisposedException e)
-            { 
-                MessageBox.Show(e.ToString()); 
+            {
+                MessageBox.Show(e.ToString());
             }
         }
 
