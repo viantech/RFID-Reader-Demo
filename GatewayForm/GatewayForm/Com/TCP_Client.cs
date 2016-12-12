@@ -380,7 +380,8 @@ namespace GatewayForm
             {
                 //Part file
                 byte[] part_byte;
-                UInt16 num_part, id = 0, len_last_part, len_part, percent;
+                UInt16 num_part, len_last_part, len_part, percent;
+                int id = 0;
                 len_part = (ushort)CM.LENGTH.CHUNK_SIZE_FILE;
                 num_part = (ushort)(file_stream.Length / len_part);
                 len_last_part = (ushort)(file_stream.Length % len_part);
@@ -398,7 +399,7 @@ namespace GatewayForm
                     id += len_part;
                     CM.FrameFormat fmt_set = new CM.FrameFormat();
                     fmt_set.command = (byte)CM.COMMAND.FIRMWARE_UPDATE_CMD;
-                    fmt_set.length = (ushort)((ushort)CM.LENGTH.FRAME_NON_DATA + part_byte.Length);
+                    fmt_set.length = (ushort)((ushort)CM.LENGTH.FRAME_NON_DATA + len_part);
                     fmt_set.metal_data = part_byte;
                     percent = (ushort)((ip + 1) * (100 / num_part));
                     /* Byte data of Frame Format*/

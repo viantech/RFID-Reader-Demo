@@ -1280,12 +1280,22 @@ namespace GatewayForm
             //DCM_file.InitialDirectory = DCM_file_tx.Text;
             if (firware_file.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                FileInfo fileinfo = new FileInfo(firware_file.FileName);
-                byte[] bytesFile = System.IO.File.ReadAllBytes(firware_file.FileName);
-                string info_file = "[" + fileinfo.Name + "]" + "[" + fileinfo.Length.ToString() + "]";
-                Log_Handler("Sending ...");
-                progressBar1.Value = 0;
-                com_type.Update_File(bytesFile, info_file);
+                DialogResult result = MessageBox.Show("File Selected\n" + firware_file.FileName + "\nAre you sure to upload this firmware?\nPlease click \"Yes\" for confirmation",
+                                                              "Confirmation", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
+                {
+                    FileInfo fileinfo = new FileInfo(firware_file.FileName);
+                    byte[] bytesFile = System.IO.File.ReadAllBytes(firware_file.FileName);
+                    string info_file = "[" + fileinfo.Name + "]" + "[" + fileinfo.Length.ToString() + "]";
+                    Log_Handler("Sending ...");
+                    progressBar1.Value = 0;
+                    com_type.Update_File(bytesFile, info_file);
+                }
+                else
+                {
+                    //no...
+                }
+                
             }
         }
     }
