@@ -150,9 +150,7 @@ namespace GatewayForm
             }
             catch (SocketException ex)
             {
-                //pingTimer.Stop();
                 MessageBox.Show(ex.ToString());
-                //this.Free();
             }
         }
 
@@ -179,10 +177,10 @@ namespace GatewayForm
             {
                 MessageBox.Show(e.ToString());
             }
-            catch (SocketException)
+            catch (SocketException se)
             {
                 //connectDone.Set();
-                //MessageBox.Show(e.ToString()); //2
+                MessageBox.Show(se.ToString()); //2
             }
             catch (ObjectDisposedException)
             {
@@ -203,12 +201,14 @@ namespace GatewayForm
             if (!tcp_client.Connected)
             {
                 // Connection is terminated, either by force or willingly
-                MessageBox.Show("Error send because socket is terminated");
+                MessageBox.Show("Error transmit because socket is terminated");
                 connect_ok = false;
-                return;
             }
-            tcp_client.BeginSend(b_frame, 0, b_frame.Length, 0, new AsyncCallback(SendCallback), tcp_client);
-            sendDone.WaitOne();
+            else
+            {
+                tcp_client.BeginSend(b_frame, 0, b_frame.Length, 0, new AsyncCallback(SendCallback), tcp_client);
+                sendDone.WaitOne();
+            }
         }
 
         private void SendCallback(IAsyncResult ar)
@@ -219,15 +219,17 @@ namespace GatewayForm
                 if (!tcp_client.Connected)
                 {
                     // Connection is terminated, either by force or willingly
-                    MessageBox.Show("Error sending because socket is terminated");
+                    MessageBox.Show("Sending error because socket is terminated");
                     connect_ok = false;
-                    return;
                 }
-                // Complete sending the data to the remote device.
-                ((Socket)ar.AsyncState).EndSend(ar);
+                else
+                {
+                    // Complete sending the data to the remote device.
+                    ((Socket)ar.AsyncState).EndSend(ar);
 
-                // Signal that all bytes have been sent.
-                sendDone.Set();
+                    // Signal that all bytes have been sent.
+                    sendDone.Set();
+                }
             }
             catch (IOException e)
             {
@@ -591,7 +593,7 @@ namespace GatewayForm
                     }
                     else
                     {
-                        MessageBox.Show("Wrong Message");
+                        MessageBox.Show("Wrong Sub Frame Packet");
                         Receive_Command_Handler();
                     }
                 }
@@ -638,7 +640,7 @@ namespace GatewayForm
             }
             else
             {
-                MessageBox.Show("Error receive because socket is terminated");
+                MessageBox.Show("Receive error because socket is terminated");
                 connect_ok = false;
             }
 

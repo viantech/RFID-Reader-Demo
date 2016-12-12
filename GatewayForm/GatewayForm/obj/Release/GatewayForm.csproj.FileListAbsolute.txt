@@ -27,3 +27,4 @@ C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Release\Gatewa
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Release\GatewayForm.pdb
 D:\GUI\guidesign\GatewayForm\GatewayForm\bin\Release\System.Data.SQLite.dll
 D:\GUI\guidesign\GatewayForm\GatewayForm\obj\Release\GatewayForm.SearchForm_Data.resources
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Release\GatewayForm.csprojResolveAssemblyReference.cache

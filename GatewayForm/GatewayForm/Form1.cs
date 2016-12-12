@@ -86,7 +86,7 @@ namespace GatewayForm
                 {
                     case CM.COMMAND.DIS_CONNECT_CMD:
                         com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
-                        //com_type.waitflagRevTCP();
+                        com_type.waitflagRevTCP();
                         com_type.Close();
                         Disconnect_Behavior();
                         break;
@@ -1286,7 +1286,6 @@ namespace GatewayForm
                 Log_Handler("Sending ...");
                 progressBar1.Value = 0;
                 com_type.Update_File(bytesFile, info_file);
-                //com_type.waitflagRevTCP();
             }
         }
     }
