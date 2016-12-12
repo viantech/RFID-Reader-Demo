@@ -2175,7 +2175,7 @@
             this.Controls.Add(this.tabControl2);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
-            this.Text = "Seldat RFID GUI @ HW Team";
+            this.Text = "Seldat WAS GUI Management @ HW Team";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.tabControl1.ResumeLayout(false);
