@@ -100,15 +100,15 @@
             this.label12 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.groupBox14 = new System.Windows.Forms.GroupBox();
+            this.protocol_plan_tx = new System.Windows.Forms.TextBox();
             this.weight_tx = new System.Windows.Forms.TextBox();
             this.groupBox16 = new System.Windows.Forms.GroupBox();
+            this.tid_rbtn = new System.Windows.Forms.RadioButton();
+            this.Mem_rbtn = new System.Windows.Forms.RadioButton();
+            this.EPC_rbtn = new System.Windows.Forms.RadioButton();
             this.TID_filter_tx = new System.Windows.Forms.TextBox();
             this.Memory_filter_tx = new System.Windows.Forms.TextBox();
             this.EPC_filter_tx = new System.Windows.Forms.TextBox();
-            this.label39 = new System.Windows.Forms.Label();
-            this.label38 = new System.Windows.Forms.Label();
-            this.label37 = new System.Windows.Forms.Label();
-            this.protocol_plan_cbx = new System.Windows.Forms.ComboBox();
             this.label40 = new System.Windows.Forms.Label();
             this.label30 = new System.Windows.Forms.Label();
             this.groupBox15 = new System.Windows.Forms.GroupBox();
@@ -185,9 +185,9 @@
             this.label6 = new System.Windows.Forms.Label();
             this.Gateway_ID_lb = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
-            this.status_btn = new System.Windows.Forms.Button();
             this.status_lb = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.status_led = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.Log_lb = new System.Windows.Forms.Label();
             this.ptimer_loghandle = new System.Windows.Forms.Timer(this.components);
@@ -199,6 +199,8 @@
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tabPage6 = new System.Windows.Forms.TabPage();
             this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
+            this.get_plan_btn = new System.Windows.Forms.Button();
+            this.set_plan_btn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -229,7 +231,6 @@
             this.tabPage5.SuspendLayout();
             this.groupBox13.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Table_dbbrowser_datagrid)).BeginInit();
-            this.groupBox12.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -1015,9 +1016,11 @@
             // 
             // groupBox14
             // 
+            this.groupBox14.Controls.Add(this.protocol_plan_tx);
             this.groupBox14.Controls.Add(this.weight_tx);
+            this.groupBox14.Controls.Add(this.set_plan_btn);
+            this.groupBox14.Controls.Add(this.get_plan_btn);
             this.groupBox14.Controls.Add(this.groupBox16);
-            this.groupBox14.Controls.Add(this.protocol_plan_cbx);
             this.groupBox14.Controls.Add(this.label40);
             this.groupBox14.Controls.Add(this.label30);
             this.groupBox14.Controls.Add(this.groupBox15);
@@ -1032,6 +1035,14 @@
             this.groupBox14.TabStop = false;
             this.groupBox14.Text = "[Read Plan]";
             // 
+            // protocol_plan_tx
+            // 
+            this.protocol_plan_tx.Location = new System.Drawing.Point(322, 110);
+            this.protocol_plan_tx.Name = "protocol_plan_tx";
+            this.protocol_plan_tx.Size = new System.Drawing.Size(100, 22);
+            this.protocol_plan_tx.TabIndex = 7;
+            this.protocol_plan_tx.Text = "GEN2";
+            // 
             // weight_tx
             // 
             this.weight_tx.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1039,15 +1050,16 @@
             this.weight_tx.Name = "weight_tx";
             this.weight_tx.Size = new System.Drawing.Size(199, 22);
             this.weight_tx.TabIndex = 1;
+            this.weight_tx.Leave += new System.EventHandler(this.weight_tx_Leave);
             // 
             // groupBox16
             // 
+            this.groupBox16.Controls.Add(this.tid_rbtn);
+            this.groupBox16.Controls.Add(this.Mem_rbtn);
+            this.groupBox16.Controls.Add(this.EPC_rbtn);
             this.groupBox16.Controls.Add(this.TID_filter_tx);
             this.groupBox16.Controls.Add(this.Memory_filter_tx);
             this.groupBox16.Controls.Add(this.EPC_filter_tx);
-            this.groupBox16.Controls.Add(this.label39);
-            this.groupBox16.Controls.Add(this.label38);
-            this.groupBox16.Controls.Add(this.label37);
             this.groupBox16.Location = new System.Drawing.Point(207, 173);
             this.groupBox16.Name = "groupBox16";
             this.groupBox16.Size = new System.Drawing.Size(291, 143);
@@ -1055,72 +1067,68 @@
             this.groupBox16.TabStop = false;
             this.groupBox16.Text = "[Filter]";
             // 
+            // tid_rbtn
+            // 
+            this.tid_rbtn.AutoSize = true;
+            this.tid_rbtn.Location = new System.Drawing.Point(12, 95);
+            this.tid_rbtn.Name = "tid_rbtn";
+            this.tid_rbtn.Size = new System.Drawing.Size(46, 20);
+            this.tid_rbtn.TabIndex = 2;
+            this.tid_rbtn.TabStop = true;
+            this.tid_rbtn.Text = "TID";
+            this.tid_rbtn.UseVisualStyleBackColor = true;
+            this.tid_rbtn.CheckedChanged += new System.EventHandler(this.tid_rbtn_CheckedChanged);
+            // 
+            // Mem_rbtn
+            // 
+            this.Mem_rbtn.AutoSize = true;
+            this.Mem_rbtn.Location = new System.Drawing.Point(12, 64);
+            this.Mem_rbtn.Name = "Mem_rbtn";
+            this.Mem_rbtn.Size = new System.Drawing.Size(77, 20);
+            this.Mem_rbtn.TabIndex = 2;
+            this.Mem_rbtn.TabStop = true;
+            this.Mem_rbtn.Text = "Memory";
+            this.Mem_rbtn.UseVisualStyleBackColor = true;
+            this.Mem_rbtn.CheckedChanged += new System.EventHandler(this.Mem_rbtn_CheckedChanged);
+            // 
+            // EPC_rbtn
+            // 
+            this.EPC_rbtn.AutoSize = true;
+            this.EPC_rbtn.Location = new System.Drawing.Point(12, 32);
+            this.EPC_rbtn.Name = "EPC_rbtn";
+            this.EPC_rbtn.Size = new System.Drawing.Size(52, 20);
+            this.EPC_rbtn.TabIndex = 2;
+            this.EPC_rbtn.TabStop = true;
+            this.EPC_rbtn.Text = "EPC";
+            this.EPC_rbtn.UseVisualStyleBackColor = true;
+            this.EPC_rbtn.CheckedChanged += new System.EventHandler(this.EPC_rbtn_CheckedChanged);
+            // 
             // TID_filter_tx
             // 
             this.TID_filter_tx.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TID_filter_tx.Location = new System.Drawing.Point(77, 98);
+            this.TID_filter_tx.Location = new System.Drawing.Point(100, 98);
             this.TID_filter_tx.Name = "TID_filter_tx";
-            this.TID_filter_tx.Size = new System.Drawing.Size(199, 22);
+            this.TID_filter_tx.Size = new System.Drawing.Size(176, 22);
             this.TID_filter_tx.TabIndex = 1;
+            this.TID_filter_tx.Leave += new System.EventHandler(this.TID_filter_tx_Leave);
             // 
             // Memory_filter_tx
             // 
             this.Memory_filter_tx.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Memory_filter_tx.Location = new System.Drawing.Point(77, 64);
+            this.Memory_filter_tx.Location = new System.Drawing.Point(100, 64);
             this.Memory_filter_tx.Name = "Memory_filter_tx";
-            this.Memory_filter_tx.Size = new System.Drawing.Size(199, 22);
+            this.Memory_filter_tx.Size = new System.Drawing.Size(176, 22);
             this.Memory_filter_tx.TabIndex = 1;
+            this.Memory_filter_tx.Leave += new System.EventHandler(this.Memory_filter_tx_Leave);
             // 
             // EPC_filter_tx
             // 
             this.EPC_filter_tx.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.EPC_filter_tx.Location = new System.Drawing.Point(77, 30);
+            this.EPC_filter_tx.Location = new System.Drawing.Point(100, 30);
             this.EPC_filter_tx.Name = "EPC_filter_tx";
-            this.EPC_filter_tx.Size = new System.Drawing.Size(199, 22);
+            this.EPC_filter_tx.Size = new System.Drawing.Size(176, 22);
             this.EPC_filter_tx.TabIndex = 1;
-            // 
-            // label39
-            // 
-            this.label39.AutoSize = true;
-            this.label39.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label39.Location = new System.Drawing.Point(12, 103);
-            this.label39.Name = "label39";
-            this.label39.Size = new System.Drawing.Size(29, 15);
-            this.label39.TabIndex = 0;
-            this.label39.Text = "TID:";
-            // 
-            // label38
-            // 
-            this.label38.AutoSize = true;
-            this.label38.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label38.Location = new System.Drawing.Point(9, 67);
-            this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(53, 15);
-            this.label38.TabIndex = 0;
-            this.label38.Text = "Memory:";
-            // 
-            // label37
-            // 
-            this.label37.AutoSize = true;
-            this.label37.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label37.Location = new System.Drawing.Point(10, 33);
-            this.label37.Name = "label37";
-            this.label37.Size = new System.Drawing.Size(35, 15);
-            this.label37.TabIndex = 0;
-            this.label37.Text = "EPC:";
-            // 
-            // protocol_plan_cbx
-            // 
-            this.protocol_plan_cbx.Font = new System.Drawing.Font("Arial", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.protocol_plan_cbx.FormattingEnabled = true;
-            this.protocol_plan_cbx.Items.AddRange(new object[] {
-            "GEN2",
-            "Lam mau"});
-            this.protocol_plan_cbx.Location = new System.Drawing.Point(338, 113);
-            this.protocol_plan_cbx.Name = "protocol_plan_cbx";
-            this.protocol_plan_cbx.Size = new System.Drawing.Size(101, 24);
-            this.protocol_plan_cbx.TabIndex = 5;
-            this.protocol_plan_cbx.Text = "GEN2";
+            this.EPC_filter_tx.Leave += new System.EventHandler(this.EPC_filter_tx_Leave);
             // 
             // label40
             // 
@@ -1236,6 +1244,7 @@
             // 
             this.treeView1.BackColor = System.Drawing.SystemColors.Control;
             this.treeView1.Font = new System.Drawing.Font("Arial", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.treeView1.HideSelection = false;
             this.treeView1.LabelEdit = true;
             this.treeView1.Location = new System.Drawing.Point(18, 55);
             this.treeView1.Name = "treeView1";
@@ -1245,8 +1254,8 @@
             treeNode1});
             this.treeView1.Size = new System.Drawing.Size(170, 385);
             this.treeView1.TabIndex = 0;
-            this.treeView1.BeforeLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeView1_BeforeLabelEdit);
             this.treeView1.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeView1_AfterLabelEdit);
+            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
             // Set_RFID_btn
             // 
@@ -1888,7 +1897,6 @@
             // 
             // groupBox12
             // 
-            this.groupBox12.Controls.Add(this.chart1);
             this.groupBox12.Location = new System.Drawing.Point(12, 14);
             this.groupBox12.Name = "groupBox12";
             this.groupBox12.Size = new System.Drawing.Size(335, 276);
@@ -2010,35 +2018,24 @@
             this.label8.TabIndex = 6;
             this.label8.Text = "Connect:";
             // 
-            // status_btn
-            // 
-            this.status_btn.BackColor = System.Drawing.Color.Red;
-            this.status_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.status_btn.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.status_btn.Location = new System.Drawing.Point(82, 44);
-            this.status_btn.Name = "status_btn";
-            this.status_btn.Size = new System.Drawing.Size(25, 23);
-            this.status_btn.TabIndex = 7;
-            this.status_btn.UseVisualStyleBackColor = false;
-            // 
             // status_lb
             // 
             this.status_lb.AutoSize = true;
-            this.status_lb.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.status_lb.Font = new System.Drawing.Font("Arial", 12.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.status_lb.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.status_lb.Location = new System.Drawing.Point(138, 49);
+            this.status_lb.Location = new System.Drawing.Point(157, 44);
             this.status_lb.Name = "status_lb";
-            this.status_lb.Size = new System.Drawing.Size(64, 18);
+            this.status_lb.Size = new System.Drawing.Size(69, 19);
             this.status_lb.TabIndex = 8;
             this.status_lb.Text = "Inactive";
             // 
             // groupBox4
             // 
             this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox4.Controls.Add(this.status_led);
             this.groupBox4.Controls.Add(this.Gateway_ID_lb);
             this.groupBox4.Controls.Add(this.status_lb);
             this.groupBox4.Controls.Add(this.label6);
-            this.groupBox4.Controls.Add(this.status_btn);
             this.groupBox4.Controls.Add(this.label8);
             this.groupBox4.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox4.Location = new System.Drawing.Point(553, 3);
@@ -2047,6 +2044,15 @@
             this.groupBox4.TabIndex = 9;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "[Reader Information]";
+            // 
+            // status_led
+            // 
+            this.status_led.Image = global::GatewayForm.Properties.Resources.red_led;
+            this.status_led.Location = new System.Drawing.Point(87, 39);
+            this.status_led.Name = "status_led";
+            this.status_led.Size = new System.Drawing.Size(28, 28);
+            this.status_led.TabIndex = 9;
+            this.status_led.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label10
             // 
@@ -2162,10 +2168,34 @@
             // 
             this.elementHost1.Location = new System.Drawing.Point(6, 110);
             this.elementHost1.Name = "elementHost1";
-            this.elementHost1.Size = new System.Drawing.Size(942, 299);
+            this.elementHost1.Size = new System.Drawing.Size(622, 481);
             this.elementHost1.TabIndex = 0;
             this.elementHost1.Text = "elementHost1";
             this.elementHost1.Child = null;
+            // 
+            // get_plan_btn
+            // 
+            this.get_plan_btn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.get_plan_btn.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.get_plan_btn.Location = new System.Drawing.Point(277, 402);
+            this.get_plan_btn.Name = "get_plan_btn";
+            this.get_plan_btn.Size = new System.Drawing.Size(59, 24);
+            this.get_plan_btn.TabIndex = 11;
+            this.get_plan_btn.Text = "Get";
+            this.get_plan_btn.UseVisualStyleBackColor = true;
+            this.get_plan_btn.Click += new System.EventHandler(this.get_plan_btn_Click);
+            // 
+            // set_plan_btn
+            // 
+            this.set_plan_btn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.set_plan_btn.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.set_plan_btn.Location = new System.Drawing.Point(372, 402);
+            this.set_plan_btn.Name = "set_plan_btn";
+            this.set_plan_btn.Size = new System.Drawing.Size(59, 24);
+            this.set_plan_btn.TabIndex = 11;
+            this.set_plan_btn.Text = "Set";
+            this.set_plan_btn.UseVisualStyleBackColor = true;
+            this.set_plan_btn.Click += new System.EventHandler(this.set_plan_btn_Click);
             // 
             // Form1
             // 
@@ -2220,7 +2250,6 @@
             this.tabPage5.ResumeLayout(false);
             this.groupBox13.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.Table_dbbrowser_datagrid)).EndInit();
-            this.groupBox12.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
@@ -2259,7 +2288,6 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label Gateway_ID_lb;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Button status_btn;
         private System.Windows.Forms.Label status_lb;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Label label10;
@@ -2378,7 +2406,6 @@
         private System.Windows.Forms.TreeView treeView1;
         private System.Windows.Forms.Button Add_plan_btn;
         private System.Windows.Forms.Button Remove_plan_btn;
-        private System.Windows.Forms.ComboBox protocol_plan_cbx;
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.GroupBox groupBox15;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel3;
@@ -2391,9 +2418,6 @@
         private System.Windows.Forms.TextBox TID_filter_tx;
         private System.Windows.Forms.TextBox Memory_filter_tx;
         private System.Windows.Forms.TextBox EPC_filter_tx;
-        private System.Windows.Forms.Label label39;
-        private System.Windows.Forms.Label label38;
-        private System.Windows.Forms.Label label37;
         private System.Windows.Forms.Label label40;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel4;
@@ -2404,6 +2428,13 @@
         private System.Windows.Forms.Button update_fw_btn;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Integration.ElementHost elementHost1;
+        private System.Windows.Forms.Label status_led;
+        private System.Windows.Forms.TextBox protocol_plan_tx;
+        private System.Windows.Forms.RadioButton tid_rbtn;
+        private System.Windows.Forms.RadioButton Mem_rbtn;
+        private System.Windows.Forms.RadioButton EPC_rbtn;
+        private System.Windows.Forms.Button set_plan_btn;
+        private System.Windows.Forms.Button get_plan_btn;
     }
 }
 

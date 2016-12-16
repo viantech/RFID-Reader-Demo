@@ -13,6 +13,15 @@ using System.IO;
 
 namespace GatewayForm
 {
+    public struct ReadPlan
+    {
+        public string name;
+        public string anten_list;
+        //public bool gen2_protocol;
+        public FILTER type;
+        public string EPC;
+        public string weight;
+    }
 
     public partial class Form1 : Form
     {
@@ -21,8 +30,10 @@ namespace GatewayForm
         Wifi_pop wifi_form;
         Tcp_pop tcp_form;
         Serial_pop serial_form;
-        StringBuilder gateway_config = new StringBuilder();
+        
+        
         LogIOData plog; // Declare Database Table
+
         string[] GW_Format = new string[16] {
                  "Seldatinc gateway configuration=\n",
                  "Gateway serial={0}\n",
@@ -41,7 +52,16 @@ namespace GatewayForm
                  "Stack light support={0}\n",
                  "Stack light GPIO={0}"
         };
+        string[] simple_plan_format = new string[5] {
+            "SimpleReadPlan:[Antennas=[{0}],",
+            "Protocol=GEN2,",
+            "Filter=TagData:[EPC={0}],",
+            "Op=null,",
+            "UseFastSearch=true,Weight={0}]"
+        };
         List<string> list_plan_name = new List<string>();
+        Plan_Node.Plan_Root all_plans = new Plan_Node.Plan_Root();
+        
         public Form1()
         {
             InitializeComponent();
@@ -50,6 +70,7 @@ namespace GatewayForm
             wifi_form = new Wifi_pop();
             tcp_form = new Tcp_pop();
             serial_form = new Serial_pop();
+            //status_led.Image = global::GatewayForm.Properties.Resources.red;
             // create contructor for class LogIOData
             if (plog == null)
             {
@@ -231,7 +252,7 @@ namespace GatewayForm
         {
             ConnType_cbx.Enabled = false;
             Connect_btn.Text = "Disconnect";
-            status_btn.BackColor = Color.Blue;
+            status_led.Image = global::GatewayForm.Properties.Resources.green_led;
             status_lb.Text = "Active";
             status_lb.ForeColor = Color.DarkBlue;
             ViewConn_btn.Text = "View Port";
@@ -240,7 +261,7 @@ namespace GatewayForm
         private void Disconnect_Behavior()
         {
             Connect_btn.Text = "Connect";
-            status_btn.BackColor = Color.Red;
+            status_led.Image = global::GatewayForm.Properties.Resources.red_led;
             status_lb.Text = "Inactive";
             status_lb.ForeColor = SystemColors.ControlDark;
             ConnType_cbx.Enabled = true;
@@ -253,7 +274,11 @@ namespace GatewayForm
         {
             string[] config_str = config_msg.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
 
-            if (config_str[0] == "BLF Setting")
+            if (config_str[0] == "Update FW")
+            {
+                SetControl(progressBar1, config_str[1]);
+            }
+            else if (config_str[0] == "BLF Setting")
             {
                 if (couting == 0)
                 {
@@ -377,7 +402,23 @@ namespace GatewayForm
                 SetControl(region_lst, config_str[1]);
                 Log_Handler("Get Region done");
             }
-            else if (config_str[0].IndexOf('/') == 0)
+            else if (config_str[0] == "Get Plan")
+            {
+                list_plan_name.Clear();
+                all_plans.plan_list.Clear();
+                all_plans = LoadReadPlans(config_str[1]);
+                PopulateTreeView(all_plans);
+            }
+            else if (config_str[0] == "Keep Alive Timeout")
+            {
+                startcmdprocess(CM.COMMAND.CHECK_READER_STT_CMD);
+            }
+            else if (config_str[0] == "Change Protocol")
+            {
+                MessageBox.Show(config_str[1]);
+                startcmdprocess(CM.COMMAND.SET_CONN_TYPE_CMD);
+            }
+            else if (config_str[0][0] == '/')
             {
                 //freq
                 if (config_str[16].IndexOf("250", 15) != -1)
@@ -417,24 +458,17 @@ namespace GatewayForm
                     SetControl(power_mode_cbx, "3");
                 else
                     SetControl(power_mode_cbx, "4");
-            }
-            else if (config_str[0].IndexOf("= {") != -1)
-            {
-                MessageBox.Show(config_msg);
-                startcmdprocess(CM.COMMAND.SET_CONN_TYPE_CMD);
-            }
-            else if (config_str[0] == "Update FW")
-            {
-                SetControl(progressBar1, config_str[1]);
-            }
-            else if (config_str[0] == "Keep Alive Timeout")
-            {
-                startcmdprocess(CM.COMMAND.CHECK_READER_STT_CMD);
+                //Read Plan
+                //int id_muti = config_str[20].IndexOf("Multi");
+                list_plan_name.Clear();
+                all_plans.plan_list.Clear();
+                all_plans = LoadReadPlans(config_str[20].Substring(config_str[20].IndexOf("Simple")));
+                PopulateTreeView(all_plans);
             }
             else if (config_str[0] == "NAK")
-                Log_Handler("Failed Get Config");
+                MessageBox.Show("Failed Get Config");
             else
-                Log_Handler("Get command not defined");
+                MessageBox.Show("Get Command not defined");
         }
 
         private void Log_Handler(string log_msg)
@@ -713,7 +747,7 @@ namespace GatewayForm
         {
             if (com_type.getflagConnected_TCPIP())
             {
-                gateway_config.Clear();
+                StringBuilder gateway_config = new StringBuilder();
                 gateway_config.Append(GW_Format[0]);
                 gateway_config.AppendFormat(GW_Format[1], Gateway_ID_tx.Text);
                 gateway_config.AppendFormat(GW_Format[2], HW_Verrsion_tx.Text);
@@ -1224,7 +1258,7 @@ namespace GatewayForm
                     break;
             }
         }
-        private string New_Node()
+        private string New_NamePlan()
         {
             if (list_plan_name.Count == 0)
             {
@@ -1247,27 +1281,93 @@ namespace GatewayForm
 
         private void Add_plan_btn_Click(object sender, EventArgs e)
         {
-            //TreeNode node;
-            //Plan_Node nodeplan = new Plan_Node();
-            //nodeplan.name = New_Node();
-            //node = new TreeNode();
-            treeView1.Nodes.Add(New_Node());
+            TreeNode node;
+            Plan_Node.Plan_Struct nodeplan = new Plan_Node.Plan_Struct(New_NamePlan());
+            node = new TreeNode(nodeplan.name);
+            node.Tag = nodeplan;
+            treeView1.Nodes.Add(node);
+            all_plans.plan_list.Add(nodeplan);
+            //treeView1.Focus();
+            //string json = "SimpleReadPlan:[Antennas=[1],Protocol=GEN2,Filter=TagData:[EPC=DDDDDDDD],Op=ReadData:[Bank=EPC,WordAddress=20,Len=0],UseFastSearch=true,Weight=10]";
+                                         //"SimpleReadPlan:[Antennas=[3],Protocol=GEN2,Filter=TagData:[EPC=DDDDDDDD],Op=null,UseFastSearch=true,Weight=2]]";
+            //all_plans = LoadReadPlans(json);
         }
-
+        private Plan_Node.Plan_Root LoadReadPlans(string plan_str)
+        {
+            Plan_Node.Plan_Root root = new Plan_Node.Plan_Root();
+            string[] seperators = new string[] { "SimpleReadPlan:[Antennas=[", ",Protocol=", ",Filter=", ",Op=", ",UseFastSearch=", ",Weight=" };
+            string[] field = plan_str.Split(seperators, StringSplitOptions.None);
+            if (field.Length < 12)
+            {
+                Plan_Node.Plan_Struct theplan = new Plan_Node.Plan_Struct(New_NamePlan());
+                theplan.antena = field[1].TrimEnd(']');
+                theplan.type = FILTER.EPC;
+                if (theplan.type == FILTER.EPC)
+                {
+                    theplan.EPC = field[3].Substring(field[3].IndexOf('=') + 1).TrimEnd(']');
+                }
+                theplan.weight = field[6].Substring(0, field[6].Length - 1);
+                root.plan_list.Add(theplan);
+            }
+            else
+            {
+                for (int num_plan = 0; num_plan < field.Length / 6; num_plan++)
+                {
+                    Plan_Node.Plan_Struct theplan = new Plan_Node.Plan_Struct(New_NamePlan());
+                    theplan.antena = field[6 * num_plan + 1].TrimEnd(']');
+                    theplan.type = FILTER.EPC;
+                    if (theplan.type == FILTER.EPC)
+                    {
+                        theplan.EPC = field[6 * num_plan + 3].Substring(field[6 * num_plan + 3].IndexOf('=') + 1).TrimEnd(']');
+                    }
+                    theplan.weight = field[6 * num_plan + 6].Substring(0, field[6 * num_plan + 6].Length - 2);
+                    root.plan_list.Add(theplan);
+                }
+            }
+            return root;
+        }
+        
+        //private delegate void TreeViewDelegate(TreeView tree, Plan_Node.Plan_Root plans);
+        private void PopulateTreeView(Plan_Node.Plan_Root root_node)
+        {
+            this.Invoke((MethodInvoker)delegate
+            {
+                treeView1.Nodes.Clear();
+                TreeNode node_lable = new TreeNode("[Plans]");
+                treeView1.Nodes.Add(node_lable);
+                for (int ix = 0; ix < root_node.plan_list.Count; ix++)
+                {
+                    Plan_Node.Plan_Struct plan = root_node.plan_list[ix];
+                    TreeNode node = new TreeNode(plan.name);
+                    node.Tag = plan;
+                    treeView1.Nodes.Add(node);
+                }
+            });
+        }
         private void treeView1_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
         {
-            list_plan_name.Add(e.Label);
-        }
-
-        private void treeView1_BeforeLabelEdit(object sender, NodeLabelEditEventArgs e)
-        {
-            list_plan_name.Remove(e.Node.Text);
+            if (e.Label != null)
+            {
+                list_plan_name[treeView1.SelectedNode.Index - 1] = e.Label;
+                all_plans.plan_list[treeView1.SelectedNode.Index - 1].name = e.Label;
+            }
         }
 
         private void Remove_plan_btn_Click(object sender, EventArgs e)
         {
-            list_plan_name.Remove(treeView1.SelectedNode.Text);
-            treeView1.Nodes.Remove(treeView1.SelectedNode);
+            if (treeView1.Nodes.Count > 2)
+            {
+                int next = treeView1.SelectedNode.Index;
+                list_plan_name.Remove(treeView1.SelectedNode.Text);
+                treeView1.Nodes.Remove(treeView1.SelectedNode);
+                all_plans.plan_list.RemoveAt(treeView1.SelectedNode.Index - 1);
+                treeView1.SelectedNode = treeView1.Nodes[next - 1];
+                treeView1.Focus();
+            }
+            else
+            {
+                MessageBox.Show("At least must exist one simple plan");
+            }
         }
 
         private void update_fw_btn_Click(object sender, EventArgs e)
@@ -1280,7 +1380,7 @@ namespace GatewayForm
             //DCM_file.InitialDirectory = DCM_file_tx.Text;
             if (firware_file.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                DialogResult result = MessageBox.Show("File Selected\n" + firware_file.FileName + "\nAre you sure to upload this firmware?\nPlease click \"Yes\" for confirmation",
+                DialogResult result = MessageBox.Show("File Selected:\n" + firware_file.FileName + "\nAre you sure to upload this firmware?\nPlease click \"Yes\" for confirmation",
                                                               "Confirmation", MessageBoxButtons.YesNo);
                 if (result == DialogResult.Yes)
                 {
@@ -1297,6 +1397,180 @@ namespace GatewayForm
                 }
                 
             }
+        }
+
+        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            if (e.Node.Index == 0)
+                treeView1.SelectedNode = e.Node.NextNode;
+            else
+            {
+                DisplayReadPlan(e.Node);
+            }
+        }
+        private void DisplayReadPlan(TreeNode plan_node)
+        {
+            Plan_Node.Plan_Struct plan = (Plan_Node.Plan_Struct)plan_node.Tag;
+            if (plan.type == FILTER.EPC)
+            {
+                EPC_rbtn.Checked = true;
+                EPC_filter_tx.Text = plan.EPC;
+            }
+            else if (plan.type == FILTER.User)
+            {
+                Mem_rbtn.Checked = true;
+                Memory_filter_tx.Text = plan.EPC;
+            }
+            else
+            {
+                tid_rbtn.Checked = true;
+                TID_filter_tx.Text = plan.EPC;
+            }
+            if (plan.antena.IndexOf('1') != -1)
+                Ant1_plan_ckb.Checked = true;
+            else
+                Ant1_plan_ckb.Checked = false;
+
+            if (plan.antena.IndexOf('2') != -1)
+                Ant2_plan_ckb.Checked = true;
+            else
+                Ant2_plan_ckb.Checked = false;
+
+            if (plan.antena.IndexOf('3') != -1)
+                Ant3_plan_ckb.Checked = true;
+            else
+                Ant3_plan_ckb.Checked = false;
+
+            if (plan.antena.IndexOf('4') != -1)
+                Ant4_plan_ckb.Checked = true;
+            else
+                Ant4_plan_ckb.Checked = false;
+            weight_tx.Text = plan.weight;
+        }
+
+        private void EPC_rbtn_CheckedChanged(object sender, EventArgs e)
+        {
+            if (EPC_rbtn.Checked == true)
+            {
+                EPC_filter_tx.Enabled = true;
+                Memory_filter_tx.Enabled = false;
+                TID_filter_tx.Enabled = false;
+                if (all_plans.plan_list.Count > 0)
+                {
+                    all_plans.plan_list[treeView1.SelectedNode.Index - 1].type = FILTER.EPC;
+                }
+            }
+        }
+
+        private void Mem_rbtn_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Mem_rbtn.Checked == true)
+            {
+                EPC_filter_tx.Enabled = false;
+                Memory_filter_tx.Enabled = true;
+                TID_filter_tx.Enabled = false;
+                if (all_plans.plan_list.Count > 0)
+                {
+                    all_plans.plan_list[treeView1.SelectedNode.Index - 1].type = FILTER.User;
+                }
+            }
+        }
+
+        private void tid_rbtn_CheckedChanged(object sender, EventArgs e)
+        {
+            if (tid_rbtn.Checked == true)
+            {
+                EPC_filter_tx.Enabled = false;
+                Memory_filter_tx.Enabled = false;
+                TID_filter_tx.Enabled = true;
+                if (all_plans.plan_list.Count > 0)
+                {
+                    all_plans.plan_list[treeView1.SelectedNode.Index - 1].type = FILTER.TID;
+                }
+            }
+        }
+
+        private void EPC_filter_tx_Leave(object sender, EventArgs e)
+        {
+            if (EPC_rbtn.Checked)
+            {
+                all_plans.plan_list[treeView1.SelectedNode.Index - 1].EPC = EPC_filter_tx.Text;
+            }
+        }
+       
+        private void Memory_filter_tx_Leave(object sender, EventArgs e)
+        {
+            if (Mem_rbtn.Checked)
+            {
+                all_plans.plan_list[treeView1.SelectedNode.Index - 1].EPC = Memory_filter_tx.Text;
+            }
+        }
+
+        private void TID_filter_tx_Leave(object sender, EventArgs e)
+        {
+            if (tid_rbtn.Checked)
+            {
+                all_plans.plan_list[treeView1.SelectedNode.Index - 1].EPC = TID_filter_tx.Text;
+            }
+        }
+
+        private void weight_tx_Leave(object sender, EventArgs e)
+        {
+            all_plans.plan_list[treeView1.SelectedNode.Index - 1].weight = weight_tx.Text;
+        }
+
+        private void get_plan_btn_Click(object sender, EventArgs e)
+        {
+            if (com_type.getflagConnected_TCPIP())
+            {
+                com_type.Get_Command_Send(CM.COMMAND.GET_PLAN_CMD);
+            }
+            else
+            {
+                MessageBox.Show("Connection was disconnected\nPlease connect again!");
+                Disconnect_Behavior();
+            }
+        }
+
+        private void set_plan_btn_Click(object sender, EventArgs e)
+        {
+            if (com_type.getflagConnected_TCPIP())
+            {
+                com_type.Set_Command_Send(CM.COMMAND.SET_PLAN_CMD, Plans_ToString(all_plans));
+            }
+            else
+            {
+                MessageBox.Show("Connection was disconnected\nPlease connect again!");
+                Disconnect_Behavior();
+            }
+        }
+        private string Plans_ToString (Plan_Node.Plan_Root plans)
+        {
+            StringBuilder plan_string = new StringBuilder();
+            if (all_plans.plan_list.Count == 1)
+            {
+                plan_string.AppendFormat(simple_plan_format[0], all_plans.plan_list[0].antena);
+                plan_string.AppendFormat(simple_plan_format[1]);
+                plan_string.AppendFormat(simple_plan_format[2], all_plans.plan_list[0].EPC);
+                plan_string.AppendFormat(simple_plan_format[3]);
+                plan_string.AppendFormat(simple_plan_format[4], all_plans.plan_list[0].weight);
+            }
+            else
+            {
+                plan_string.Append("MultiReadPlan:[");
+                for (int ix = 0; ix < all_plans.plan_list.Count; ix++)
+                {
+                    plan_string.AppendFormat(simple_plan_format[0], all_plans.plan_list[ix].antena);
+                    plan_string.AppendFormat(simple_plan_format[1]);
+                    plan_string.AppendFormat(simple_plan_format[2], all_plans.plan_list[ix].EPC);
+                    plan_string.AppendFormat(simple_plan_format[3]);
+                    plan_string.AppendFormat(simple_plan_format[4], all_plans.plan_list[ix].weight);
+                    plan_string.Append(",");
+                }
+                plan_string.Remove(plan_string.Length - 1, 1);
+                plan_string.Append("]");
+            }
+            return plan_string.ToString();
         }
     }
 }

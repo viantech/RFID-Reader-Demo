@@ -13,10 +13,6 @@ namespace GatewayForm
         private CM.TYPECONNECT type;
         private SocketClient zigbee;
         private TCP_Client tcp;
-        //public event CM.SocketReceivedHandler TagID_Msg;
-        //public event CM.SocketReceivedHandler Config_Msg;
-        //public event CM.SocketReceivedHandler Log_Msg;
-        //TcpipConnection pTcpipClient;
         public Communication(CM.TYPECONNECT type_connect)
         {
             this.type = type_connect;
@@ -64,7 +60,6 @@ namespace GatewayForm
             switch (type)
             {
                 case CM.TYPECONNECT.HDR_ZIGBEE:
-
                     zigbee.Connect(ip_addr, port);
                     break;
                 case CM.TYPECONNECT.HDR_WIFI:
@@ -284,7 +279,10 @@ namespace GatewayForm
             switch (type)
             {
                 case CM.TYPECONNECT.HDR_ZIGBEE:
-                    
+                    if (zigbee != null)
+                    {
+                        zigbee.Start_Process(command_type);
+                    }
                     break;
                 case CM.TYPECONNECT.HDR_WIFI:
                     if (tcp != null)
@@ -322,7 +320,10 @@ namespace GatewayForm
             switch (type)
             {
                 case CM.TYPECONNECT.HDR_ZIGBEE:
-
+                    if (zigbee != null)
+                    {
+                        MessageBox.Show("We not support update firmware in Zigbee protocol");
+                    }
                     break;
                 case CM.TYPECONNECT.HDR_WIFI:
                     if (tcp != null)

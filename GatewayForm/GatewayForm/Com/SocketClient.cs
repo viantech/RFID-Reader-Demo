@@ -22,6 +22,9 @@ namespace GatewayForm
         public const int ZigbeeSize = 2048;
         // Receive buffer.
         public byte[] buffer = new byte[ZigbeeSize];
+        public byte[] result_byte_frame = new byte[0];
+        public byte[] raw_read_byte = new byte[0];
+
     }
 
     public class SocketClient
@@ -36,8 +39,7 @@ namespace GatewayForm
         private static byte[] ack_header = Encoding.ASCII.GetBytes("ACK");
         private static byte[] nack_header = Encoding.ASCII.GetBytes("NACK");
         private static byte[] error_header = Encoding.ASCII.GetBytes("ERROR");*/
-        private byte[] result_byte_frame = new byte[0];
-        private byte[] raw_read_byte = new byte[0];
+        //private byte[] result_byte_frame = new byte[0];
         //private string respose;
         private static int retry_count = 3;
         //private volatile bool start_enable = false;
@@ -45,9 +47,10 @@ namespace GatewayForm
         private NetworkStream stream;
         //private Socket client_socket;
 
-        private ManualResetEvent connectDone = new ManualResetEvent(false);
-        private ManualResetEvent sendDone = new ManualResetEvent(false);
-        private ManualResetEvent receiveDone = new ManualResetEvent(false);
+        private AutoResetEvent connectDone = new AutoResetEvent(false);
+        private AutoResetEvent sendDone = new AutoResetEvent(false);
+        private AutoResetEvent receive_ACKDone = new AutoResetEvent(false);
+        public AutoResetEvent receiveDone = new AutoResetEvent(false);
         public SocketClient()
         {
         }
@@ -66,6 +69,7 @@ namespace GatewayForm
             }
             Receive_Handler();
             Send_ConnectionRequest();
+
         }
         private void OnConnect(IAsyncResult ar)
         {
@@ -85,6 +89,48 @@ namespace GatewayForm
         }
 
         #region Send
+
+        public void Send_Binary(byte[] sub_fmt_byte)
+        {
+            byte[] len_byte = Encoding.ASCII.GetBytes(sub_fmt_byte.Length.ToString("X2"));
+            byte[] concat = new byte[zigbee_binary.Length + len_byte.Length + addr_node.Length + 2];
+            Buffer.BlockCopy(zigbee_binary, 0, concat, 0, zigbee_binary.Length);
+            Buffer.BlockCopy(len_byte, 0, concat, zigbee_binary.Length, len_byte.Length);
+            concat[zigbee_binary.Length + len_byte.Length] = 0x2C;
+            Buffer.BlockCopy(addr_node, 0, concat, zigbee_binary.Length + len_byte.Length + 1, addr_node.Length);
+            concat[zigbee_binary.Length + len_byte.Length + addr_node.Length + 1] = 0x0D;
+            stream.BeginWrite(concat, 0, concat.Length, OnWriteComplete, null);
+
+            stream.BeginWrite(sub_fmt_byte, 0, sub_fmt_byte.Length, OnWriteComplete, null);
+
+        }
+
+        public void SendAsync(byte[] bytesSend)
+        {
+            byte[] zigbee_frame = Encode_Zigbee(bytesSend);
+            stream.BeginWrite(zigbee_frame, 0, zigbee_frame.Length, OnWriteComplete, null);
+            //Console.WriteLine("Len:{0}-{1}", zigbee_frame.Length, ByteArrayToHexString(zigbee_frame));
+            sendDone.WaitOne();
+            sendDone.Reset();
+        }
+
+        private void OnWriteComplete(IAsyncResult ar)
+        {
+            try
+            {
+                // Complete sending the data to the remote device.
+                stream.EndWrite(ar);
+                //CM.Log_Raise(String.Format("Sent {0} bytes to server.", bytesSent));
+
+                // Signal that all bytes have been sent.
+                sendDone.Set();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+        }
+
         /// <summary>
         /// Send connection request command
         /// </summary>
@@ -159,7 +205,7 @@ namespace GatewayForm
 
             /* Byte data of Frame Format*/
             byte[] sub_fmt_byte = CM.Encode_Frame(fmt_set);
-            Send_Packets(sub_fmt_byte);
+            Send_Bytes(sub_fmt_byte);
         }
 
         public void Set_Command_Send_Bytes(CM.COMMAND command, byte[] user_bytes)
@@ -171,10 +217,10 @@ namespace GatewayForm
 
             /* Byte data of Frame Format*/
             byte[] sub_fmt_byte = CM.Encode_Frame(fmt_set);
-            Send_Packets(sub_fmt_byte);
+            Send_Bytes(sub_fmt_byte);
         }
 
-        private void Send_Packets(byte[] frame_data_byte)
+        private void Send_Bytes(byte[] frame_data_byte)
         {
             UInt16 num_packet, last_packet_byte, len_transmit;
             UInt16 idx, len_byte_fmt;
@@ -203,8 +249,7 @@ namespace GatewayForm
                 Send_Binary(byte_tcp);
                 if (i < num_packet -1)
                 {
-                    receiveDone.WaitOne(2000);
-                    receiveDone.Reset();
+                    receive_ACKDone.WaitOne(2000);
                 }
             }
         }
@@ -223,85 +268,69 @@ namespace GatewayForm
             return concat;
         }
 
-        private void Send_Binary(byte[] sub_fmt_byte)
+        public async void Start_Process(CM.COMMAND cmd)
         {
-            byte[] len_byte = Encoding.ASCII.GetBytes(sub_fmt_byte.Length.ToString("X2"));
-            byte[] concat = new byte[zigbee_binary.Length + len_byte.Length + addr_node.Length + 2];
-            Buffer.BlockCopy(zigbee_binary, 0, concat, 0, zigbee_binary.Length);
-            Buffer.BlockCopy(len_byte, 0, concat, zigbee_binary.Length, len_byte.Length);
-            concat[zigbee_binary.Length + len_byte.Length] = 0x2C;
-            Buffer.BlockCopy(addr_node, 0, concat, zigbee_binary.Length + len_byte.Length + 1, addr_node.Length);
-            concat[zigbee_binary.Length + len_byte.Length + addr_node.Length + 1] = 0x0D;
-            stream.BeginWrite(concat, 0, concat.Length, OnWriteComplete, null);
-            
-            stream.BeginWrite(sub_fmt_byte, 0, sub_fmt_byte.Length, OnWriteComplete, null);
-            
+            int task = await Task.Run(() => Command_Process(cmd));
         }
 
-        /*private void WaitACK()
+        private int Command_Process(CM.COMMAND command)
         {
-            ZigbeeClient state = new ZigbeeClient();
-
-            stream.BeginRead(state.buffer, 0, ZigbeeClient.ZigbeeSize, OnReadACKComplete, state);
-            receiveDone.WaitOne();
-            receiveDone.Reset();
-        }
-
-        private void OnReadACKComplete(IAsyncResult ar)
-        {
-            int bytesRead;
-            ZigbeeClient state = (ZigbeeClient)ar.AsyncState;
-            try
+            switch (command)
             {
-                lock (stream)
-                {
-                    bytesRead = stream.EndRead(ar);
-                }
-                if (bytesRead > 0)
-                {
-                    string recv = Encoding.ASCII.GetString(state.buffer,0,bytesRead);
-                    if (recv.Contains("ACK"))
-                    { 
-                        receiveDone.Set();
-                    }
-                    else
-                        stream.BeginRead(state.buffer, 0, ZigbeeClient.ZigbeeSize, OnReadACKComplete, state);
-                }
+                case CM.COMMAND.CONNECTION_REQUEST_CMD:
+                    Send_ConnectionRequest();
+                    receiveDone.WaitOne(2000);
+                    break;
+                case CM.COMMAND.GET_CONFIGURATION_CMD:
+                    //Get Gateway Configuration
+                    Get_Command_Send(CM.COMMAND.GET_CONFIGURATION_CMD);
+                    receiveDone.WaitOne(2000);
+                    //Antena
+                    Get_Command_Send(CM.COMMAND.ANTENA_CMD);
+                    receiveDone.WaitOne(2000);
+                    break;
+                case CM.COMMAND.GET_POWER_CMD:
+                    Get_Command_Power(CM.COMMAND.GET_POWER_CMD, 0);
+                    receiveDone.WaitOne(2000);
+                    Get_Command_Power(CM.COMMAND.GET_POWER_CMD, 1);
+                    receiveDone.WaitOne(2000);
+                    break;
+                case CM.COMMAND.GET_POWER_MODE_CMD:
+                    Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 0);
+                    receiveDone.WaitOne(2000);
+                    Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 1);
+                    receiveDone.WaitOne(2000);
+                    Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 2);
+                    receiveDone.WaitOne(2000);
+                    receiveDone.Reset();
+                    Get_Command_Power(CM.COMMAND.GET_POWER_CMD, 0);
+                    receiveDone.WaitOne(2000);
+                    Get_Command_Power(CM.COMMAND.GET_POWER_CMD, 1);
+                    receiveDone.WaitOne(2000);
+                    Get_Command_Send(CM.COMMAND.GET_POWER_MODE_CMD);
+                    receiveDone.WaitOne(2000);
+                    break;
+                case CM.COMMAND.GET_BLF_CMD:
+                    Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 0);
+                    receiveDone.WaitOne(2000);
+                    Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 1);
+                    receiveDone.WaitOne(2000);
+                    Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 2);
+                    receiveDone.WaitOne(2000);
+                    break;
+                case CM.COMMAND.GET_RFID_CONFIGURATION_CMD:
+                    Get_Command_Send(CM.COMMAND.GET_RFID_CONFIGURATION_CMD);
+                    receiveDone.WaitOne(2000);
+                    break;
+                case CM.COMMAND.DIS_CONNECT_CMD:
+                    Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
+                    receiveDone.WaitOne(2000);
+                    Free();
+                    break;
+                default:
+                    break;
             }
-            catch (IOException e)
-            {
-                MessageBox.Show(e.ToString());
-            }
-            catch (ObjectDisposedException)
-            {
-                CM.Log_Raise("Abort due to close");
-            }
-        }*/
-
-        public void SendAsync(byte[] bytesSend)
-        {
-            byte[] zigbee_frame = Encode_Zigbee(bytesSend);
-            stream.BeginWrite(zigbee_frame, 0, zigbee_frame.Length, OnWriteComplete, null);
-            //Console.WriteLine("Len:{0}-{1}", zigbee_frame.Length, ByteArrayToHexString(zigbee_frame));
-            sendDone.WaitOne();
-            sendDone.Reset();
-        }
-
-        private void OnWriteComplete(IAsyncResult ar)
-        {
-            try
-            {
-                // Complete sending the data to the remote device.
-                stream.EndWrite(ar);
-                //CM.Log_Raise(String.Format("Sent {0} bytes to server.", bytesSent));
-
-                // Signal that all bytes have been sent.
-                sendDone.Set();
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.ToString());
-            }
+            return 1;
         }
         #endregion
 
@@ -316,26 +345,21 @@ namespace GatewayForm
             if (0x00 == byte_receive[0])
             {
                 CM.Log_Raise("Accepted!");
-
-                Get_Command_Send(CM.COMMAND.GET_CONFIGURATION_CMD);
+                Start_Process(CM.COMMAND.GET_CONFIGURATION_CMD);
             }
             else
             {
                 if (retry_count > 0)
                 {
                     MessageBox.Show("Fail request connection\n Retry!");
-                    result_byte_frame = new byte[0];
-                    raw_read_byte = new byte[0];
                     retry_count--;
-                    Send_ConnectionRequest();
-                    //ReadAsync(CM.COMMAND.CONNECTION_REQUEST_CMD);
+                    Start_Process(CM.COMMAND.CONNECTION_REQUEST_CMD);
                 }
                 else
                 {
                     CM.Log_Raise("Retry Failed. Closed Socket.");
                     retry_count = 3;
-                    stream.Close();
-                    client.Close();
+                    Free();
                     return;
                 }
             }
@@ -417,23 +441,23 @@ namespace GatewayForm
                     if (state.buffer[bytesRead - 3] == 0x4B && state.buffer[bytesRead - 2] == 0x0d && state.buffer[bytesRead - 1] == 0x0a)
                     {
                         Receive_Handler();
-                        receiveDone.Set();
+                        receive_ACKDone.Set();
                         return;
                     }
-                    Array.Resize(ref raw_read_byte, raw_read_byte.Length + bytesRead);
-                    Buffer.BlockCopy(state.buffer, 0, raw_read_byte, raw_read_byte.Length - bytesRead, bytesRead);
+                    Array.Resize(ref state.raw_read_byte, state.raw_read_byte.Length + bytesRead);
+                    Buffer.BlockCopy(state.buffer, 0, state.raw_read_byte, state.raw_read_byte.Length - bytesRead, bytesRead);
                     if (bytesRead > 4)
                     {
                         if (state.buffer[bytesRead - 4] == 0x01)
                         {
                             if (state.buffer[bytesRead - 2] == 0x0d && state.buffer[bytesRead - 1] == 0x0a)
                             {
-                                int found_ucast = IndexOfByte(raw_read_byte, ucast_header) - 2;
-                                raw_read_byte = raw_read_byte.Skip(found_ucast).ToArray();
+                                int found_ucast = IndexOfByte(state.raw_read_byte, ucast_header) - 2;
+                                state.raw_read_byte = state.raw_read_byte.Skip(found_ucast).ToArray();
                                 UInt16 num_ucast, last_ucast, len_block;
                                 UInt16 idx, len_stream;
                                 idx = 0;
-                                len_stream = (ushort)raw_read_byte.Length;
+                                len_stream = (ushort)state.raw_read_byte.Length;
                                 num_ucast = (ushort)(len_stream / (ushort)CM.LENGTH.MAX_SIZE_ZIGBEE_BLOCK);
                                 last_ucast = (ushort)(len_stream % (ushort)CM.LENGTH.MAX_SIZE_ZIGBEE_BLOCK);
                                 if (last_ucast > 0)
@@ -447,37 +471,32 @@ namespace GatewayForm
                                             len_block = last_ucast;
                                     }
                                     byte[] subframe_block = new byte[len_block - 30];
-                                    Buffer.BlockCopy(raw_read_byte, idx + 28, subframe_block, 0, subframe_block.Length);
+                                    Buffer.BlockCopy(state.raw_read_byte, idx + 28, subframe_block, 0, subframe_block.Length);
                                     idx += len_block;
                                     byte[] meta_sub = CM.Decode_SubFrame(subframe_block, subframe_block.Length);
                                     if (meta_sub != null)
                                     {
-                                        Array.Resize(ref result_byte_frame, result_byte_frame.Length + meta_sub.Length);
-                                        Buffer.BlockCopy(meta_sub, 0, result_byte_frame, result_byte_frame.Length - meta_sub.Length, meta_sub.Length);
+                                        Array.Resize(ref state.result_byte_frame, state.result_byte_frame.Length + meta_sub.Length);
+                                        Buffer.BlockCopy(meta_sub, 0, state.result_byte_frame, state.result_byte_frame.Length - meta_sub.Length, meta_sub.Length);
                                     }
                                     else
                                     {
-                                        MessageBox.Show("Wrong Message");
-                                        result_byte_frame = new byte[0];
-                                        raw_read_byte = new byte[0];
+                                        MessageBox.Show("Wrong Sub Frame Packet");
                                         Receive_Handler();
                                     }
 
                                 }
-                                if (result_byte_frame != null)
+                                if (state.result_byte_frame != null)
                                 {
-                                    if ((byte)CM.COMMAND.CONNECTION_REQUEST_CMD == result_byte_frame[0])
-                                        Request_Connection_Handler(CM.Decode_Frame((byte)CM.COMMAND.CONNECTION_REQUEST_CMD, result_byte_frame));
-                                    else CM.Data_Receive_Handler(result_byte_frame);
+                                    receiveDone.Set();
+                                    if ((byte)CM.COMMAND.CONNECTION_REQUEST_CMD == state.result_byte_frame[0])
+                                        Request_Connection_Handler(CM.Decode_Frame((byte)CM.COMMAND.CONNECTION_REQUEST_CMD, state.result_byte_frame));
+                                    else CM.Data_Receive_Handler(state.result_byte_frame);
 
-                                    result_byte_frame = new byte[0];
-                                    raw_read_byte = new byte[0];
                                     Receive_Handler();
                                 }
                                 else
                                 {
-                                    result_byte_frame = new byte[0];
-                                    raw_read_byte = new byte[0];
                                     Receive_Handler();
                                 }
                             }

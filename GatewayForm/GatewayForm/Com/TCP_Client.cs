@@ -10,8 +10,8 @@ using System.Net.Sockets;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using System.Net.NetworkInformation;
-using System.Timers;
+//using System.Net.NetworkInformation;
+//using System.Timers;
 using CM = GatewayForm.Common;
 
 namespace GatewayForm
@@ -40,10 +40,6 @@ namespace GatewayForm
         /// </summary>
         public bool connect_ok = false;
 
-        // ManualResetEvent instances signal completion.
-        private AutoResetEvent connectDone = new AutoResetEvent(false);
-        private AutoResetEvent sendDone = new AutoResetEvent(false);
-        public AutoResetEvent receiveDone = new AutoResetEvent(false);
         //Ping connection
         //private System.Timers.Timer pingTimer = new System.Timers.Timer() { Interval = 10000 };
         //private AutoResetEvent waiter = new AutoResetEvent(false);
@@ -52,7 +48,10 @@ namespace GatewayForm
         //public bool recv_flag = false;
         //public bool alive = true;
         private static int retry_count = 3;
-
+        // ManualResetEvent instances signal completion.
+        private AutoResetEvent connectDone = new AutoResetEvent(false);
+        private AutoResetEvent sendDone = new AutoResetEvent(false);
+        public AutoResetEvent receiveDone = new AutoResetEvent(false);
         // The response from the remote device.
 
         public TCP_Client()
@@ -130,8 +129,7 @@ namespace GatewayForm
                     CM.SetKeepAliveValues(tcp_client, true, 2000, 1000);
                     connect_ok = true;
                     Receive_Command_Handler();
-
-                    Start_Command_Process(CM.COMMAND.CONNECTION_REQUEST_CMD);
+                    Send_ConnectionRequest();
                     /*pingTimer.Elapsed += (sender, e) =>
                         {
                             //pingsender.SendAsync(ipAddress, 120, icmp_test, options, waiter);
@@ -198,16 +196,31 @@ namespace GatewayForm
         /// <param name="b_frame"></param> byte array of sending frame
         private void SendFrame(byte[] b_frame)
         {
-            if (!tcp_client.Connected)
+            try
             {
-                // Connection is terminated, either by force or willingly
-                MessageBox.Show("Error transmit because socket is terminated");
-                connect_ok = false;
+                if (!tcp_client.Connected)
+                {
+                    // Connection is terminated, either by force or willingly
+                    MessageBox.Show("Error transmit because socket is terminated");
+                    connect_ok = false;
+                }
+                else
+                {
+                    tcp_client.BeginSend(b_frame, 0, b_frame.Length, 0, new AsyncCallback(SendCallback), tcp_client);
+                    sendDone.WaitOne();
+                }
             }
-            else
+            catch (IOException e)
             {
-                tcp_client.BeginSend(b_frame, 0, b_frame.Length, 0, new AsyncCallback(SendCallback), tcp_client);
-                sendDone.WaitOne();
+                MessageBox.Show(e.ToString());
+            }
+            catch (SocketException e)
+            {
+                MessageBox.Show(e.ToString()); //4
+            }
+            catch (ObjectDisposedException)
+            {
+                CM.Log_Raise("Abort due to close");
             }
         }
 
@@ -405,9 +418,9 @@ namespace GatewayForm
                     /* Byte data of Frame Format*/
                     byte[] sub_fmt_byte = CM.Encode_Frame(fmt_set);
                     Send_Packets(sub_fmt_byte);
-                    if (!receiveDone.WaitOne(7000))
+                    if (!receiveDone.WaitOne(5000))
                     {
-                        CM.Log_Raise("Failed to update.");
+                        MessageBox.Show("Time out! Failed to update.");
                         break;
                     }
                     else
@@ -415,7 +428,7 @@ namespace GatewayForm
                 }
             }
             else
-                MessageBox.Show("Wrong File Info");
+                MessageBox.Show("Wrong File Info (Part 0)");
             File_Mode = false;
         }
 
@@ -462,6 +475,8 @@ namespace GatewayForm
                 case CM.COMMAND.CONNECTION_REQUEST_CMD:
                     Send_ConnectionRequest();
                     receiveDone.WaitOne(2000);
+                    break;
+                case CM.COMMAND.GET_CONFIGURATION_CMD:
                     //Get Gateway Configuration
                     Get_Command_Send(CM.COMMAND.GET_CONFIGURATION_CMD);
                     receiveDone.WaitOne(2000);
@@ -526,6 +541,7 @@ namespace GatewayForm
             if (0x00 == byte_receive[0])
             {
                 CM.Log_Raise("Accepted!");
+                Start_Command_Process(CM.COMMAND.GET_CONFIGURATION_CMD);
             }
             else
             {
@@ -534,6 +550,7 @@ namespace GatewayForm
                     MessageBox.Show("Fail request connection\n Retry!");
                     retry_count--;
                     Start_Command_Process(CM.COMMAND.CONNECTION_REQUEST_CMD);
+                    //Send_ConnectionRequest();
                 }
                 else
                 {
@@ -569,7 +586,7 @@ namespace GatewayForm
                             if (0x00 == ack_file)
                                 receiveDone.Set();
                             else
-                                MessageBox.Show("Failed to update. Please try again!");
+                                CM.Log_Raise("Failed Part sent.");
                             Receive_Command_Handler();
                         }
                         else
@@ -670,12 +687,6 @@ namespace GatewayForm
             {
                 MessageBox.Show(e.ToString());
             }
-        }
-
-        ~TCP_Client()
-        {
-            // Release the socket.
-
         }
 
     }

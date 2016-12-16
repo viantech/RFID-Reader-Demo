@@ -144,6 +144,8 @@ namespace GatewayForm
             GET_BLF_CMD = 0x15,
             REBOOT_CMD = 0x16,
             ANTENA_CMD = 0x17,
+            SET_PLAN_CMD = 0x18,
+            GET_PLAN_CMD = 0x19,
             FIRMWARE_UPDATE_CMD = 0x1B,
         };
 
@@ -388,9 +390,9 @@ namespace GatewayForm
                     case COMMAND.SET_CONFIGURATION_CMD:
                         info_ack = Decode_Frame_ACK((byte)COMMAND.SET_CONFIGURATION_CMD, command_bytes);
                         if (0x00 == info_ack)
-                            Log_Raise("Set GW Config done");
+                            Log_Raise("Set Reader Config done");
                         else
-                            Log_Raise("Failed set Config");
+                            MessageBox.Show("Failed Reader Set Config");
                         break;
                     /* RFID configuration */
                     case COMMAND.GET_RFID_CONFIGURATION_CMD:
@@ -404,26 +406,28 @@ namespace GatewayForm
                         if (0x00 == info_ack)
                             Log_Raise("Set RFID done");
                         else
-                            Log_Raise("Failed set RFID");
+                            MessageBox.Show("Failed Set RFID Configuration");
                         break;
                     /* Port Properties */
                     case COMMAND.GET_PORT_PROPERTIES_CMD:
                         data_response = Get_Data(Decode_Frame((byte)COMMAND.GET_PORT_PROPERTIES_CMD, command_bytes));
                         if (data_response.Length > 0)
+                        {
                             Cmd_Raise(data_response);
-                        MessageBox.Show(data_response);
+                            MessageBox.Show(data_response);
+                        }
                         break;
                     case COMMAND.SET_PORT_PROPERTIES_CMD:
                         info_ack = Decode_Frame_ACK((byte)COMMAND.SET_PORT_PROPERTIES_CMD, command_bytes);
                         if (0x00 == info_ack)
                             Log_Raise("Set connection done");
                         else
-                            Log_Raise("Failed set connection");
+                            MessageBox.Show("Failed Set Connection");
                         break;
                     case COMMAND.DIS_CONNECT_CMD:
                         info_ack = Decode_Frame_ACK((byte)COMMAND.DIS_CONNECT_CMD, command_bytes);
                         if (0x00 != info_ack)
-                            MessageBox.Show("Failed disconnect");
+                            MessageBox.Show("Failed Disconnect");
                         break;
                     /* start operate */
                     case COMMAND.START_OPERATION_CMD:
@@ -433,7 +437,7 @@ namespace GatewayForm
                             Log_Raise("Inventory Mode");
                         }
                         else
-                            MessageBox.Show("Failed start operation");
+                            MessageBox.Show("Failed Start Operation");
                         break;
                     /* stop operate */
                     case COMMAND.STOP_OPERATION_CMD:
@@ -443,7 +447,7 @@ namespace GatewayForm
                             Log_Raise("Stop Inventory");
                         }
                         else
-                            MessageBox.Show("Failed stop operation!");
+                            MessageBox.Show("Failed Stop Operation!");
                         break;
                     /*Tag ID */
                     case COMMAND.REQUEST_TAG_ID_CMD:
@@ -459,7 +463,7 @@ namespace GatewayForm
                             if (0x00 == byte_bits[0])
                                 Cmd_Raise("Power RFID\n" + byte_bits[1].ToString() + "\n");
                             else
-                                Log_Raise("Fail get power");
+                                MessageBox.Show("Fail Get Power");
                         }
                         break;
                     case COMMAND.SET_POWER_CMD:
@@ -467,7 +471,7 @@ namespace GatewayForm
                         if (0x00 == info_ack)
                             Log_Raise("Set Power done");
                         else
-                            Log_Raise("Failed Set Power");
+                            MessageBox.Show("Failed Set Power");
                         break;
                     //Region Configuration
                     case COMMAND.GET_REGION_CMD:
@@ -477,7 +481,7 @@ namespace GatewayForm
                             if (0x00 == byte_bits[0])
                                 Cmd_Raise("Region RFID\n" + byte_bits[1].ToString() + "\n");
                             else
-                                Log_Raise("Fail get region");
+                                MessageBox.Show("Fail Get Region");
                         }
                         break;
                     case COMMAND.SET_REGION_CMD:
@@ -485,7 +489,7 @@ namespace GatewayForm
                         if (0x00 == info_ack)
                             Log_Raise("Set Region done");
                         else
-                            Log_Raise("Failed set region");
+                            MessageBox.Show("Failed Set Region");
                         break;
                     //Power Mode Configuration
                     case COMMAND.GET_POWER_MODE_CMD:
@@ -495,7 +499,7 @@ namespace GatewayForm
                             if (0x00 == byte_bits[0])
                                 Cmd_Raise("Power Mode RFID\n" + byte_bits[1].ToString() + "\n");
                             else
-                                Log_Raise("Fail get power mode");
+                                MessageBox.Show("Fail Get Power Mode");
                         }
                         break;
                     case COMMAND.SET_POWER_MODE_CMD:
@@ -503,13 +507,13 @@ namespace GatewayForm
                         if (0x00 == info_ack)
                             Log_Raise("Set Power Mode done");
                         else
-                            Log_Raise("Failed set power mode");
+                            MessageBox.Show("Failed Set Power Mode");
                         break;
                     // Change Connection Type
                     case COMMAND.SET_CONN_TYPE_CMD:
                         data_response = Get_Data(Decode_Frame((byte)COMMAND.SET_CONN_TYPE_CMD, command_bytes));
                         if (data_response.Length > 0)
-                            Cmd_Raise(data_response);
+                            Cmd_Raise("Change Protocol\n" + data_response + "\n");
                         break;
                     case COMMAND.GET_BLF_CMD:
                         byte_bits = Decode_Frame((byte)COMMAND.GET_BLF_CMD, command_bytes);
@@ -533,12 +537,24 @@ namespace GatewayForm
                         if (0x00 == info_ack)
                             Log_Raise("Rebooting ...");
                         else
-                            Log_Raise("Failed Reboot");
+                            MessageBox.Show("Failed Reboot");
                         break;
                     case COMMAND.ANTENA_CMD:
                         data_response = Get_Data(Decode_Frame((byte)COMMAND.ANTENA_CMD, command_bytes));
                         if (data_response.Length > 0)
                             Cmd_Raise("Antena RFID\n" + data_response + "\n");
+                        break;
+                    case COMMAND.SET_PLAN_CMD:
+                        info_ack = Decode_Frame_ACK((byte)COMMAND.SET_PLAN_CMD, command_bytes);
+                        if (0x00 == info_ack)
+                            Log_Raise("Set Plan done");
+                        else
+                            MessageBox.Show("Failed Set Plan");
+                        break;
+                    case COMMAND.GET_PLAN_CMD:
+                        data_response = Get_Data(Decode_Frame((byte)COMMAND.GET_PLAN_CMD, command_bytes));
+                        if (data_response.Length > 0)
+                            Cmd_Raise("Get Plan\n" + data_response + "\n");
                         break;
                     default:
                         break;
