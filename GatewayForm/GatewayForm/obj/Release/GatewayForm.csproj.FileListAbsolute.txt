@@ -27,4 +27,3 @@ C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Release\Gatewa
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Release\GatewayForm.csproj.GenerateResource.Cache
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Release\GatewayForm.exe
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Release\GatewayForm.pdb
-C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Release\GatewayForm.csprojResolveAssemblyReference.cache
