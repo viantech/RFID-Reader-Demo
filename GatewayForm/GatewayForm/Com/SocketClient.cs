@@ -42,6 +42,7 @@ namespace GatewayForm
         //private byte[] result_byte_frame = new byte[0];
         //private string respose;
         private static int retry_count = 3;
+        public bool connect_ok = false;
         //private volatile bool start_enable = false;
         private TcpClient client;
         private NetworkStream stream;
@@ -59,17 +60,26 @@ namespace GatewayForm
         {
             try
             {
-                client = new TcpClient(ip, port);
-                stream = client.GetStream();
-                //client_socket = client.Client;
+                IPEndPoint remoteEP;
+                IPAddress ipAddress = Dns.GetHostAddresses(ip)[0];
+                remoteEP = new IPEndPoint(ipAddress, port);
+                client = new TcpClient();
+                client.Client.BeginConnect(remoteEP, OnConnect, client.Client);
+                if (connectDone.WaitOne(3000))
+                {
+                    stream = client.GetStream();
+                    connect_ok = true;
+                    //client_socket = client.Client;
+                    Receive_Handler();
+                    Send_ConnectionRequest();
+                }
+                else
+                    MessageBox.Show("Socket Connect Timeout");
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.ToString());
             }
-            Receive_Handler();
-            Send_ConnectionRequest();
-
         }
         private void OnConnect(IAsyncResult ar)
         {
@@ -84,7 +94,8 @@ namespace GatewayForm
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.ToString());
+                if (connect_ok)
+                    MessageBox.Show(e.ToString());
             }
         }
 
@@ -92,17 +103,24 @@ namespace GatewayForm
 
         public void Send_Binary(byte[] sub_fmt_byte)
         {
-            byte[] len_byte = Encoding.ASCII.GetBytes(sub_fmt_byte.Length.ToString("X2"));
-            byte[] concat = new byte[zigbee_binary.Length + len_byte.Length + addr_node.Length + 2];
-            Buffer.BlockCopy(zigbee_binary, 0, concat, 0, zigbee_binary.Length);
-            Buffer.BlockCopy(len_byte, 0, concat, zigbee_binary.Length, len_byte.Length);
-            concat[zigbee_binary.Length + len_byte.Length] = 0x2C;
-            Buffer.BlockCopy(addr_node, 0, concat, zigbee_binary.Length + len_byte.Length + 1, addr_node.Length);
-            concat[zigbee_binary.Length + len_byte.Length + addr_node.Length + 1] = 0x0D;
-            stream.BeginWrite(concat, 0, concat.Length, OnWriteComplete, null);
+            if (client.Client.Connected)
+            {
+                byte[] len_byte = Encoding.ASCII.GetBytes(sub_fmt_byte.Length.ToString("X2"));
+                byte[] concat = new byte[zigbee_binary.Length + len_byte.Length + addr_node.Length + 2];
+                Buffer.BlockCopy(zigbee_binary, 0, concat, 0, zigbee_binary.Length);
+                Buffer.BlockCopy(len_byte, 0, concat, zigbee_binary.Length, len_byte.Length);
+                concat[zigbee_binary.Length + len_byte.Length] = 0x2C;
+                Buffer.BlockCopy(addr_node, 0, concat, zigbee_binary.Length + len_byte.Length + 1, addr_node.Length);
+                concat[zigbee_binary.Length + len_byte.Length + addr_node.Length + 1] = 0x0D;
+                stream.BeginWrite(concat, 0, concat.Length, OnWriteComplete, null);
 
-            stream.BeginWrite(sub_fmt_byte, 0, sub_fmt_byte.Length, OnWriteComplete, null);
-
+                stream.BeginWrite(sub_fmt_byte, 0, sub_fmt_byte.Length, OnWriteComplete, null);
+            }
+            else
+            {
+                MessageBox.Show("Send Stream close");
+                connect_ok = false;
+            }
         }
 
         public void SendAsync(byte[] bytesSend)
@@ -127,7 +145,8 @@ namespace GatewayForm
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.ToString());
+                if (connect_ok)
+                    MessageBox.Show(e.ToString());
             }
         }
 
@@ -278,10 +297,12 @@ namespace GatewayForm
             switch (command)
             {
                 case CM.COMMAND.CONNECTION_REQUEST_CMD:
+                    receiveDone.WaitOne(2000);
                     Send_ConnectionRequest();
                     receiveDone.WaitOne(2000);
                     break;
                 case CM.COMMAND.GET_CONFIGURATION_CMD:
+                    receiveDone.WaitOne(2000);
                     //Get Gateway Configuration
                     Get_Command_Send(CM.COMMAND.GET_CONFIGURATION_CMD);
                     receiveDone.WaitOne(2000);
@@ -338,10 +359,6 @@ namespace GatewayForm
 
         private void Request_Connection_Handler(byte[] byte_receive)
         {
-            //ACK and Status
-            //if (0x00 == byte_resp[1])
-            //form1.SetLog("Join Ready State.");
-
             if (0x00 == byte_receive[0])
             {
                 CM.Log_Raise("Accepted!");
@@ -358,6 +375,7 @@ namespace GatewayForm
                 else
                 {
                     CM.Log_Raise("Retry Failed. Closed Socket.");
+                    connect_ok = false;
                     retry_count = 3;
                     Free();
                     return;
@@ -424,9 +442,17 @@ namespace GatewayForm
 
         private void Receive_Handler()
         {
-            ZigbeeClient state = new ZigbeeClient();
+            if (client.Client.Connected)
+            {
+                ZigbeeClient state = new ZigbeeClient();
 
-            stream.BeginRead(state.buffer, 0, ZigbeeClient.ZigbeeSize, OnRead, state);
+                stream.BeginRead(state.buffer, 0, ZigbeeClient.ZigbeeSize, OnRead, state);
+            }
+            else
+            {
+                MessageBox.Show("Stream Receive close ");
+                connect_ok = false;
+            }
         }
 
         private void OnRead(IAsyncResult ar)
@@ -506,15 +532,22 @@ namespace GatewayForm
                     }
                     else stream.BeginRead(state.buffer, 0, ZigbeeClient.ZigbeeSize, OnRead, state); // read < 4bytes
                 }
+                else
+                {
+                    MessageBox.Show("Zigbee is down");
+                    Free();
+                }
 
             }
-            catch (IOException e)
+            catch (SocketException se)
             {
-                MessageBox.Show(e.ToString());
+                if (connect_ok)
+                    MessageBox.Show(se.ToString()); 
             }
             catch (ObjectDisposedException)
             {
-                CM.Log_Raise("Abort connection");
+                if (connect_ok)
+                    CM.Log_Raise("Abort connection");
             }
         }
         #endregion
@@ -522,9 +555,21 @@ namespace GatewayForm
         #region Free resource
         public void Free()
         {
-            stream.Close();
-            //client_socket.Close();
-            client.Close();
+            try
+            {
+                connect_ok = false;
+                stream.Close();
+                //client_socket.Close();
+                client.Close();
+            }
+            catch (SocketException se)
+            {
+                MessageBox.Show(se.ToString());
+            }
+            catch (ObjectDisposedException e)
+            {
+                MessageBox.Show(e.ToString());
+            }
         }
         /*/// <summary>
         /// Free TCP resource

@@ -139,12 +139,8 @@ namespace GatewayForm
                 }
                 else
                 {
-                    MessageBox.Show("Error Socket");
+                    MessageBox.Show("Socket Connect Timeout");
                 }
-            }
-            catch (IOException e)
-            {
-                MessageBox.Show(e.ToString());
             }
             catch (SocketException ex)
             {
@@ -170,10 +166,6 @@ namespace GatewayForm
                     // Signal that the connection has been made.
                     connectDone.Set();
                 }
-            }
-            catch (IOException e)
-            {
-                MessageBox.Show(e.ToString());
             }
             catch (SocketException se)
             {
@@ -210,10 +202,6 @@ namespace GatewayForm
                     sendDone.WaitOne();
                 }
             }
-            catch (IOException e)
-            {
-                MessageBox.Show(e.ToString());
-            }
             catch (SocketException e)
             {
                 MessageBox.Show(e.ToString()); //4
@@ -243,10 +231,6 @@ namespace GatewayForm
                     // Signal that all bytes have been sent.
                     sendDone.Set();
                 }
-            }
-            catch (IOException e)
-            {
-                MessageBox.Show(e.ToString());
             }
             catch (SocketException e)
             {
@@ -473,10 +457,12 @@ namespace GatewayForm
             switch (command)
             {
                 case CM.COMMAND.CONNECTION_REQUEST_CMD:
+                    receiveDone.WaitOne(2000);
                     Send_ConnectionRequest();
                     receiveDone.WaitOne(2000);
                     break;
                 case CM.COMMAND.GET_CONFIGURATION_CMD:
+                    receiveDone.WaitOne(2000);
                     //Get Gateway Configuration
                     Get_Command_Send(CM.COMMAND.GET_CONFIGURATION_CMD);
                     receiveDone.WaitOne(2000);
@@ -550,7 +536,6 @@ namespace GatewayForm
                     MessageBox.Show("Fail request connection\n Retry!");
                     retry_count--;
                     Start_Command_Process(CM.COMMAND.CONNECTION_REQUEST_CMD);
-                    //Send_ConnectionRequest();
                 }
                 else
                 {
@@ -629,10 +614,6 @@ namespace GatewayForm
                     if (se.ErrorCode == 10061)
                         CM.Cmd_Raise("Keep Alive Timeout\n");
                 }
-            }
-            catch (IOException e)
-            {
-                MessageBox.Show(e.ToString());
             }
             catch (ObjectDisposedException)
             {

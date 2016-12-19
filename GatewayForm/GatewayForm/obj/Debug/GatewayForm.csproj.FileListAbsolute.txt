@@ -75,4 +75,3 @@ C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\GatewayF
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\GatewayForm.exe
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\GatewayForm.pdb
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Debug\GatewayForm.pdb
-C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\GatewayForm.csprojResolveAssemblyReference.cache

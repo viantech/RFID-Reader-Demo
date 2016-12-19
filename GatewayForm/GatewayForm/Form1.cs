@@ -186,9 +186,21 @@ namespace GatewayForm
                         {
                             Log_lb.Text = "Connecting ...";
                             com_type = new Communication(CM.TYPECONNECT.HDR_ZIGBEE);
-
-                            com_type.Connect(zigbee_form.ip_add, int.Parse(zigbee_form.port));
-                            Connected_Behavior();
+                            if (!String.IsNullOrEmpty(zigbee_form.ip_add))
+                            {
+                                com_type.Connect(zigbee_form.ip_add, int.Parse(zigbee_form.port));
+                                if (com_type != null && com_type.getflagConnected_TCPIP())
+                                    Connected_Behavior();
+                                else
+                                {
+                                    Log_lb.Text = "Idle";
+                                }
+                            }
+                            else
+                            {
+                                MessageBox.Show("Zigbee Setting not configured.");
+                                Log_lb.Text = "Idle";
+                            }
                         }
                         else
                         {
@@ -204,7 +216,7 @@ namespace GatewayForm
                             Log_lb.Text = "Connecting ...";
                             com_type = new Communication(CM.TYPECONNECT.HDR_WIFI);
                             com_type.Connect(wifi_form.address, int.Parse(wifi_form.port));
-                            if (com_type.getflagConnected_TCPIP())
+                            if (com_type != null && com_type.getflagConnected_TCPIP())
                                 Connected_Behavior();
                             else
                             {
@@ -226,7 +238,7 @@ namespace GatewayForm
                             Log_lb.Text = "Connecting ...";
                             com_type = new Communication(CM.TYPECONNECT.HDR_ETHERNET);
                             com_type.Connect(tcp_form.address, int.Parse(tcp_form.port));
-                            if (com_type.getflagConnected_TCPIP())
+                            if (com_type != null && com_type.getflagConnected_TCPIP())
                                 Connected_Behavior();
                             else
                             {
@@ -245,7 +257,10 @@ namespace GatewayForm
                         break;
                 }
             }
-            catch { }
+            catch (Exception ex) 
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
 
         private void Connected_Behavior()
@@ -665,17 +680,26 @@ namespace GatewayForm
 
         private void Start_Operate_btn_Click(object sender, EventArgs e)
         {
-            if (Start_Operate_btn.Text == "Start inventory")
+            if (com_type != null && com_type.getflagConnected_TCPIP())
             {
-                CM.MessageReceived += Read_handler;
-                com_type.Get_Command_Send(CM.COMMAND.START_OPERATION_CMD);
+                if (Start_Operate_btn.Text == "Start inventory")
+                {
+                    CM.MessageReceived += Read_handler;
+                    com_type.Get_Command_Send(CM.COMMAND.START_OPERATION_CMD);
 
+                }
+                else
+                {
+                    CM.MessageReceived -= Read_handler;
+                    com_type.Get_Command_Send(CM.COMMAND.STOP_OPERATION_CMD);
+                }
             }
             else
             {
-                CM.MessageReceived -= Read_handler;
-                com_type.Get_Command_Send(CM.COMMAND.STOP_OPERATION_CMD);
+                MessageBox.Show("Connection was disconnected\nPlease connect again!");
+                Disconnect_Behavior();
             }
+            
         }
 
         private void Stop_Behavior()
@@ -732,7 +756,7 @@ namespace GatewayForm
 
         private void Get_GW_Config_btn_Click(object sender, EventArgs e)
         {
-            if (com_type.getflagConnected_TCPIP())
+            if (com_type != null && com_type.getflagConnected_TCPIP())
             {
                 com_type.Get_Command_Send(CM.COMMAND.GET_CONFIGURATION_CMD);
             }
@@ -745,7 +769,7 @@ namespace GatewayForm
 
         private void Set_GW_Config_btn_Click(object sender, EventArgs e)
         {
-            if (com_type.getflagConnected_TCPIP())
+            if (com_type != null && com_type.getflagConnected_TCPIP())
             {
                 StringBuilder gateway_config = new StringBuilder();
                 gateway_config.Append(GW_Format[0]);
@@ -819,7 +843,7 @@ namespace GatewayForm
 
         private void Get_RFID_btn_Click(object sender, EventArgs e)
         {
-            if (com_type.getflagConnected_TCPIP())
+            if (com_type != null && com_type.getflagConnected_TCPIP())
             {
                 com_type.Get_Command_Send(CM.COMMAND.GET_RFID_CONFIGURATION_CMD);
             }
@@ -855,7 +879,7 @@ namespace GatewayForm
 
         private void get_power_btn_Click(object sender, EventArgs e)
         {
-            if (com_type.getflagConnected_TCPIP())
+            if (com_type != null && com_type.getflagConnected_TCPIP())
             {
                 /*com_type.Get_Command_Power(CM.COMMAND.GET_POWER_CMD, 0);
                 com_type.waitflagRevTCP();
@@ -872,7 +896,7 @@ namespace GatewayForm
 
         private void set_power_btn_Click(object sender, EventArgs e)
         {
-            if (com_type.getflagConnected_TCPIP())
+            if (com_type != null && com_type.getflagConnected_TCPIP())
             {
                 /*byte[] power_bytes = new byte[2];
                 power_bytes[0] = 0;
@@ -894,7 +918,7 @@ namespace GatewayForm
 
         private void get_region_btn_Click(object sender, EventArgs e)
         {
-            if (com_type.getflagConnected_TCPIP())
+            if (com_type != null && com_type.getflagConnected_TCPIP())
             {
                 com_type.Get_Command_Send(CM.COMMAND.GET_REGION_CMD);
             }
@@ -907,7 +931,7 @@ namespace GatewayForm
 
         private void set_region_btn_Click(object sender, EventArgs e)
         {
-            if (com_type.getflagConnected_TCPIP())
+            if (com_type != null && com_type.getflagConnected_TCPIP())
             {
                 byte[] region_byte = new byte[1];
                 region_byte[0] = (byte)region_lst.SelectedIndex;
@@ -937,7 +961,7 @@ namespace GatewayForm
 
         private void get_power_mode_btn_Click(object sender, EventArgs e)
         {
-            if (com_type.getflagConnected_TCPIP())
+            if (com_type != null && com_type.getflagConnected_TCPIP())
             {
                 //com_type.Get_Command_Send(CM.COMMAND.GET_POWER_MODE_CMD);
                 startcmdprocess(CM.COMMAND.GET_POWER_MODE_CMD);
@@ -951,7 +975,7 @@ namespace GatewayForm
 
         private void set_power_mode_btn_Click(object sender, EventArgs e)
         {
-            if (com_type.getflagConnected_TCPIP())
+            if (com_type != null && com_type.getflagConnected_TCPIP())
             {
                 byte[] pw_mode_byte = new byte[1];
                 pw_mode_byte[0] = (byte)power_mode_cbx.SelectedIndex;
@@ -982,7 +1006,7 @@ namespace GatewayForm
 
         private void set_newconn_btn_Click(object sender, EventArgs e)
         {
-            if (com_type.getflagConnected_TCPIP())
+            if (com_type != null && com_type.getflagConnected_TCPIP())
             {
                 byte[] conn_type_byte = new byte[1];
                 conn_type_byte[0] = (byte)Change_conntype_cbx.SelectedIndex;
@@ -1098,7 +1122,7 @@ namespace GatewayForm
 
         private void get_protocol_btn_Click(object sender, EventArgs e)
         {
-            if (com_type.getflagConnected_TCPIP())
+            if (com_type != null && com_type.getflagConnected_TCPIP())
             {
                 /*com_type.Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 0);
                 com_type.waitflagRevTCP();
@@ -1117,7 +1141,7 @@ namespace GatewayForm
 
         private void set_protocol_btn_Click(object sender, EventArgs e)
         {
-            if (com_type.getflagConnected_TCPIP())
+            if (com_type != null && com_type.getflagConnected_TCPIP())
             {
                 /*byte[] freq_bytes = new byte[2];
                 freq_bytes[0] = 0;
@@ -1258,6 +1282,36 @@ namespace GatewayForm
                     break;
             }
         }
+
+        private void update_fw_btn_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog firware_file = new OpenFileDialog();
+            firware_file.Filter = "Bin file (*.*)|*.*";
+            firware_file.FilterIndex = 1;
+            firware_file.Multiselect = false;
+            firware_file.RestoreDirectory = true;
+            //DCM_file.InitialDirectory = DCM_file_tx.Text;
+            if (firware_file.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                DialogResult result = MessageBox.Show("File Selected:\n" + firware_file.FileName + "\nAre you sure to upload this firmware?\nPlease click \"Yes\" for confirmation",
+                                                              "Confirmation", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
+                {
+                    FileInfo fileinfo = new FileInfo(firware_file.FileName);
+                    byte[] bytesFile = System.IO.File.ReadAllBytes(firware_file.FileName);
+                    string info_file = "[" + fileinfo.Name + "]" + "[" + fileinfo.Length.ToString() + "]";
+                    Log_Handler("Sending ...");
+                    progressBar1.Value = 0;
+                    com_type.Update_File(bytesFile, info_file);
+                }
+                else
+                {
+                    //no...
+                }
+
+            }
+        }
+        #region Get Plan
         private string New_NamePlan()
         {
             if (list_plan_name.Count == 0)
@@ -1287,11 +1341,8 @@ namespace GatewayForm
             node.Tag = nodeplan;
             treeView1.Nodes.Add(node);
             all_plans.plan_list.Add(nodeplan);
-            //treeView1.Focus();
-            //string json = "SimpleReadPlan:[Antennas=[1],Protocol=GEN2,Filter=TagData:[EPC=DDDDDDDD],Op=ReadData:[Bank=EPC,WordAddress=20,Len=0],UseFastSearch=true,Weight=10]";
-                                         //"SimpleReadPlan:[Antennas=[3],Protocol=GEN2,Filter=TagData:[EPC=DDDDDDDD],Op=null,UseFastSearch=true,Weight=2]]";
-            //all_plans = LoadReadPlans(json);
         }
+
         private Plan_Node.Plan_Root LoadReadPlans(string plan_str)
         {
             Plan_Node.Plan_Root root = new Plan_Node.Plan_Root();
@@ -1327,7 +1378,6 @@ namespace GatewayForm
             return root;
         }
         
-        //private delegate void TreeViewDelegate(TreeView tree, Plan_Node.Plan_Root plans);
         private void PopulateTreeView(Plan_Node.Plan_Root root_node)
         {
             this.Invoke((MethodInvoker)delegate
@@ -1344,14 +1394,6 @@ namespace GatewayForm
                 }
             });
         }
-        private void treeView1_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
-        {
-            if (e.Label != null)
-            {
-                list_plan_name[treeView1.SelectedNode.Index - 1] = e.Label;
-                all_plans.plan_list[treeView1.SelectedNode.Index - 1].name = e.Label;
-            }
-        }
 
         private void Remove_plan_btn_Click(object sender, EventArgs e)
         {
@@ -1367,35 +1409,6 @@ namespace GatewayForm
             else
             {
                 MessageBox.Show("At least must exist one simple plan");
-            }
-        }
-
-        private void update_fw_btn_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog firware_file = new OpenFileDialog();
-            firware_file.Filter = "Bin file (*.*)|*.*";
-            firware_file.FilterIndex = 1;
-            firware_file.Multiselect = false;
-            firware_file.RestoreDirectory = true;
-            //DCM_file.InitialDirectory = DCM_file_tx.Text;
-            if (firware_file.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                DialogResult result = MessageBox.Show("File Selected:\n" + firware_file.FileName + "\nAre you sure to upload this firmware?\nPlease click \"Yes\" for confirmation",
-                                                              "Confirmation", MessageBoxButtons.YesNo);
-                if (result == DialogResult.Yes)
-                {
-                    FileInfo fileinfo = new FileInfo(firware_file.FileName);
-                    byte[] bytesFile = System.IO.File.ReadAllBytes(firware_file.FileName);
-                    string info_file = "[" + fileinfo.Name + "]" + "[" + fileinfo.Length.ToString() + "]";
-                    Log_Handler("Sending ...");
-                    progressBar1.Value = 0;
-                    com_type.Update_File(bytesFile, info_file);
-                }
-                else
-                {
-                    //no...
-                }
-                
             }
         }
 
@@ -1448,6 +1461,31 @@ namespace GatewayForm
             weight_tx.Text = plan.weight;
         }
 
+        private void get_plan_btn_Click(object sender, EventArgs e)
+        {
+            if (com_type != null && com_type.getflagConnected_TCPIP())
+            {
+                com_type.Get_Command_Send(CM.COMMAND.GET_PLAN_CMD);
+            }
+            else
+            {
+                MessageBox.Show("Connection was disconnected\nPlease connect again!");
+                Disconnect_Behavior();
+            }
+        }
+        #endregion
+
+        #region Set Plan
+
+        private void treeView1_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
+        {
+            if (e.Label != null)
+            {
+                list_plan_name[treeView1.SelectedNode.Index - 1] = e.Label;
+                all_plans.plan_list[treeView1.SelectedNode.Index - 1].name = e.Label;
+            }
+        }
+
         private void EPC_rbtn_CheckedChanged(object sender, EventArgs e)
         {
             if (EPC_rbtn.Checked == true)
@@ -1494,7 +1532,8 @@ namespace GatewayForm
         {
             if (EPC_rbtn.Checked)
             {
-                all_plans.plan_list[treeView1.SelectedNode.Index - 1].EPC = EPC_filter_tx.Text;
+                if (all_plans.plan_list.Count > 0)
+                    all_plans.plan_list[treeView1.SelectedNode.Index - 1].EPC = EPC_filter_tx.Text;
             }
         }
        
@@ -1502,7 +1541,8 @@ namespace GatewayForm
         {
             if (Mem_rbtn.Checked)
             {
-                all_plans.plan_list[treeView1.SelectedNode.Index - 1].EPC = Memory_filter_tx.Text;
+                if (all_plans.plan_list.Count > 0)
+                    all_plans.plan_list[treeView1.SelectedNode.Index - 1].EPC = Memory_filter_tx.Text;
             }
         }
 
@@ -1510,41 +1550,43 @@ namespace GatewayForm
         {
             if (tid_rbtn.Checked)
             {
-                all_plans.plan_list[treeView1.SelectedNode.Index - 1].EPC = TID_filter_tx.Text;
+                if (all_plans.plan_list.Count > 0)
+                    all_plans.plan_list[treeView1.SelectedNode.Index - 1].EPC = TID_filter_tx.Text;
             }
         }
 
         private void weight_tx_Leave(object sender, EventArgs e)
         {
-            all_plans.plan_list[treeView1.SelectedNode.Index - 1].weight = weight_tx.Text;
-        }
-
-        private void get_plan_btn_Click(object sender, EventArgs e)
-        {
-            if (com_type.getflagConnected_TCPIP())
+            if (!String.IsNullOrEmpty(weight_tx.Text))
             {
-                com_type.Get_Command_Send(CM.COMMAND.GET_PLAN_CMD);
+                if (all_plans.plan_list.Count > 0)
+                    all_plans.plan_list[treeView1.SelectedNode.Index - 1].weight = weight_tx.Text;
             }
             else
-            {
-                MessageBox.Show("Connection was disconnected\nPlease connect again!");
-                Disconnect_Behavior();
-            }
+                MessageBox.Show("The weight field can not blank");
         }
 
-        private void set_plan_btn_Click(object sender, EventArgs e)
+        private string Antena_ToString()
         {
-            if (com_type.getflagConnected_TCPIP())
-            {
-                com_type.Set_Command_Send(CM.COMMAND.SET_PLAN_CMD, Plans_ToString(all_plans));
-            }
-            else
-            {
-                MessageBox.Show("Connection was disconnected\nPlease connect again!");
-                Disconnect_Behavior();
-            }
+            string anten_str = String.Empty;
+            if (Ant1_plan_ckb.Checked)
+                anten_str += "1,";
+            if (Ant2_plan_ckb.Checked)
+                anten_str += "2,";
+            if (Ant3_plan_ckb.Checked)
+                anten_str += "3,";
+            if (Ant4_plan_ckb.Checked)
+                anten_str += "4,";
+            return anten_str.Remove(anten_str.Length - 1);
         }
-        private string Plans_ToString (Plan_Node.Plan_Root plans)
+
+        private void flowLayoutPanel3_Leave(object sender, EventArgs e)
+        {
+            if (all_plans.plan_list.Count > 0)
+                all_plans.plan_list[treeView1.SelectedNode.Index - 1].antena = Antena_ToString();
+        }
+
+        private string Plans_ToString(Plan_Node.Plan_Root plans)
         {
             StringBuilder plan_string = new StringBuilder();
             if (all_plans.plan_list.Count == 1)
@@ -1572,5 +1614,19 @@ namespace GatewayForm
             }
             return plan_string.ToString();
         }
+
+        private void set_plan_btn_Click(object sender, EventArgs e)
+        {
+            if (com_type != null && com_type.getflagConnected_TCPIP())
+            {
+                com_type.Set_Command_Send(CM.COMMAND.SET_PLAN_CMD, Plans_ToString(all_plans));
+            }
+            else
+            {
+                MessageBox.Show("Connection was disconnected\nPlease connect again!");
+                Disconnect_Behavior();
+            }
+        }
+        #endregion
     }
 }

@@ -102,6 +102,8 @@
             this.groupBox14 = new System.Windows.Forms.GroupBox();
             this.protocol_plan_tx = new System.Windows.Forms.TextBox();
             this.weight_tx = new System.Windows.Forms.TextBox();
+            this.set_plan_btn = new System.Windows.Forms.Button();
+            this.get_plan_btn = new System.Windows.Forms.Button();
             this.groupBox16 = new System.Windows.Forms.GroupBox();
             this.tid_rbtn = new System.Windows.Forms.RadioButton();
             this.Mem_rbtn = new System.Windows.Forms.RadioButton();
@@ -199,8 +201,6 @@
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tabPage6 = new System.Windows.Forms.TabPage();
             this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
-            this.get_plan_btn = new System.Windows.Forms.Button();
-            this.set_plan_btn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -1052,6 +1052,30 @@
             this.weight_tx.TabIndex = 1;
             this.weight_tx.Leave += new System.EventHandler(this.weight_tx_Leave);
             // 
+            // set_plan_btn
+            // 
+            this.set_plan_btn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.set_plan_btn.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.set_plan_btn.Location = new System.Drawing.Point(372, 402);
+            this.set_plan_btn.Name = "set_plan_btn";
+            this.set_plan_btn.Size = new System.Drawing.Size(59, 24);
+            this.set_plan_btn.TabIndex = 11;
+            this.set_plan_btn.Text = "Set";
+            this.set_plan_btn.UseVisualStyleBackColor = true;
+            this.set_plan_btn.Click += new System.EventHandler(this.set_plan_btn_Click);
+            // 
+            // get_plan_btn
+            // 
+            this.get_plan_btn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.get_plan_btn.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.get_plan_btn.Location = new System.Drawing.Point(277, 402);
+            this.get_plan_btn.Name = "get_plan_btn";
+            this.get_plan_btn.Size = new System.Drawing.Size(59, 24);
+            this.get_plan_btn.TabIndex = 11;
+            this.get_plan_btn.Text = "Get";
+            this.get_plan_btn.UseVisualStyleBackColor = true;
+            this.get_plan_btn.Click += new System.EventHandler(this.get_plan_btn_Click);
+            // 
             // groupBox16
             // 
             this.groupBox16.Controls.Add(this.tid_rbtn);
@@ -1171,6 +1195,7 @@
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
             this.flowLayoutPanel3.Size = new System.Drawing.Size(285, 45);
             this.flowLayoutPanel3.TabIndex = 0;
+            this.flowLayoutPanel3.Leave += new System.EventHandler(this.flowLayoutPanel3_Leave);
             // 
             // Ant1_plan_ckb
             // 
@@ -2172,30 +2197,6 @@
             this.elementHost1.TabIndex = 0;
             this.elementHost1.Text = "elementHost1";
             this.elementHost1.Child = null;
-            // 
-            // get_plan_btn
-            // 
-            this.get_plan_btn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.get_plan_btn.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.get_plan_btn.Location = new System.Drawing.Point(277, 402);
-            this.get_plan_btn.Name = "get_plan_btn";
-            this.get_plan_btn.Size = new System.Drawing.Size(59, 24);
-            this.get_plan_btn.TabIndex = 11;
-            this.get_plan_btn.Text = "Get";
-            this.get_plan_btn.UseVisualStyleBackColor = true;
-            this.get_plan_btn.Click += new System.EventHandler(this.get_plan_btn_Click);
-            // 
-            // set_plan_btn
-            // 
-            this.set_plan_btn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.set_plan_btn.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.set_plan_btn.Location = new System.Drawing.Point(372, 402);
-            this.set_plan_btn.Name = "set_plan_btn";
-            this.set_plan_btn.Size = new System.Drawing.Size(59, 24);
-            this.set_plan_btn.TabIndex = 11;
-            this.set_plan_btn.Text = "Set";
-            this.set_plan_btn.UseVisualStyleBackColor = true;
-            this.set_plan_btn.Click += new System.EventHandler(this.set_plan_btn_Click);
             // 
             // Form1
             // 

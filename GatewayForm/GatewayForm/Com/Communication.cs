@@ -44,11 +44,16 @@ namespace GatewayForm
         }
         public Boolean getflagConnected_TCPIP()
         {
-            return tcp.connect_ok;
+            if (tcp != null)
+                return tcp.connect_ok;
+            else if (zigbee != null)
+                return zigbee.connect_ok;
+            else return false;
         }
         public void setflagConnected_TCPIP(Boolean v)
         {
-            tcp.connect_ok = v;
+            if (tcp != null)
+                tcp.connect_ok = v;
         }
         public Boolean waitflagRevTCP()
         {
@@ -96,14 +101,17 @@ namespace GatewayForm
             {
                 case CM.TYPECONNECT.HDR_ZIGBEE:
                     zigbee.Free();
+                    zigbee = null;
                     break;
                 case CM.TYPECONNECT.HDR_WIFI:
                     tcp.Free();
+                    tcp = null;
                     break;
                 case CM.TYPECONNECT.HDR_BLUETOOTH:
                     break;
                 case CM.TYPECONNECT.HDR_ETHERNET:
                     tcp.Free();
+                    tcp = null;
                     /*pp.close();
                     pTcpipClient.MessageReceived -= passed_event; //chu y
                     pTcpipClient.ConfigMessage -= passed_config;
