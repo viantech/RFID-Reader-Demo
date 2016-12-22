@@ -57,7 +57,12 @@ namespace GatewayForm
         }
         public Boolean waitflagRevTCP()
         {
-            return tcp.receiveDone.WaitOne(2000);
+            if (tcp != null)
+                return tcp.receiveDone.WaitOne(2000);
+            else if (zigbee != null)
+                return zigbee.receiveDone.WaitOne(2000);
+            else
+                return false;
         }
        
         public void Connect(string ip_addr, int port)
@@ -95,6 +100,7 @@ namespace GatewayForm
                     break;
             }
         }
+        
         public void Close()
         {
             switch (type)

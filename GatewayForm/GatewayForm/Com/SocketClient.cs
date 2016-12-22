@@ -74,7 +74,7 @@ namespace GatewayForm
                     Send_ConnectionRequest();
                 }
                 else
-                    MessageBox.Show("Socket Connect Timeout");
+                    MessageBox.Show("Socket Connect Timeout", "Error Socket", MessageBoxButtons.OK);
             }
             catch (Exception e)
             {

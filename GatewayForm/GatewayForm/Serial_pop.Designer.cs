@@ -184,13 +184,15 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(280, 362);
             this.Controls.Add(this.close_btn);
             this.Controls.Add(this.update_btn);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
+            this.MaximizeBox = false;
             this.Name = "Serial_pop";
-            this.Text = "Serial_pop";
+            this.Text = "Serial Port";
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             this.groupBox3.ResumeLayout(false);

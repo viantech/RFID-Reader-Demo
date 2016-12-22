@@ -65,6 +65,17 @@
             this.Ant3_ckb = new System.Windows.Forms.CheckBox();
             this.Ant4_ckb = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.groupBox17 = new System.Windows.Forms.GroupBox();
+            this.Set_sensor_btn = new System.Windows.Forms.Button();
+            this.read_sensor_ckb = new System.Windows.Forms.ComboBox();
+            this.reader_type_lb = new System.Windows.Forms.Label();
+            this.label41 = new System.Windows.Forms.Label();
+            this.label39 = new System.Windows.Forms.Label();
+            this.label38 = new System.Windows.Forms.Label();
+            this.label37 = new System.Windows.Forms.Label();
+            this.Sensor_EN_ckb = new System.Windows.Forms.CheckBox();
+            this.time_off_tx = new System.Windows.Forms.TextBox();
+            this.time_on_tx = new System.Windows.Forms.TextBox();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.label7 = new System.Windows.Forms.Label();
             this.Change_conntype_cbx = new System.Windows.Forms.ComboBox();
@@ -212,6 +223,7 @@
             this.groupBox1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.groupBox17.SuspendLayout();
             this.groupBox10.SuspendLayout();
             this.groupBox6.SuspendLayout();
             this.groupBox5.SuspendLayout();
@@ -246,6 +258,8 @@
             // 
             this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.AllowUserToDeleteRows = false;
+            this.dataGridView1.AllowUserToResizeColumns = false;
+            this.dataGridView1.AllowUserToResizeRows = false;
             this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -354,6 +368,7 @@
             // 
             // Start_Operate_btn
             // 
+            this.Start_Operate_btn.Enabled = false;
             this.Start_Operate_btn.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.Start_Operate_btn.Font = new System.Drawing.Font("Arial", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Start_Operate_btn.Location = new System.Drawing.Point(3, 3);
@@ -391,6 +406,7 @@
             // 
             // GPO0_ckb
             // 
+            this.GPO0_ckb.AutoCheck = false;
             this.GPO0_ckb.AutoSize = true;
             this.GPO0_ckb.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.GPO0_ckb.Location = new System.Drawing.Point(3, 3);
@@ -402,6 +418,7 @@
             // 
             // GPO1_ckb
             // 
+            this.GPO1_ckb.AutoCheck = false;
             this.GPO1_ckb.AutoSize = true;
             this.GPO1_ckb.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.GPO1_ckb.Location = new System.Drawing.Point(66, 3);
@@ -413,6 +430,7 @@
             // 
             // GPO2_ckb
             // 
+            this.GPO2_ckb.AutoCheck = false;
             this.GPO2_ckb.AutoSize = true;
             this.GPO2_ckb.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.GPO2_ckb.Location = new System.Drawing.Point(129, 3);
@@ -424,6 +442,7 @@
             // 
             // GPO3_ckb
             // 
+            this.GPO3_ckb.AutoCheck = false;
             this.GPO3_ckb.AutoSize = true;
             this.GPO3_ckb.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.GPO3_ckb.Location = new System.Drawing.Point(3, 27);
@@ -435,6 +454,7 @@
             // 
             // GPO4_ckb
             // 
+            this.GPO4_ckb.AutoCheck = false;
             this.GPO4_ckb.AutoSize = true;
             this.GPO4_ckb.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.GPO4_ckb.Location = new System.Drawing.Point(66, 27);
@@ -469,6 +489,7 @@
             this.label1.Size = new System.Drawing.Size(86, 15);
             this.label1.TabIndex = 6;
             this.label1.Text = "Time duration:";
+            this.label1.Visible = false;
             // 
             // label3
             // 
@@ -499,6 +520,7 @@
             this.time_duration_lb.Size = new System.Drawing.Size(40, 16);
             this.time_duration_lb.TabIndex = 6;
             this.time_duration_lb.Text = "00:00";
+            this.time_duration_lb.Visible = false;
             // 
             // label2
             // 
@@ -585,6 +607,7 @@
             // tabPage2
             // 
             this.tabPage2.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage2.Controls.Add(this.groupBox17);
             this.tabPage2.Controls.Add(this.groupBox10);
             this.tabPage2.Controls.Add(this.StackLight_ckb);
             this.tabPage2.Controls.Add(this.update_fw_btn);
@@ -612,7 +635,133 @@
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(956, 490);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Gateway configuration";
+            this.tabPage2.Text = "Reader configuration";
+            // 
+            // groupBox17
+            // 
+            this.groupBox17.Controls.Add(this.Set_sensor_btn);
+            this.groupBox17.Controls.Add(this.read_sensor_ckb);
+            this.groupBox17.Controls.Add(this.reader_type_lb);
+            this.groupBox17.Controls.Add(this.label41);
+            this.groupBox17.Controls.Add(this.label39);
+            this.groupBox17.Controls.Add(this.label38);
+            this.groupBox17.Controls.Add(this.label37);
+            this.groupBox17.Controls.Add(this.Sensor_EN_ckb);
+            this.groupBox17.Controls.Add(this.time_on_tx);
+            this.groupBox17.Controls.Add(this.time_off_tx);
+            this.groupBox17.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox17.Location = new System.Drawing.Point(540, 162);
+            this.groupBox17.Name = "groupBox17";
+            this.groupBox17.Size = new System.Drawing.Size(329, 157);
+            this.groupBox17.TabIndex = 31;
+            this.groupBox17.TabStop = false;
+            // 
+            // Set_sensor_btn
+            // 
+            this.Set_sensor_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Set_sensor_btn.Location = new System.Drawing.Point(244, 75);
+            this.Set_sensor_btn.Name = "Set_sensor_btn";
+            this.Set_sensor_btn.Size = new System.Drawing.Size(75, 32);
+            this.Set_sensor_btn.TabIndex = 17;
+            this.Set_sensor_btn.Text = "Apply";
+            this.Set_sensor_btn.UseVisualStyleBackColor = true;
+            this.Set_sensor_btn.Click += new System.EventHandler(this.Set_sensor_btn_Click);
+            // 
+            // read_sensor_ckb
+            // 
+            this.read_sensor_ckb.Enabled = false;
+            this.read_sensor_ckb.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.read_sensor_ckb.FormattingEnabled = true;
+            this.read_sensor_ckb.Items.AddRange(new object[] {
+            "True",
+            "False"});
+            this.read_sensor_ckb.Location = new System.Drawing.Point(159, 115);
+            this.read_sensor_ckb.Name = "read_sensor_ckb";
+            this.read_sensor_ckb.Size = new System.Drawing.Size(61, 24);
+            this.read_sensor_ckb.TabIndex = 16;
+            this.read_sensor_ckb.Text = "True";
+            // 
+            // reader_type_lb
+            // 
+            this.reader_type_lb.AutoSize = true;
+            this.reader_type_lb.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.reader_type_lb.Location = new System.Drawing.Point(156, 27);
+            this.reader_type_lb.Name = "reader_type_lb";
+            this.reader_type_lb.Size = new System.Drawing.Size(131, 17);
+            this.reader_type_lb.TabIndex = 1;
+            this.reader_type_lb.Text = "Gateway/Conveyor";
+            // 
+            // label41
+            // 
+            this.label41.AutoSize = true;
+            this.label41.Location = new System.Drawing.Point(30, 27);
+            this.label41.Name = "label41";
+            this.label41.Size = new System.Drawing.Size(84, 16);
+            this.label41.TabIndex = 1;
+            this.label41.Text = "Reader Type:";
+            // 
+            // label39
+            // 
+            this.label39.AutoSize = true;
+            this.label39.Location = new System.Drawing.Point(31, 121);
+            this.label39.Name = "label39";
+            this.label39.Size = new System.Drawing.Size(104, 16);
+            this.label39.TabIndex = 1;
+            this.label39.Text = "Read Continous:";
+            // 
+            // label38
+            // 
+            this.label38.AutoSize = true;
+            this.label38.Location = new System.Drawing.Point(30, 91);
+            this.label38.Name = "label38";
+            this.label38.Size = new System.Drawing.Size(60, 16);
+            this.label38.TabIndex = 1;
+            this.label38.Text = "Time Off:";
+            // 
+            // label37
+            // 
+            this.label37.AutoSize = true;
+            this.label37.Location = new System.Drawing.Point(31, 61);
+            this.label37.Name = "label37";
+            this.label37.Size = new System.Drawing.Size(61, 16);
+            this.label37.TabIndex = 1;
+            this.label37.Text = "Time On:";
+            // 
+            // Sensor_EN_ckb
+            // 
+            this.Sensor_EN_ckb.AutoSize = true;
+            this.Sensor_EN_ckb.Checked = true;
+            this.Sensor_EN_ckb.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.Sensor_EN_ckb.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Sensor_EN_ckb.Location = new System.Drawing.Point(8, -3);
+            this.Sensor_EN_ckb.Name = "Sensor_EN_ckb";
+            this.Sensor_EN_ckb.Size = new System.Drawing.Size(127, 20);
+            this.Sensor_EN_ckb.TabIndex = 0;
+            this.Sensor_EN_ckb.Text = "[Enable Sensor]";
+            this.Sensor_EN_ckb.UseVisualStyleBackColor = true;
+            this.Sensor_EN_ckb.CheckedChanged += new System.EventHandler(this.Sensor_EN_ckb_CheckedChanged);
+            // 
+            // time_off_tx
+            // 
+            this.time_off_tx.BackColor = System.Drawing.SystemColors.HighlightText;
+            this.time_off_tx.Enabled = false;
+            this.time_off_tx.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.time_off_tx.Location = new System.Drawing.Point(159, 86);
+            this.time_off_tx.Name = "time_off_tx";
+            this.time_off_tx.Size = new System.Drawing.Size(61, 22);
+            this.time_off_tx.TabIndex = 15;
+            this.time_off_tx.Text = "0";
+            // 
+            // time_on_tx
+            // 
+            this.time_on_tx.BackColor = System.Drawing.SystemColors.HighlightText;
+            this.time_on_tx.Enabled = false;
+            this.time_on_tx.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.time_on_tx.Location = new System.Drawing.Point(159, 58);
+            this.time_on_tx.Name = "time_on_tx";
+            this.time_on_tx.Size = new System.Drawing.Size(61, 22);
+            this.time_on_tx.TabIndex = 15;
+            this.time_on_tx.Text = "0";
             // 
             // groupBox10
             // 
@@ -672,9 +821,9 @@
             // set_newconn_btn
             // 
             this.set_newconn_btn.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.set_newconn_btn.Location = new System.Drawing.Point(370, 24);
+            this.set_newconn_btn.Location = new System.Drawing.Point(370, 22);
             this.set_newconn_btn.Name = "set_newconn_btn";
-            this.set_newconn_btn.Size = new System.Drawing.Size(75, 23);
+            this.set_newconn_btn.Size = new System.Drawing.Size(75, 25);
             this.set_newconn_btn.TabIndex = 28;
             this.set_newconn_btn.Text = "Change";
             this.set_newconn_btn.UseVisualStyleBackColor = true;
@@ -801,6 +950,7 @@
             this.groupBox6.Size = new System.Drawing.Size(368, 67);
             this.groupBox6.TabIndex = 10;
             this.groupBox6.TabStop = false;
+            this.groupBox6.Visible = false;
             // 
             // PalletSupport_cbx
             // 
@@ -848,7 +998,7 @@
             this.groupBox5.Controls.Add(this.AudioVolume_trb);
             this.groupBox5.Controls.Add(this.label16);
             this.groupBox5.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox5.Location = new System.Drawing.Point(540, 181);
+            this.groupBox5.Location = new System.Drawing.Point(540, 338);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(329, 83);
             this.groupBox5.TabIndex = 8;
@@ -1039,6 +1189,7 @@
             // 
             this.protocol_plan_tx.Location = new System.Drawing.Point(322, 110);
             this.protocol_plan_tx.Name = "protocol_plan_tx";
+            this.protocol_plan_tx.ReadOnly = true;
             this.protocol_plan_tx.Size = new System.Drawing.Size(100, 22);
             this.protocol_plan_tx.TabIndex = 7;
             this.protocol_plan_tx.Text = "GEN2";
@@ -1056,11 +1207,11 @@
             // 
             this.set_plan_btn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.set_plan_btn.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.set_plan_btn.Location = new System.Drawing.Point(372, 402);
+            this.set_plan_btn.Location = new System.Drawing.Point(423, 402);
             this.set_plan_btn.Name = "set_plan_btn";
-            this.set_plan_btn.Size = new System.Drawing.Size(59, 24);
+            this.set_plan_btn.Size = new System.Drawing.Size(62, 24);
             this.set_plan_btn.TabIndex = 11;
-            this.set_plan_btn.Text = "Set";
+            this.set_plan_btn.Text = "Set Plan";
             this.set_plan_btn.UseVisualStyleBackColor = true;
             this.set_plan_btn.Click += new System.EventHandler(this.set_plan_btn_Click);
             // 
@@ -1068,11 +1219,11 @@
             // 
             this.get_plan_btn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.get_plan_btn.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.get_plan_btn.Location = new System.Drawing.Point(277, 402);
+            this.get_plan_btn.Location = new System.Drawing.Point(337, 402);
             this.get_plan_btn.Name = "get_plan_btn";
-            this.get_plan_btn.Size = new System.Drawing.Size(59, 24);
+            this.get_plan_btn.Size = new System.Drawing.Size(62, 24);
             this.get_plan_btn.TabIndex = 11;
-            this.get_plan_btn.Text = "Get";
+            this.get_plan_btn.Text = "Get Plan";
             this.get_plan_btn.UseVisualStyleBackColor = true;
             this.get_plan_btn.Click += new System.EventHandler(this.get_plan_btn_Click);
             // 
@@ -1980,7 +2131,7 @@
             this.ViewConn_btn.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ViewConn_btn.Location = new System.Drawing.Point(228, 21);
             this.ViewConn_btn.Name = "ViewConn_btn";
-            this.ViewConn_btn.Size = new System.Drawing.Size(101, 23);
+            this.ViewConn_btn.Size = new System.Drawing.Size(101, 26);
             this.ViewConn_btn.TabIndex = 3;
             this.ViewConn_btn.Text = "Setting";
             this.ViewConn_btn.UseVisualStyleBackColor = true;
@@ -2223,6 +2374,8 @@
             this.flowLayoutPanel1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            this.groupBox17.ResumeLayout(false);
+            this.groupBox17.PerformLayout();
             this.groupBox10.ResumeLayout(false);
             this.groupBox10.PerformLayout();
             this.groupBox6.ResumeLayout(false);
@@ -2436,6 +2589,17 @@
         private System.Windows.Forms.RadioButton EPC_rbtn;
         private System.Windows.Forms.Button set_plan_btn;
         private System.Windows.Forms.Button get_plan_btn;
+        private System.Windows.Forms.GroupBox groupBox17;
+        private System.Windows.Forms.ComboBox read_sensor_ckb;
+        private System.Windows.Forms.Label label39;
+        private System.Windows.Forms.Label label38;
+        private System.Windows.Forms.Label label37;
+        private System.Windows.Forms.CheckBox Sensor_EN_ckb;
+        private System.Windows.Forms.TextBox time_off_tx;
+        private System.Windows.Forms.TextBox time_on_tx;
+        private System.Windows.Forms.Label label41;
+        private System.Windows.Forms.Label reader_type_lb;
+        private System.Windows.Forms.Button Set_sensor_btn;
     }
 }
 

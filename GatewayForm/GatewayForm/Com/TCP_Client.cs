@@ -26,7 +26,6 @@ namespace GatewayForm
         // Receive buffer.
         public byte[] buffer = new byte[BufferSize];
         //public byte[] result_data_byte = new byte[0];
-        public byte[] result_data_byte = new byte[0];
     }
 
     //public delegate void SocketReceivedHandler(string msg);
@@ -44,6 +43,7 @@ namespace GatewayForm
         //private System.Timers.Timer pingTimer = new System.Timers.Timer() { Interval = 10000 };
         //private AutoResetEvent waiter = new AutoResetEvent(false);
         private bool File_Mode = false;
+        //private bool Muti_packets = false;
         // Event Handler
         //public bool recv_flag = false;
         //public bool alive = true;
@@ -53,7 +53,7 @@ namespace GatewayForm
         private AutoResetEvent sendDone = new AutoResetEvent(false);
         public AutoResetEvent receiveDone = new AutoResetEvent(false);
         // The response from the remote device.
-
+        private List<byte> result_command_bytes = new List<byte>();
         public TCP_Client()
         {
             // TODO: Complete member initialization
@@ -139,7 +139,7 @@ namespace GatewayForm
                 }
                 else
                 {
-                    MessageBox.Show("Socket Connect Timeout");
+                    MessageBox.Show("Socket Connect Timeout", "Error Socket",MessageBoxButtons.OK);
                 }
             }
             catch (SocketException ex)
@@ -446,7 +446,7 @@ namespace GatewayForm
                 SendFrame(byte_tcp);
             }
         }
-
+        
         public async void Start_Command_Process(CM.COMMAND cmd)
         {
             int task = await Task.Run(() => Command_Process(cmd));
@@ -457,12 +457,12 @@ namespace GatewayForm
             switch (command)
             {
                 case CM.COMMAND.CONNECTION_REQUEST_CMD:
-                    receiveDone.WaitOne(2000);
+                    //receiveDone.Reset();
                     Send_ConnectionRequest();
                     receiveDone.WaitOne(2000);
                     break;
                 case CM.COMMAND.GET_CONFIGURATION_CMD:
-                    receiveDone.WaitOne(2000);
+                    //receiveDone.Reset();
                     //Get Gateway Configuration
                     Get_Command_Send(CM.COMMAND.GET_CONFIGURATION_CMD);
                     receiveDone.WaitOne(2000);
@@ -546,7 +546,7 @@ namespace GatewayForm
                 }
             }
         }
-
+        
         /// <summary>
         /// Start when have incomming tcp
         /// </summary>
@@ -556,53 +556,71 @@ namespace GatewayForm
             try
             {
                 StateTCPClient state = (StateTCPClient)ar.AsyncState;
-                //Socket client = state.workSocket;
 
                 // Read data from the remote device.
                 int bytesRead = tcp_client.EndReceive(ar);
-                if (bytesRead != 0)
+                if (bytesRead > 0)
                 {
-                    byte[] meta_sub = CM.Decode_SubFrame(state.buffer, bytesRead);
-                    if (meta_sub != null)
+                    if (StateTCPClient.BufferSize == bytesRead)
                     {
-                        if (File_Mode)
-                        {
-                            byte ack_file = CM.Decode_Frame_ACK((byte)CM.COMMAND.FIRMWARE_UPDATE_CMD, meta_sub);
-                            if (0x00 == ack_file)
-                                receiveDone.Set();
-                            else
-                                CM.Log_Raise("Failed Part sent.");
-                            Receive_Command_Handler();
-                        }
+                        tcp_client.BeginReceive(state.buffer, 0, StateTCPClient.BufferSize, 0,
+                                      new AsyncCallback(Receive_Command_Callback), state);
+                        byte[] part_meta_sub = CM.Decode_SubFrame(state.buffer, StateTCPClient.BufferSize);
+                        if (part_meta_sub != null)
+                            result_command_bytes.AddRange(part_meta_sub);
                         else
                         {
-                            Array.Resize(ref state.result_data_byte, state.result_data_byte.Length + meta_sub.Length);
-                            Buffer.BlockCopy(meta_sub, 0, state.result_data_byte, state.result_data_byte.Length - meta_sub.Length, meta_sub.Length);
-                            if (0x01 != state.buffer[bytesRead - 2])
-                                tcp_client.BeginReceive(state.buffer, 0, StateTCPClient.BufferSize, 0,
-                                   new AsyncCallback(Receive_Command_Callback), state);
-                            else
-                            {
-                                if ((byte)CM.COMMAND.CONNECTION_REQUEST_CMD == state.result_data_byte[0])
-                                    Request_Connection_Handler(CM.Decode_Frame((byte)CM.COMMAND.CONNECTION_REQUEST_CMD, state.result_data_byte));
-
-                                else
-                                    CM.Data_Receive_Handler(state.result_data_byte);
-
-                                receiveDone.Set();
-                                Receive_Command_Handler();
-                            }
+                            MessageBox.Show("Wrong Sub Frame Packet");
+                            Receive_Command_Handler();
                         }
                     }
                     else
                     {
-                        MessageBox.Show("Wrong Sub Frame Packet");
-                        Receive_Command_Handler();
+                        byte[] last_meta_sub = CM.Decode_SubFrame(state.buffer, bytesRead);
+                        if (last_meta_sub != null)
+                        {
+                            if (File_Mode)
+                            {
+                                Receive_Command_Handler();
+                                byte ack_file = CM.Decode_Frame_ACK((byte)CM.COMMAND.FIRMWARE_UPDATE_CMD, last_meta_sub);
+                                if (0x00 == ack_file)
+                                    receiveDone.Set();
+                                else
+                                    CM.Log_Raise("Failed Part sent.");
+                            }
+                            else
+                            {
+                                //Array.Resize(ref state.result_data_byte, state.result_data_byte.Length + meta_sub.Length);
+                                //Buffer.BlockCopy(meta_sub, 0, state.result_data_byte, state.result_data_byte.Length - meta_sub.Length, meta_sub.Length);
+                                Receive_Command_Handler();
+                                receiveDone.Set();
+                                if (result_command_bytes.Count > 0)
+                                {
+                                    result_command_bytes.AddRange(last_meta_sub);
+                                    CM.Data_Receive_Handler(result_command_bytes.ToArray());
+                                    result_command_bytes.Clear();
+                                }
+                                else
+                                {
+                                    if ((byte)CM.COMMAND.CONNECTION_REQUEST_CMD == last_meta_sub[0])
+                                        Request_Connection_Handler(CM.Decode_Frame((byte)CM.COMMAND.CONNECTION_REQUEST_CMD, last_meta_sub));
+
+                                    else
+                                        CM.Data_Receive_Handler(last_meta_sub);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("Wrong Sub Frame Packet");
+                            Receive_Command_Handler();
+                        }
                     }
+                    
                 }
                 else
                 {
-                    MessageBox.Show("Server closed\nNo more data will be sent.");
+                    MessageBox.Show("Gateway closed\nNo more data will be sent.");
                     Free();
                 }
             }
@@ -611,7 +629,7 @@ namespace GatewayForm
                 if (connect_ok)
                 {
                     MessageBox.Show(se.ToString());
-                    if (se.ErrorCode == 10061)
+                    if (se.ErrorCode == 10060)
                         CM.Cmd_Raise("Keep Alive Timeout\n");
                 }
             }

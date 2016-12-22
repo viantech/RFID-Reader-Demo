@@ -257,13 +257,15 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(268, 360);
             this.Controls.Add(this.close_btn);
             this.Controls.Add(this.update_btn);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
+            this.MaximizeBox = false;
             this.Name = "Tcp_pop";
-            this.Text = "Ethernet Setting Form";
+            this.Text = "Ethernet Port";
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             this.groupBox3.ResumeLayout(false);

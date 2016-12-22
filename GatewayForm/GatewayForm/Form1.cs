@@ -61,7 +61,7 @@ namespace GatewayForm
         };
         List<string> list_plan_name = new List<string>();
         Plan_Node.Plan_Root all_plans = new Plan_Node.Plan_Root();
-        
+        //ManualResetEvent oSignalEvent = new ManualResetEvent(false);
         public Form1()
         {
             InitializeComponent();
@@ -70,6 +70,7 @@ namespace GatewayForm
             wifi_form = new Wifi_pop();
             tcp_form = new Tcp_pop();
             serial_form = new Serial_pop();
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             //status_led.Image = global::GatewayForm.Properties.Resources.red;
             // create contructor for class LogIOData
             if (plog == null)
@@ -137,6 +138,14 @@ namespace GatewayForm
                         com_type.Get_Command_Send(CM.COMMAND.GET_POWER_MODE_CMD);
                         com_type.waitflagRevTCP();
                         break;
+                    case CM.COMMAND.GET_BLF_CMD:
+                        com_type.Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 0);
+                        com_type.waitflagRevTCP();
+                        com_type.Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 1);
+                        com_type.waitflagRevTCP();
+                        com_type.Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 2);
+                        com_type.waitflagRevTCP();
+                        break;
                     case CM.COMMAND.SET_BLF_CMD:
                         byte[] freq_bytes = new byte[2];
                         freq_bytes[0] = 0;
@@ -198,7 +207,7 @@ namespace GatewayForm
                             }
                             else
                             {
-                                MessageBox.Show("Zigbee Setting not configured.");
+                                MessageBox.Show("Please config Zigbee property", "Setting Port Error", MessageBoxButtons.OK);
                                 Log_lb.Text = "Idle";
                             }
                         }
@@ -263,27 +272,6 @@ namespace GatewayForm
             }
         }
 
-        private void Connected_Behavior()
-        {
-            ConnType_cbx.Enabled = false;
-            Connect_btn.Text = "Disconnect";
-            status_led.Image = global::GatewayForm.Properties.Resources.green_led;
-            status_lb.Text = "Active";
-            status_lb.ForeColor = Color.DarkBlue;
-            ViewConn_btn.Text = "View Port";
-            ViewConn_btn.FlatStyle = FlatStyle.Flat;
-        }
-        private void Disconnect_Behavior()
-        {
-            Connect_btn.Text = "Connect";
-            status_led.Image = global::GatewayForm.Properties.Resources.red_led;
-            status_lb.Text = "Inactive";
-            status_lb.ForeColor = SystemColors.ControlDark;
-            ConnType_cbx.Enabled = true;
-            ViewConn_btn.Text = "Setting";
-            ViewConn_btn.FlatStyle = FlatStyle.Standard;
-        }
-
         int couting = 0;
         private void GetConfig_Handler(string config_msg)
         {
@@ -315,6 +303,7 @@ namespace GatewayForm
                     SetControl(tari_cbx, config_str[1]);
                     couting = 0;
                     Log_Handler("Get BLF done");
+                    Enable_RFID();
                 }
             }
             else if (config_str[0] == "Power RFID")
@@ -330,6 +319,7 @@ namespace GatewayForm
                     SetControl(trackBar3, config_str[1]);
                     Log_Handler("Get Write Power done");
                     couting = 0;
+                    Enable_RFID();
                 }
             }
             else if (config_str[0] == "Seldatinc gateway configuration=")
@@ -430,7 +420,7 @@ namespace GatewayForm
             }
             else if (config_str[0] == "Change Protocol")
             {
-                MessageBox.Show(config_str[1]);
+                MessageBox.Show(config_str[1],"New Protocol Port Property",MessageBoxButtons.OK);
                 startcmdprocess(CM.COMMAND.SET_CONN_TYPE_CMD);
             }
             else if (config_str[0][0] == '/')
@@ -481,9 +471,9 @@ namespace GatewayForm
                 PopulateTreeView(all_plans);
             }
             else if (config_str[0] == "NAK")
-                MessageBox.Show("Failed Get Config");
+                MessageBox.Show("Failed to get Configuration", "Error Get Command", MessageBoxButtons.OK);
             else
-                MessageBox.Show("Get Command not defined");
+                MessageBox.Show("Get Command not defined", "Error Get Command", MessageBoxButtons.OK);
         }
 
         private void Log_Handler(string log_msg)
@@ -498,12 +488,12 @@ namespace GatewayForm
                 else if (log_msg == "Stop Inventory")
                 {
                     Start_Behavior();
-                    ptimer_loghandle.Interval = 2000;
+                    ptimer_loghandle.Interval = 500;
                     ptimer_loghandle.Start();
                 }
                 else
                 {
-                    ptimer_loghandle.Interval = 2500;
+                    ptimer_loghandle.Interval = 1500;
                     ptimer_loghandle.Start();
                 }
             });
@@ -518,10 +508,12 @@ namespace GatewayForm
             }
             else
             {
-                if (control is TextBox || control is Label)
-                    control.Text = config_tx;
-                else if (control is ComboBox)
+                if (control is ComboBox)
                     (control as ComboBox).SelectedIndex = int.Parse(config_tx);
+                else if (control is ProgressBar)
+                {
+                    (control as ProgressBar).Value = int.Parse(config_tx);
+                }
                 else if (control is TrackBar)
                 {
                     if ((control as TrackBar).Name.Contains("trackBar"))
@@ -533,6 +525,8 @@ namespace GatewayForm
                         (control as TrackBar).Value = int.Parse(config_tx.Remove(config_tx.Length - 2));
                     }
                 }
+                else if (control is TextBox || control is Label)
+                    control.Text = config_tx;
                 else if (control is CheckBox)
                 {
                     if ("yes" == config_tx)
@@ -540,6 +534,7 @@ namespace GatewayForm
                     else
                         (control as CheckBox).Checked = false;
                 }
+                
                 else if (control is CheckedListBox)
                 {
                     for (int i = 0; i < (control as CheckedListBox).Items.Count; i++)
@@ -570,81 +565,10 @@ namespace GatewayForm
                     else
                         (control as RadioButton).Checked = false;
                 }
-                else if (control is ProgressBar)
-                {
-                    (control as ProgressBar).Value = int.Parse(config_tx);
-                }
                 else
                 {
-                    MessageBox.Show("New type control");
+                    MessageBox.Show("New type control", "Warrning", MessageBoxButtons.OK);
                 }
-                #region sub
-                /*switch (control.GetType().Name)
-                {
-                    case "TextBox":
-                        control.Text = config_tx;
-                        break;
-
-                    case "Label":
-                        control.Text = config_tx;
-                        break;
-
-                    case "CheckBox":
-                        if ("yes" == config_tx)
-                            (control as CheckBox).Checked = true;
-                        else
-                            (control as CheckBox).Checked = false;
-                        break;
-
-                    case "RadioButton":
-                        if ("yes" == config_tx)
-                            (control as RadioButton).Checked = true;
-                        else
-                            (control as RadioButton).Checked = false;
-                        break;
-
-                    case "CheckedListBox":
-                        for (int i = 0; i < (control as CheckedListBox).Items.Count; i++)
-                            ConnectionList_ck.SetItemCheckState(i, CheckState.Checked);
-
-                        if (!config_tx.Contains("Zigbee"))
-                            (control as CheckedListBox).SetItemCheckState(0, CheckState.Unchecked);
-                        if (!config_tx.Contains("Wifi"))
-                            (control as CheckedListBox).SetItemCheckState(1, CheckState.Unchecked);
-                        if (!config_tx.Contains("Bluetooth"))
-                            (control as CheckedListBox).SetItemCheckState(2, CheckState.Unchecked);
-                        if (!config_tx.Contains("Ethernet"))
-                            (control as CheckedListBox).SetItemCheckState(3, CheckState.Unchecked);
-                        if (!config_tx.Contains("RS485"))
-                            (control as CheckedListBox).SetItemCheckState(4, CheckState.Unchecked);
-                        break;
-
-                    case "TrackBar":
-                        if ((control as TrackBar).Name.Contains("trackBar"))
-                        {
-                            (control as TrackBar).Value = int.Parse(config_tx);
-                        }
-                        else if ((control as TrackBar).Name == "AudioVolume_trb")
-                        {
-                            (control as TrackBar).Value = int.Parse(config_tx.Remove(config_tx.Length - 2));
-                        }
-                        break;
-
-                    case "Button":
-                        if ("Failed" == config_tx)
-                            (control as Button).BackColor = Color.Red;
-                        else
-                            (control as Button).BackColor = Color.Blue;
-                        break;
-                    case "ComboBox":
-                        //if (control.Name == "region_lst")
-                        (control as ComboBox).SelectedIndex = int.Parse(config_tx);
-                        //else if (control.Name == "power_mode_cbx")
-                        break;
-                    default:
-                        break;
-                }*/
-                #endregion
             }
         }
         private void Read_handler(string msg)// open and save
@@ -684,74 +608,169 @@ namespace GatewayForm
             {
                 if (Start_Operate_btn.Text == "Start inventory")
                 {
+                    Start_Operate_btn.Enabled = false;
                     CM.MessageReceived += Read_handler;
                     com_type.Get_Command_Send(CM.COMMAND.START_OPERATION_CMD);
-
                 }
                 else
                 {
+                    Start_Operate_btn.Enabled = false;
                     CM.MessageReceived -= Read_handler;
                     com_type.Get_Command_Send(CM.COMMAND.STOP_OPERATION_CMD);
+                    ptimer_loghandle.Interval = 3000;
+                    ptimer_loghandle.Start();
                 }
             }
             else
             {
-                MessageBox.Show("Connection was disconnected\nPlease connect again!");
+                MessageBox.Show("Connection was disconnected\nPlease connect again!", "Connection Error", MessageBoxButtons.OK);
                 Disconnect_Behavior();
             }
             
         }
 
+        private void Connected_Behavior()
+        {
+            ConnType_cbx.Enabled = false;
+            Connect_btn.Text = "Disconnect";
+            status_led.Image = global::GatewayForm.Properties.Resources.green_led;
+            status_lb.Text = "Active";
+            status_lb.ForeColor = Color.DarkBlue;
+            //ViewConn_btn.Text = "View Port";
+            ViewConn_btn.FlatStyle = FlatStyle.Flat;
+            Start_Operate_btn.Enabled = true;
+        }
+
+        private void Disconnect_Behavior()
+        {
+            Connect_btn.Text = "Connect";
+            status_led.Image = global::GatewayForm.Properties.Resources.red_led;
+            status_lb.Text = "Inactive";
+            status_lb.ForeColor = SystemColors.ControlDark;
+            ConnType_cbx.Enabled = true;
+            //ViewConn_btn.Text = "Setting";
+            ViewConn_btn.FlatStyle = FlatStyle.Standard;
+            Start_Operate_btn.Enabled = false;
+            //Clear GW Config
+            foreach(CheckBox com_clear in flowLayoutPanel2.Controls)
+            {
+                (com_clear as CheckBox).Checked = false;
+            }
+            foreach(CheckBox com_clear in flowLayoutPanel1.Controls)
+            {
+                (com_clear as CheckBox).Checked = false;
+            }
+            PalletSupport_cbx.Checked = false;
+            for (int conn = 0; conn < ConnectionList_ck.Items.Count; conn++)
+                ConnectionList_ck.SetItemChecked(conn, false);
+            LED_Support_ckb.Checked = false;
+            Offline_ckb.Checked = false;
+            RFID_API_ckb.Checked = false;
+            StackLight_ckb.Checked = false;
+            HW_Verrsion_tx.Text = String.Empty;
+            SW_Version_tx.Text = String.Empty;
+            Gateway_ID_lb.Text = String.Empty;
+            Gateway_ID_tx.Text = String.Empty;
+            MessageInterval_tx.Text = String.Empty;
+            //RIFD
+            foreach (ComboBox comm_clear in this.groupBox8.Controls.OfType<ComboBox>())
+            {
+                comm_clear.SelectedIndex = 0;
+            }
+            region_lst.SelectedIndex = 1;
+            foreach (TrackBar comm_clear in this.groupBox9.Controls.OfType<TrackBar>())
+            {
+                comm_clear.Value = 5;
+            }
+            list_plan_name.Clear();
+            all_plans.plan_list.Clear();
+            treeView1.Nodes.Clear();
+            TreeNode node_lable = new TreeNode("[Plans]");
+            treeView1.Nodes.Add(node_lable);
+            foreach (CheckBox com_clear in flowLayoutPanel3.Controls)
+            {
+                (com_clear as CheckBox).Checked = false;
+            }
+        }
+
         private void Stop_Behavior()
         {
             Start_Operate_btn.Text = "Stop inventory";
-
+            //GW Config
             Set_GW_Config_btn.Enabled = false;
             Get_GW_Config_btn.Enabled = false;
             set_newconn_btn.Enabled = false;
             Get_RFID_btn.Enabled = false;
             Set_RFID_btn.Enabled = false;
             Connect_btn.Enabled = false;
-
-            foreach (Button comm_btn in this.groupBox8.Controls.OfType<Button>())
-            {
-                comm_btn.Enabled = false;
-            }
-            foreach (Button comm_btn in this.groupBox9.Controls.OfType<Button>())
-            {
-                comm_btn.Enabled = false;
-            }
-            foreach (Button comm_btn in this.groupBox11.Controls.OfType<Button>())
-            {
-                comm_btn.Enabled = false;
-            }
+            update_fw_btn.Enabled = false;
+            set_port_btn.Enabled = false;
+            //RFID 
+            Block_RFID_Tab();
+            Start_Operate_btn.Enabled = true;
         }
-
+       
         private void Start_Behavior()
         {
             Start_Operate_btn.Text = "Start inventory";
-
+            //GW Config
             Set_GW_Config_btn.Enabled = true;
             Get_GW_Config_btn.Enabled = true;
             set_newconn_btn.Enabled = true;
             Get_RFID_btn.Enabled = true;
             Set_RFID_btn.Enabled = true;
             Connect_btn.Enabled = true;
+            update_fw_btn.Enabled = true;
+            set_port_btn.Enabled = true;
 
+            Enable_RFID();
+            this.dataGridView1.Rows.Clear();
+            this.No_Tag_lb.Text = "0";
+            Start_Operate_btn.Enabled = true;
+        }
+
+        //RFID View
+        private void Block_RFID_Tab()
+        {
             foreach (Button comm_btn in this.groupBox8.Controls.OfType<Button>())
             {
-                comm_btn.Enabled = true;
+                comm_btn.Enabled = false;
             }
             foreach (Button comm_btn in this.groupBox9.Controls.OfType<Button>())
             {
-                comm_btn.Enabled = true;
+                comm_btn.Enabled = false;
             }
             foreach (Button comm_btn in this.groupBox11.Controls.OfType<Button>())
             {
-                comm_btn.Enabled = true;
+                comm_btn.Enabled = false;
             }
-            this.dataGridView1.Rows.Clear();
-            this.No_Tag_lb.Text = "0";
+            foreach (Control comm_btn in this.groupBox14.Controls)
+            {
+                comm_btn.Enabled = false;
+            }
+        }
+
+        private void Enable_RFID()
+        {
+            this.Invoke((MethodInvoker)delegate
+            {
+                foreach (Button comm_btn in this.groupBox8.Controls.OfType<Button>())
+                {
+                    comm_btn.Enabled = true;
+                }
+                foreach (Button comm_btn in this.groupBox9.Controls.OfType<Button>())
+                {
+                    comm_btn.Enabled = true;
+                }
+                foreach (Button comm_btn in this.groupBox11.Controls.OfType<Button>())
+                {
+                    comm_btn.Enabled = true;
+                }
+                foreach (Control comm_btn in this.groupBox14.Controls)
+                {
+                    comm_btn.Enabled = true;
+                }
+            });
         }
 
         private void Get_GW_Config_btn_Click(object sender, EventArgs e)
@@ -762,7 +781,7 @@ namespace GatewayForm
             }
             else
             {
-                MessageBox.Show("Connection was disconnected\nPlease connect again!");
+                MessageBox.Show("Connection was disconnected\nPlease connect again!", "Connection Error", MessageBoxButtons.OK);
                 Disconnect_Behavior();
             }
         }
@@ -813,7 +832,7 @@ namespace GatewayForm
             }
             else
             {
-                MessageBox.Show("Connection was disconnected\nPlease connect again!");
+                MessageBox.Show("Connection was disconnected\nPlease connect again!", "Connection Error", MessageBoxButtons.OK);
                 Disconnect_Behavior();
             }
         }
@@ -849,7 +868,7 @@ namespace GatewayForm
             }
             else
             {
-                MessageBox.Show("Connection was disconnected\nPlease connect again!");
+                MessageBox.Show("Connection was disconnected\nPlease connect again!", "Connection Error", MessageBoxButtons.OK);
                 Disconnect_Behavior();
             }
         }
@@ -885,11 +904,13 @@ namespace GatewayForm
                 com_type.waitflagRevTCP();
                 com_type.Get_Command_Power(CM.COMMAND.GET_POWER_CMD, 1);
                 com_type.waitflagRevTCP();*/
+                couting = 0;
                 com_type.StartCmd_Process(CM.COMMAND.GET_POWER_CMD);
+                Block_RFID_Tab();
             }
             else
             {
-                MessageBox.Show("Connection was disconnected\nPlease connect again!");
+                MessageBox.Show("Connection was disconnected\nPlease connect again!", "Connection Error", MessageBoxButtons.OK);
                 Disconnect_Behavior();
             }
         }
@@ -911,7 +932,7 @@ namespace GatewayForm
             }
             else
             {
-                MessageBox.Show("Connection was disconnected\nPlease connect again!");
+                MessageBox.Show("Connection was disconnected\nPlease connect again!", "Connection Error", MessageBoxButtons.OK);
                 Disconnect_Behavior();
             }
         }
@@ -924,7 +945,7 @@ namespace GatewayForm
             }
             else
             {
-                MessageBox.Show("Connection was disconnected\nPlease connect again!");
+                MessageBox.Show("Connection was disconnected\nPlease connect again!", "Connection Error", MessageBoxButtons.OK);
                 Disconnect_Behavior();
             }
         }
@@ -939,7 +960,7 @@ namespace GatewayForm
             }
             else
             {
-                MessageBox.Show("Connection was disconnected\nPlease connect again!");
+                MessageBox.Show("Connection was disconnected\nPlease connect again!", "Connection Error", MessageBoxButtons.OK);
                 Disconnect_Behavior();
             }
         }
@@ -968,7 +989,7 @@ namespace GatewayForm
             }
             else
             {
-                MessageBox.Show("Connection was disconnected\nPlease connect again!");
+                MessageBox.Show("Connection was disconnected\nPlease connect again!", "Connection Error", MessageBoxButtons.OK);
                 Disconnect_Behavior();
             }
         }
@@ -983,7 +1004,7 @@ namespace GatewayForm
             }
             else
             {
-                MessageBox.Show("Connection was disconnected\nPlease connect again!");
+                MessageBox.Show("Connection was disconnected\nPlease connect again!", "Connection Error", MessageBoxButtons.OK);
                 Disconnect_Behavior();
             }
         }
@@ -1014,7 +1035,7 @@ namespace GatewayForm
             }
             else
             {
-                MessageBox.Show("Connection was disconnected\nPlease connect again!");
+                MessageBox.Show("Connection was disconnected\nPlease connect again!", "Connection Error", MessageBoxButtons.OK);
                 Disconnect_Behavior();
             }
         }
@@ -1033,18 +1054,18 @@ namespace GatewayForm
                             if ((flowLayoutPanel1.Controls[i - 1] as CheckBox).Checked)
                             {
                                 Antena_cbx.Items.Add("ANT" + i.ToString());
-                                (flowLayoutPanel3.Controls[i - 1] as CheckBox).CheckState = CheckState.Checked;
-                                (flowLayoutPanel3.Controls[i - 1] as CheckBox).Enabled = true;
+                                //(flowLayoutPanel3.Controls[i - 1] as CheckBox).CheckState = CheckState.Checked;
+                                //(flowLayoutPanel3.Controls[i - 1] as CheckBox).Enabled = true;
                             }
                             else
                             {
-                                (flowLayoutPanel3.Controls[i - 1] as CheckBox).Enabled = false;
+                                //(flowLayoutPanel3.Controls[i - 1] as CheckBox).Enabled = false;
                             }
                         }
                     }
                     else
                     {
-                        MessageBox.Show("Connection was disconnected\nPlease connect again!");
+                        MessageBox.Show("Connection was disconnected\nPlease connect again!", "Connection Error", MessageBoxButtons.OK);
                         Disconnect_Behavior();
                     }
                 }
@@ -1112,11 +1133,19 @@ namespace GatewayForm
                 if (status_lb.Text == "Active")
                     Disconnect_Behavior();
             }
-
+            else if ("Inventory Mode" == Log_lb.Text)
+            {
+                startcmdprocess(CM.COMMAND.DIS_CONNECT_CMD);
+                Start_Behavior();
+                Start_Operate_btn.Enabled = false;
+                MessageBox.Show("Start/Stop Inventory not working properly!\nDisconnect to Gateway", "Inventory Error", MessageBoxButtons.OK);
+            }
             else
             {
                 Log_lb.Text = "Ready!";
             }
+            //Restart_RFID();
+            //Start_Behavior();
             ptimer_loghandle.Stop();
         }
 
@@ -1125,16 +1154,21 @@ namespace GatewayForm
             if (com_type != null && com_type.getflagConnected_TCPIP())
             {
                 /*com_type.Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 0);
-                com_type.waitflagRevTCP();
+                oSignalEvent.Reset();
+                oSignalEvent.WaitOne(2000);
                 com_type.Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 1);
-                com_type.waitflagRevTCP();
+                oSignalEvent.Reset();
+                oSignalEvent.WaitOne(2000);
                 com_type.Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 2);
-                com_type.waitflagRevTCP();*/
+                oSignalEvent.Reset();
+                oSignalEvent.WaitOne(2000);*/
+                couting = 0;
                 com_type.StartCmd_Process(CM.COMMAND.GET_BLF_CMD);
+                Block_RFID_Tab();
             }
             else
             {
-                MessageBox.Show("Connection was disconnected\nPlease connect again!");
+                MessageBox.Show("Connection was disconnected\nPlease connect again!", "Connection Error", MessageBoxButtons.OK);
                 Disconnect_Behavior();
             }
         }
@@ -1162,7 +1196,7 @@ namespace GatewayForm
             }
             else
             {
-                MessageBox.Show("Connection was disconnected\nPlease connect again!");
+                MessageBox.Show("Connection was disconnected\nPlease connect again!", "Connection Error", MessageBoxButtons.OK);
                 Disconnect_Behavior();
             }
         }
@@ -1185,7 +1219,7 @@ namespace GatewayForm
                                         + "\ndeviceid = "
                                         + "\n}";
 
-                        MessageBox.Show(zigbee_config);
+                        MessageBox.Show(zigbee_config,"Zigbee Port Property", MessageBoxButtons.OK);
                         byte[] sd = Encoding.ASCII.GetBytes(zigbee_config);
                         byte[] newArray = new byte[sd.Length + 1];
                         sd.CopyTo(newArray, 1);
@@ -1193,7 +1227,7 @@ namespace GatewayForm
                         com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_PORT_PROPERTIES_CMD, newArray);
                     }
                     else
-                        MessageBox.Show("Zigbee Config not confirm");
+                        MessageBox.Show("Please config Zigbee Port", "Warning Zigbee Configuration",MessageBoxButtons.OK);
                     break;
                 case 1:
                     if (!String.IsNullOrEmpty(wifi_form.ssid_name))
@@ -1211,7 +1245,7 @@ namespace GatewayForm
                                           + "\nnetmask=" + wifi_form.netmask
                                           + "\ngateway=" + wifi_form.gateway
                                           + "\n}";
-                        MessageBox.Show(wifi_config);
+                        MessageBox.Show(wifi_config, "Wifi Port Property", MessageBoxButtons.OK);
                         byte[] sd = Encoding.ASCII.GetBytes(wifi_config);
                         byte[] newArray = new byte[sd.Length + 1];
                         sd.CopyTo(newArray, 1);
@@ -1219,7 +1253,7 @@ namespace GatewayForm
                         com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_PORT_PROPERTIES_CMD, newArray);
                     }
                     else
-                        MessageBox.Show("Wifi Config not confirm");
+                        MessageBox.Show("Please config Wifi Port", "Warning Wifi Configuration", MessageBoxButtons.OK);
                     break;
                 case 2:
                     break;
@@ -1243,7 +1277,7 @@ namespace GatewayForm
                                           + "\nnetmask=" + tcp_form.netmask
                                           + "\ngateway=" + tcp_form.gateway
                                           + "\n}";
-                        MessageBox.Show(tcp_config);
+                        MessageBox.Show(tcp_config, "Ethernet Port Property", MessageBoxButtons.OK);
                         byte[] sd = Encoding.ASCII.GetBytes(tcp_config);
                         byte[] newArray = new byte[sd.Length + 1];
                         sd.CopyTo(newArray, 1);
@@ -1251,7 +1285,7 @@ namespace GatewayForm
                         com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_PORT_PROPERTIES_CMD, newArray);
                     }
                     else
-                        MessageBox.Show("Ethernet config not confirm");
+                        MessageBox.Show("Please config Ethernet Port", "Warning Ethernet Configuration", MessageBoxButtons.OK);
                     break;
                 case 4:
                     break;
@@ -1408,7 +1442,7 @@ namespace GatewayForm
             }
             else
             {
-                MessageBox.Show("At least must exist one simple plan");
+                MessageBox.Show("At least must exist one simple plan","Warning Simple Plan",MessageBoxButtons.OK);
             }
         }
 
@@ -1469,7 +1503,7 @@ namespace GatewayForm
             }
             else
             {
-                MessageBox.Show("Connection was disconnected\nPlease connect again!");
+                MessageBox.Show("Connection was disconnected\nPlease connect again!", "Connection Error", MessageBoxButtons.OK);
                 Disconnect_Behavior();
             }
         }
@@ -1563,7 +1597,7 @@ namespace GatewayForm
                     all_plans.plan_list[treeView1.SelectedNode.Index - 1].weight = weight_tx.Text;
             }
             else
-                MessageBox.Show("The weight field can not blank");
+                MessageBox.Show("The weight field can not blank", "Error Keypress", MessageBoxButtons.OK);
         }
 
         private string Antena_ToString()
@@ -1623,10 +1657,50 @@ namespace GatewayForm
             }
             else
             {
-                MessageBox.Show("Connection was disconnected\nPlease connect again!");
+                MessageBox.Show("Connection was disconnected\nPlease connect again!", "Connection Error", MessageBoxButtons.OK);
                 Disconnect_Behavior();
             }
         }
         #endregion
+
+        private void Sensor_EN_ckb_CheckedChanged(object sender, EventArgs e)
+        {
+            if(Sensor_EN_ckb.Checked)
+            {
+                reader_type_lb.Text = "Gateway/Conveyor";
+                time_on_tx.Text = "0";
+                time_off_tx.Text = "0";
+                read_sensor_ckb.SelectedIndex = 0;
+                time_off_tx.Enabled = false;
+                time_on_tx.Enabled = false;
+                read_sensor_ckb.Enabled = false;
+            }
+            else
+            {
+                time_off_tx.Enabled = true;
+                time_on_tx.Enabled = true;
+                read_sensor_ckb.Enabled = true;
+                reader_type_lb.Text = "Forklift";
+            }
+        }
+
+        private void Set_sensor_btn_Click(object sender, EventArgs e)
+        {
+            string sensor_data = String.Empty;
+            if (Sensor_EN_ckb.Checked)
+                sensor_data += "True,";
+            else
+                sensor_data += "False,";
+            sensor_data += time_on_tx.Text + "," + time_off_tx.Text + "," + read_sensor_ckb.Text;
+            if (com_type != null && com_type.getflagConnected_TCPIP())
+            {
+                com_type.Set_Command_Send(CM.COMMAND.SETTING_SENSOR_CMD, sensor_data);
+            }
+            else
+            {
+                MessageBox.Show("Connection was disconnected\nPlease connect again!", "Connection Error", MessageBoxButtons.OK);
+                Disconnect_Behavior();
+            }
+        }
     }
 }

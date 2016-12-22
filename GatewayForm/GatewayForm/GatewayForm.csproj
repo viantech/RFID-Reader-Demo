@@ -144,6 +144,9 @@
     <EmbeddedResource Include="Wifi_pop.resx">
       <DependentUpon>Wifi_pop.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Zigbee_pop.en.resx">
+      <DependentUpon>Zigbee_pop.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Zigbee_pop.resx">
       <DependentUpon>Zigbee_pop.cs</DependentUpon>
     </EmbeddedResource>

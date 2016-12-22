@@ -147,6 +147,7 @@ namespace GatewayForm
             SET_PLAN_CMD = 0x18,
             GET_PLAN_CMD = 0x19,
             FIRMWARE_UPDATE_CMD = 0x1B,
+            SETTING_SENSOR_CMD = 0x1C,
         };
 
         public enum HEADER
@@ -555,6 +556,13 @@ namespace GatewayForm
                         data_response = Get_Data(Decode_Frame((byte)COMMAND.GET_PLAN_CMD, command_bytes));
                         if (data_response.Length > 0)
                             Cmd_Raise("Get Plan\n" + data_response + "\n");
+                        break;
+                    case COMMAND.SETTING_SENSOR_CMD:
+                        info_ack = Decode_Frame_ACK((byte)COMMAND.SETTING_SENSOR_CMD, command_bytes);
+                        if (0x00 == info_ack)
+                            Log_Raise("Configure Sensor done");
+                        else
+                            MessageBox.Show("Failed Congfigure Sensor");
                         break;
                     default:
                         break;
