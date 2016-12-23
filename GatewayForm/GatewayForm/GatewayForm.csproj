@@ -107,6 +107,12 @@
       <DependentUpon>Serial_pop.cs</DependentUpon>
     </Compile>
     <Compile Include="Com\TcpipConnection.cs" />
+    <Compile Include="setup_connect.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="setup_connect.Designer.cs">
+      <DependentUpon>setup_connect.cs</DependentUpon>
+    </Compile>
     <Compile Include="Tcp_pop.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -137,6 +143,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Serial_pop.resx">
       <DependentUpon>Serial_pop.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="setup_connect.resx">
+      <DependentUpon>setup_connect.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Tcp_pop.resx">
       <DependentUpon>Tcp_pop.cs</DependentUpon>

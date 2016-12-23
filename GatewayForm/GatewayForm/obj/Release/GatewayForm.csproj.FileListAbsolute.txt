@@ -31,3 +31,4 @@ C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Release\en\Gat
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Release\GatewayForm.exe
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Release\GatewayForm.pdb
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Release\GatewayForm.csprojResolveAssemblyReference.cache
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Release\GatewayForm.setup_connect.resources

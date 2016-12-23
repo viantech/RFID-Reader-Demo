@@ -74,8 +74,8 @@
             this.label38 = new System.Windows.Forms.Label();
             this.label37 = new System.Windows.Forms.Label();
             this.Sensor_EN_ckb = new System.Windows.Forms.CheckBox();
-            this.time_off_tx = new System.Windows.Forms.TextBox();
             this.time_on_tx = new System.Windows.Forms.TextBox();
+            this.time_off_tx = new System.Windows.Forms.TextBox();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.label7 = new System.Windows.Forms.Label();
             this.Change_conntype_cbx = new System.Windows.Forms.ComboBox();
@@ -741,17 +741,6 @@
             this.Sensor_EN_ckb.UseVisualStyleBackColor = true;
             this.Sensor_EN_ckb.CheckedChanged += new System.EventHandler(this.Sensor_EN_ckb_CheckedChanged);
             // 
-            // time_off_tx
-            // 
-            this.time_off_tx.BackColor = System.Drawing.SystemColors.HighlightText;
-            this.time_off_tx.Enabled = false;
-            this.time_off_tx.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.time_off_tx.Location = new System.Drawing.Point(159, 86);
-            this.time_off_tx.Name = "time_off_tx";
-            this.time_off_tx.Size = new System.Drawing.Size(61, 22);
-            this.time_off_tx.TabIndex = 15;
-            this.time_off_tx.Text = "0";
-            // 
             // time_on_tx
             // 
             this.time_on_tx.BackColor = System.Drawing.SystemColors.HighlightText;
@@ -762,6 +751,17 @@
             this.time_on_tx.Size = new System.Drawing.Size(61, 22);
             this.time_on_tx.TabIndex = 15;
             this.time_on_tx.Text = "0";
+            // 
+            // time_off_tx
+            // 
+            this.time_off_tx.BackColor = System.Drawing.SystemColors.HighlightText;
+            this.time_off_tx.Enabled = false;
+            this.time_off_tx.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.time_off_tx.Location = new System.Drawing.Point(159, 86);
+            this.time_off_tx.Name = "time_off_tx";
+            this.time_off_tx.Size = new System.Drawing.Size(61, 22);
+            this.time_off_tx.TabIndex = 15;
+            this.time_off_tx.Text = "0";
             // 
             // groupBox10
             // 
@@ -2235,7 +2235,7 @@
             this.label10.AutoSize = true;
             this.label10.Dock = System.Windows.Forms.DockStyle.Top;
             this.label10.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(309, 0);
+            this.label10.Location = new System.Drawing.Point(3, 0);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(94, 15);
             this.label10.TabIndex = 10;
@@ -2246,7 +2246,7 @@
             this.Log_lb.AutoSize = true;
             this.Log_lb.Dock = System.Windows.Forms.DockStyle.Top;
             this.Log_lb.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Log_lb.Location = new System.Drawing.Point(409, 0);
+            this.Log_lb.Location = new System.Drawing.Point(103, 0);
             this.Log_lb.Name = "Log_lb";
             this.Log_lb.Size = new System.Drawing.Size(28, 15);
             this.Log_lb.TabIndex = 11;
@@ -2275,9 +2275,9 @@
             // 
             // flowLayoutPanel4
             // 
-            this.flowLayoutPanel4.Controls.Add(this.progressBar1);
             this.flowLayoutPanel4.Controls.Add(this.label10);
             this.flowLayoutPanel4.Controls.Add(this.Log_lb);
+            this.flowLayoutPanel4.Controls.Add(this.progressBar1);
             this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel4.Location = new System.Drawing.Point(3, 612);
             this.flowLayoutPanel4.Name = "flowLayoutPanel4";
@@ -2287,7 +2287,7 @@
             // progressBar1
             // 
             this.progressBar1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.progressBar1.Location = new System.Drawing.Point(3, 3);
+            this.progressBar1.Location = new System.Drawing.Point(137, 3);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(300, 11);
             this.progressBar1.TabIndex = 12;

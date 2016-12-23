@@ -457,45 +457,56 @@ namespace GatewayForm
             switch (command)
             {
                 case CM.COMMAND.CONNECTION_REQUEST_CMD:
-                    //receiveDone.Reset();
+                    receiveDone.Reset();
                     Send_ConnectionRequest();
                     receiveDone.WaitOne(2000);
                     break;
                 case CM.COMMAND.GET_CONFIGURATION_CMD:
-                    //receiveDone.Reset();
+                    receiveDone.Reset();
                     //Get Gateway Configuration
                     Get_Command_Send(CM.COMMAND.GET_CONFIGURATION_CMD);
                     receiveDone.WaitOne(2000);
+                    receiveDone.Reset();
                     //Antena
                     Get_Command_Send(CM.COMMAND.ANTENA_CMD);
                     receiveDone.WaitOne(2000);
                     break;
                 case CM.COMMAND.GET_POWER_CMD:
+                    receiveDone.Reset();
                     Get_Command_Power(CM.COMMAND.GET_POWER_CMD, 0);
                     receiveDone.WaitOne(2000);
+                    receiveDone.Reset();
                     Get_Command_Power(CM.COMMAND.GET_POWER_CMD, 1);
                     receiveDone.WaitOne(2000);
                     break;
                 case CM.COMMAND.GET_POWER_MODE_CMD:
+                    receiveDone.Reset();
                     Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 0);
                     receiveDone.WaitOne(2000);
+                    receiveDone.Reset();
                     Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 1);
                     receiveDone.WaitOne(2000);
+                    receiveDone.Reset();
                     Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 2);
                     receiveDone.WaitOne(2000);
                     receiveDone.Reset();
                     Get_Command_Power(CM.COMMAND.GET_POWER_CMD, 0);
                     receiveDone.WaitOne(2000);
+                    receiveDone.Reset();
                     Get_Command_Power(CM.COMMAND.GET_POWER_CMD, 1);
                     receiveDone.WaitOne(2000);
+                    receiveDone.Reset();
                     Get_Command_Send(CM.COMMAND.GET_POWER_MODE_CMD);
                     receiveDone.WaitOne(2000);
                     break;
                 case CM.COMMAND.GET_BLF_CMD:
+                    receiveDone.Reset();
                     Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 0);
                     receiveDone.WaitOne(2000);
+                    receiveDone.Reset();
                     Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 1);
                     receiveDone.WaitOne(2000);
+                    receiveDone.Reset();
                     Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 2);
                     receiveDone.WaitOne(2000);
                     break;
