@@ -28,7 +28,7 @@ namespace GatewayForm
         //public byte[] result_data_byte = new byte[0];
     }
 
-    //public delegate void SocketReceivedHandler(string msg);
+    public delegate void SocketReceivedHandler(string msg);
 
     public class TCP_Client
     {
@@ -38,7 +38,8 @@ namespace GatewayForm
         /// Byte Data of Frame Format
         /// </summary>
         public bool connect_ok = false;
-
+        public event SocketReceivedHandler TagID_Msg;
+        public event SocketReceivedHandler Config_Msg;
         //Ping connection
         //private System.Timers.Timer pingTimer = new System.Timers.Timer() { Interval = 10000 };
         //private AutoResetEvent waiter = new AutoResetEvent(false);
@@ -408,7 +409,7 @@ namespace GatewayForm
                         break;
                     }
                     else
-                        CM.Cmd_Raise("Update FW\n" + percent.ToString() + "\n");
+                        Cmd_Raise("Update FW\n" + percent.ToString() + "\n");
                 }
             }
             else
@@ -454,73 +455,79 @@ namespace GatewayForm
 
         private int Command_Process(CM.COMMAND command)
         {
-            switch (command)
+            if( CM.COMMAND.GET_CONFIGURATION_CMD == command)
             {
-                case CM.COMMAND.CONNECTION_REQUEST_CMD:
-                    receiveDone.Reset();
-                    Send_ConnectionRequest();
-                    receiveDone.WaitOne(2000);
-                    break;
-                case CM.COMMAND.GET_CONFIGURATION_CMD:
-                    receiveDone.Reset();
-                    //Get Gateway Configuration
-                    Get_Command_Send(CM.COMMAND.GET_CONFIGURATION_CMD);
-                    receiveDone.WaitOne(2000);
-                    receiveDone.Reset();
-                    //Antena
-                    Get_Command_Send(CM.COMMAND.ANTENA_CMD);
-                    receiveDone.WaitOne(2000);
-                    break;
-                case CM.COMMAND.GET_POWER_CMD:
-                    receiveDone.Reset();
-                    Get_Command_Power(CM.COMMAND.GET_POWER_CMD, 0);
-                    receiveDone.WaitOne(2000);
-                    receiveDone.Reset();
-                    Get_Command_Power(CM.COMMAND.GET_POWER_CMD, 1);
-                    receiveDone.WaitOne(2000);
-                    break;
-                case CM.COMMAND.GET_POWER_MODE_CMD:
-                    receiveDone.Reset();
-                    Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 0);
-                    receiveDone.WaitOne(2000);
-                    receiveDone.Reset();
-                    Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 1);
-                    receiveDone.WaitOne(2000);
-                    receiveDone.Reset();
-                    Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 2);
-                    receiveDone.WaitOne(2000);
-                    receiveDone.Reset();
-                    Get_Command_Power(CM.COMMAND.GET_POWER_CMD, 0);
-                    receiveDone.WaitOne(2000);
-                    receiveDone.Reset();
-                    Get_Command_Power(CM.COMMAND.GET_POWER_CMD, 1);
-                    receiveDone.WaitOne(2000);
-                    receiveDone.Reset();
-                    Get_Command_Send(CM.COMMAND.GET_POWER_MODE_CMD);
-                    receiveDone.WaitOne(2000);
-                    break;
-                case CM.COMMAND.GET_BLF_CMD:
-                    receiveDone.Reset();
-                    Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 0);
-                    receiveDone.WaitOne(2000);
-                    receiveDone.Reset();
-                    Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 1);
-                    receiveDone.WaitOne(2000);
-                    receiveDone.Reset();
-                    Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 2);
-                    receiveDone.WaitOne(2000);
-                    break;
-                case CM.COMMAND.GET_RFID_CONFIGURATION_CMD:
-                    Get_Command_Send(CM.COMMAND.GET_RFID_CONFIGURATION_CMD);
-                    receiveDone.WaitOne(2000);
-                    break;
-                case CM.COMMAND.DIS_CONNECT_CMD:
-                    Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
-                    receiveDone.WaitOne(2000);
-                    Free();
-                    break;
-                default:
-                    break;
+                receiveDone.Reset();
+                //Get Gateway Configuration
+                Get_Command_Send(CM.COMMAND.GET_CONFIGURATION_CMD);
+                receiveDone.WaitOne(2000);
+                receiveDone.Reset();
+                //Antena
+                Get_Command_Send(CM.COMMAND.ANTENA_CMD);
+                receiveDone.WaitOne(2000);
+            }
+            else if (CM.COMMAND.GET_BLF_CMD == command)
+            {
+                receiveDone.Reset();
+                Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 0);
+                receiveDone.WaitOne(2000);
+                receiveDone.Reset();
+                Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 1);
+                receiveDone.WaitOne(2000);
+                receiveDone.Reset();
+                Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 2);
+                receiveDone.WaitOne(2000);
+            }
+            else if (CM.COMMAND.GET_POWER_CMD == command)
+            {
+                receiveDone.Reset();
+                Get_Command_Power(CM.COMMAND.GET_POWER_CMD, 0);
+                receiveDone.WaitOne(2000);
+                receiveDone.Reset();
+                Get_Command_Power(CM.COMMAND.GET_POWER_CMD, 1);
+                receiveDone.WaitOne(2000);
+            }
+            else if (CM.COMMAND.DIS_CONNECT_CMD == command)
+            {
+                Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
+                receiveDone.WaitOne(2000);
+                Free();
+            }
+            else if (CM.COMMAND.GET_RFID_CONFIGURATION_CMD == command)
+            {
+                Get_Command_Send(CM.COMMAND.GET_RFID_CONFIGURATION_CMD);
+                receiveDone.WaitOne(2000);
+            }
+            else if (CM.COMMAND.GET_POWER_MODE_CMD == command)
+            {
+                receiveDone.Reset();
+                Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 0);
+                receiveDone.WaitOne(2000);
+                receiveDone.Reset();
+                Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 1);
+                receiveDone.WaitOne(2000);
+                receiveDone.Reset();
+                Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 2);
+                receiveDone.WaitOne(2000);
+                receiveDone.Reset();
+                Get_Command_Power(CM.COMMAND.GET_POWER_CMD, 0);
+                receiveDone.WaitOne(2000);
+                receiveDone.Reset();
+                Get_Command_Power(CM.COMMAND.GET_POWER_CMD, 1);
+                receiveDone.WaitOne(2000);
+                receiveDone.Reset();
+                Get_Command_Send(CM.COMMAND.GET_POWER_MODE_CMD);
+                receiveDone.WaitOne(2000);
+            }
+            else if (CM.COMMAND.CONNECTION_REQUEST_CMD == command)
+            {
+                receiveDone.Reset();
+                Send_ConnectionRequest();
+                receiveDone.WaitOne(2000);
+            }
+            else
+            {
+
             }
             return 1;
         }
@@ -590,16 +597,7 @@ namespace GatewayForm
                         byte[] last_meta_sub = CM.Decode_SubFrame(state.buffer, bytesRead);
                         if (last_meta_sub != null)
                         {
-                            if (File_Mode)
-                            {
-                                Receive_Command_Handler();
-                                byte ack_file = CM.Decode_Frame_ACK((byte)CM.COMMAND.FIRMWARE_UPDATE_CMD, last_meta_sub);
-                                if (0x00 == ack_file)
-                                    receiveDone.Set();
-                                else
-                                    CM.Log_Raise("Failed Part sent.");
-                            }
-                            else
+                            if (!File_Mode)
                             {
                                 //Array.Resize(ref state.result_data_byte, state.result_data_byte.Length + meta_sub.Length);
                                 //Buffer.BlockCopy(meta_sub, 0, state.result_data_byte, state.result_data_byte.Length - meta_sub.Length, meta_sub.Length);
@@ -608,8 +606,26 @@ namespace GatewayForm
                                 if (result_command_bytes.Count > 0)
                                 {
                                     result_command_bytes.AddRange(last_meta_sub);
-                                    CM.Data_Receive_Handler(result_command_bytes.ToArray());
-                                    result_command_bytes.Clear();
+                                    if ((byte)CM.COMMAND.REQUEST_TAG_ID_CMD == result_command_bytes[0])
+                                    {
+                                        byte[] byte_bits = CM.Decode_Frame((byte)CM.COMMAND.REQUEST_TAG_ID_CMD, result_command_bytes.ToArray());
+                                        result_command_bytes.Clear();
+                                        //if (byte_bits != null && byte_bits.Length > 0)
+                                        TagID_Raise(Encoding.ASCII.GetString(byte_bits, 0, byte_bits.Length));
+                                    }
+                                    else if ((byte)CM.COMMAND.GET_RFID_CONFIGURATION_CMD == result_command_bytes[0])
+                                    {
+                                        //if (byte_bits != null && byte_bits.Length > 0)
+                                        string data_response = CM.Get_Data(CM.Decode_Frame((byte)CM.COMMAND.GET_RFID_CONFIGURATION_CMD, result_command_bytes.ToArray()));
+                                        result_command_bytes.Clear();
+                                        Cmd_Raise(data_response);
+                                    }
+                                    else
+                                    {
+                                        result_command_bytes.Clear();
+                                        MessageBox.Show(last_meta_sub[0].ToString());
+                                    }
+                                   
                                 }
                                 else
                                 {
@@ -617,8 +633,17 @@ namespace GatewayForm
                                         Request_Connection_Handler(CM.Decode_Frame((byte)CM.COMMAND.CONNECTION_REQUEST_CMD, last_meta_sub));
 
                                     else
-                                        CM.Data_Receive_Handler(last_meta_sub);
+                                        Data_Receive_Handler(last_meta_sub);
                                 }
+                            }
+                            else
+                            {
+                                Receive_Command_Handler();
+                                byte ack_file = CM.Decode_Frame_ACK((byte)CM.COMMAND.FIRMWARE_UPDATE_CMD, last_meta_sub);
+                                if (0x00 == ack_file)
+                                    receiveDone.Set();
+                                else
+                                    CM.Log_Raise("Failed Part sent.");
                             }
                         }
                         else
@@ -641,7 +666,7 @@ namespace GatewayForm
                 {
                     MessageBox.Show(se.ToString());
                     if (se.ErrorCode == 10060)
-                        CM.Cmd_Raise("Keep Alive Timeout\n");
+                        Cmd_Raise("Keep Alive Timeout\n");
                 }
             }
             catch (ObjectDisposedException)
@@ -651,6 +676,215 @@ namespace GatewayForm
             }
         }
 
+        private void Data_Receive_Handler(byte[] command_bytes)
+        {
+            byte info_ack;
+            string data_response = null;
+            byte[] byte_bits = null;
+            if (command_bytes != null && command_bytes.Length > 0)
+            {
+                switch ((CM.COMMAND)command_bytes[0])
+                {
+                    /* configuration */
+                    case CM.COMMAND.GET_CONFIGURATION_CMD:
+                        data_response = CM.Get_Data(CM.Decode_Frame((byte)CM.COMMAND.GET_CONFIGURATION_CMD, command_bytes));
+                        if (data_response.Length > 0)
+                            Cmd_Raise(data_response);
+                        break;
+                    case CM.COMMAND.SET_CONFIGURATION_CMD:
+                        info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_CONFIGURATION_CMD, command_bytes);
+                        if (0x00 == info_ack)
+                            CM.Log_Raise("Set Reader Config done");
+                        else
+                            MessageBox.Show("Failed Reader Set Config");
+                        break;
+                    /* RFID configuration */
+                    case CM.COMMAND.GET_RFID_CONFIGURATION_CMD:
+                        data_response = CM.Get_Data(CM.Decode_Frame((byte)CM.COMMAND.GET_RFID_CONFIGURATION_CMD, command_bytes));
+                        if (data_response.Length > 0)
+                            Cmd_Raise(data_response);
+                        //MessageBox.Show(data_response);
+                        break;
+                    case CM.COMMAND.SET_RFID_CONFIGURATION_CMD:
+                        info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_RFID_CONFIGURATION_CMD, command_bytes);
+                        if (0x00 == info_ack)
+                            CM.Log_Raise("Set RFID done");
+                        else
+                            MessageBox.Show("Failed Set RFID Configuration");
+                        break;
+                    /* Port Properties */
+                    case CM.COMMAND.GET_PORT_PROPERTIES_CMD:
+                        data_response = CM.Get_Data(CM.Decode_Frame((byte)CM.COMMAND.GET_PORT_PROPERTIES_CMD, command_bytes));
+                        if (data_response.Length > 0)
+                        {
+                            Cmd_Raise(data_response);
+                            MessageBox.Show(data_response);
+                        }
+                        break;
+                    case CM.COMMAND.SET_PORT_PROPERTIES_CMD:
+                        info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_PORT_PROPERTIES_CMD, command_bytes);
+                        if (0x00 == info_ack)
+                            CM.Log_Raise("Set connection done");
+                        else
+                            MessageBox.Show("Failed Set Connection");
+                        break;
+                    case CM.COMMAND.DIS_CONNECT_CMD:
+                        info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.DIS_CONNECT_CMD, command_bytes);
+                        if (0x00 != info_ack)
+                            MessageBox.Show("Failed Disconnect");
+                        break;
+                    /* start operate */
+                    case CM.COMMAND.START_OPERATION_CMD:
+                        info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.START_OPERATION_CMD, command_bytes);
+                        if (0x00 == info_ack)
+                        {
+                            CM.Log_Raise("Inventory Mode");
+                        }
+                        else
+                            MessageBox.Show("Failed Start Operation");
+                        break;
+                    /* stop operate */
+                    case CM.COMMAND.STOP_OPERATION_CMD:
+                        info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.STOP_OPERATION_CMD, command_bytes);
+                        if (0x00 == info_ack)
+                        {
+                            CM.Log_Raise("Stop Inventory");
+                        }
+                        else
+                            MessageBox.Show("Failed Stop Operation!");
+                        break;
+                    /*Tag ID */
+                    case CM.COMMAND.REQUEST_TAG_ID_CMD:
+                        byte_bits = CM.Decode_Frame((byte)CM.COMMAND.REQUEST_TAG_ID_CMD, command_bytes);
+                        if (byte_bits != null && byte_bits.Length > 0)
+                            TagID_Raise(Encoding.ASCII.GetString(byte_bits, 0, byte_bits.Length));
+                        break;
+                    //Power RFID
+                    case CM.COMMAND.GET_POWER_CMD:
+                        byte_bits = CM.Decode_Frame((byte)CM.COMMAND.GET_POWER_CMD, command_bytes);
+                        if (byte_bits != null)
+                        {
+                            if (0x00 == byte_bits[0])
+                                Cmd_Raise("Power RFID\n" + byte_bits[1].ToString() + "\n");
+                            else
+                                MessageBox.Show("Fail Get Power");
+                        }
+                        break;
+                    case CM.COMMAND.SET_POWER_CMD:
+                        info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_POWER_CMD, command_bytes);
+                        if (0x00 == info_ack)
+                            CM.Log_Raise("Set Power done");
+                        else
+                            MessageBox.Show("Failed Set Power");
+                        break;
+                    //Region Configuration
+                    case CM.COMMAND.GET_REGION_CMD:
+                        byte_bits = CM.Decode_Frame((byte)CM.COMMAND.GET_REGION_CMD, command_bytes);
+                        if (byte_bits != null)
+                        {
+                            if (0x00 == byte_bits[0])
+                                Cmd_Raise("Region RFID\n" + byte_bits[1].ToString() + "\n");
+                            else
+                                MessageBox.Show("Fail Get Region");
+                        }
+                        break;
+                    case CM.COMMAND.SET_REGION_CMD:
+                        info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_REGION_CMD, command_bytes);
+                        if (0x00 == info_ack)
+                            CM.Log_Raise("Set Region done");
+                        else
+                            MessageBox.Show("Failed Set Region");
+                        break;
+                    //Power Mode Configuration
+                    case CM.COMMAND.GET_POWER_MODE_CMD:
+                        byte_bits = CM.Decode_Frame((byte)CM.COMMAND.GET_POWER_MODE_CMD, command_bytes);
+                        if (byte_bits != null)
+                        {
+                            if (0x00 == byte_bits[0])
+                                Cmd_Raise("Power Mode RFID\n" + byte_bits[1].ToString() + "\n");
+                            else
+                                MessageBox.Show("Fail Get Power Mode");
+                        }
+                        break;
+                    case CM.COMMAND.SET_POWER_MODE_CMD:
+                        info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_POWER_MODE_CMD, command_bytes);
+                        if (0x00 == info_ack)
+                            CM.Log_Raise("Set Power Mode done");
+                        else
+                            MessageBox.Show("Failed Set Power Mode");
+                        break;
+                    // Change Connection Type
+                    case CM.COMMAND.SET_CONN_TYPE_CMD:
+                        data_response = CM.Get_Data(CM.Decode_Frame((byte)CM.COMMAND.SET_CONN_TYPE_CMD, command_bytes));
+                        if (data_response.Length > 0)
+                            Cmd_Raise("Change Protocol\n" + data_response + "\n");
+                        break;
+                    case CM.COMMAND.GET_BLF_CMD:
+                        byte_bits = CM.Decode_Frame((byte)CM.COMMAND.GET_BLF_CMD, command_bytes);
+                        if (byte_bits != null)
+                        {
+                            if (0x00 == byte_bits[0])
+                                Cmd_Raise("BLF Setting\n" + byte_bits[1].ToString() + "\n");
+                            else
+                                CM.Log_Raise("Fail Get BLF");
+                        }
+                        break;
+                    case CM.COMMAND.SET_BLF_CMD:
+                        info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_BLF_CMD, command_bytes);
+                        if (0x00 == info_ack)
+                            CM.Log_Raise("Set BLF done");
+                        else
+                            CM.Log_Raise("Failed BLF");
+                        break;
+                    case CM.COMMAND.REBOOT_CMD:
+                        info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.REBOOT_CMD, command_bytes);
+                        if (0x00 == info_ack)
+                            CM.Log_Raise("Rebooting ...");
+                        else
+                            MessageBox.Show("Failed Reboot");
+                        break;
+                    case CM.COMMAND.ANTENA_CMD:
+                        data_response = CM.Get_Data(CM.Decode_Frame((byte)CM.COMMAND.ANTENA_CMD, command_bytes));
+                        if (data_response.Length > 0)
+                            Cmd_Raise("Antena RFID\n" + data_response + "\n");
+                        break;
+                    case CM.COMMAND.SET_PLAN_CMD:
+                        info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_PLAN_CMD, command_bytes);
+                        if (0x00 == info_ack)
+                            CM.Log_Raise("Set Plan done");
+                        else
+                            MessageBox.Show("Failed Set Plan");
+                        break;
+                    case CM.COMMAND.GET_PLAN_CMD:
+                        data_response = CM.Get_Data(CM.Decode_Frame((byte)CM.COMMAND.GET_PLAN_CMD, command_bytes));
+                        if (data_response.Length > 0)
+                            Cmd_Raise("Get Plan\n" + data_response + "\n");
+                        break;
+                    case CM.COMMAND.SETTING_SENSOR_CMD:
+                        info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SETTING_SENSOR_CMD, command_bytes);
+                        if (0x00 == info_ack)
+                            CM.Log_Raise("Configure Sensor done");
+                        else
+                            MessageBox.Show("Failed Congfigure Sensor");
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        public void Cmd_Raise(string cmd_str)
+        {
+            SocketReceivedHandler cmd_msg = Config_Msg;
+            if (cmd_msg != null)
+                cmd_msg(cmd_str);
+        }
+        public void TagID_Raise(string ID_str)
+        {
+            SocketReceivedHandler messageReceived = TagID_Msg;
+            //if (messageReceived != null)
+                messageReceived(ID_str);
+        }
         /// <summary>
         /// Receive Command Data Response.
         /// </summary>

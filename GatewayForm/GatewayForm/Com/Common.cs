@@ -9,7 +9,7 @@ namespace GatewayForm
 {
     public class Common
     {
-        public delegate void SocketReceivedHandler(string msg);
+        public static event SocketReceivedHandler Log_Msg;
         //[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
         public struct FrameFormat
         {
@@ -349,17 +349,15 @@ namespace GatewayForm
         #endregion
 
         #region Events
-        public static event SocketReceivedHandler MessageReceived;
-        public static event SocketReceivedHandler ConfigMessage;
-        public static event SocketReceivedHandler Log_Msg;
-
+        
+        
         public static void Log_Raise(string log_str)
         {
             SocketReceivedHandler logmsg = Log_Msg;
             if (logmsg != null)
                 logmsg(log_str);
         }
-
+        /*
         public static void Cmd_Raise(string cmd_str)
         {
             SocketReceivedHandler cmd_msg = ConfigMessage;
@@ -371,205 +369,9 @@ namespace GatewayForm
             SocketReceivedHandler messageReceived = MessageReceived;
             if (messageReceived != null)
                 messageReceived(ID_str);
-        }
+        }*/
 
-        public static void Data_Receive_Handler(byte[] command_bytes)
-        {
-            byte info_ack;
-            string data_response = null;
-            byte[] byte_bits = null;
-            if (command_bytes != null && command_bytes.Length > 0)
-            {
-                switch ((COMMAND)command_bytes[0])
-                {
-                    /* configuration */
-                    case COMMAND.GET_CONFIGURATION_CMD:
-                        data_response = Get_Data(Decode_Frame((byte)COMMAND.GET_CONFIGURATION_CMD, command_bytes));
-                        if (data_response.Length > 0)
-                            Cmd_Raise(data_response);
-                        break;
-                    case COMMAND.SET_CONFIGURATION_CMD:
-                        info_ack = Decode_Frame_ACK((byte)COMMAND.SET_CONFIGURATION_CMD, command_bytes);
-                        if (0x00 == info_ack)
-                            Log_Raise("Set Reader Config done");
-                        else
-                            MessageBox.Show("Failed Reader Set Config");
-                        break;
-                    /* RFID configuration */
-                    case COMMAND.GET_RFID_CONFIGURATION_CMD:
-                        data_response = Get_Data(Decode_Frame((byte)COMMAND.GET_RFID_CONFIGURATION_CMD, command_bytes));
-                        if (data_response.Length > 0)
-                            Cmd_Raise(data_response);
-                        //MessageBox.Show(data_response);
-                        break;
-                    case COMMAND.SET_RFID_CONFIGURATION_CMD:
-                        info_ack = Decode_Frame_ACK((byte)COMMAND.SET_RFID_CONFIGURATION_CMD, command_bytes);
-                        if (0x00 == info_ack)
-                            Log_Raise("Set RFID done");
-                        else
-                            MessageBox.Show("Failed Set RFID Configuration");
-                        break;
-                    /* Port Properties */
-                    case COMMAND.GET_PORT_PROPERTIES_CMD:
-                        data_response = Get_Data(Decode_Frame((byte)COMMAND.GET_PORT_PROPERTIES_CMD, command_bytes));
-                        if (data_response.Length > 0)
-                        {
-                            Cmd_Raise(data_response);
-                            MessageBox.Show(data_response);
-                        }
-                        break;
-                    case COMMAND.SET_PORT_PROPERTIES_CMD:
-                        info_ack = Decode_Frame_ACK((byte)COMMAND.SET_PORT_PROPERTIES_CMD, command_bytes);
-                        if (0x00 == info_ack)
-                            Log_Raise("Set connection done");
-                        else
-                            MessageBox.Show("Failed Set Connection");
-                        break;
-                    case COMMAND.DIS_CONNECT_CMD:
-                        info_ack = Decode_Frame_ACK((byte)COMMAND.DIS_CONNECT_CMD, command_bytes);
-                        if (0x00 != info_ack)
-                            MessageBox.Show("Failed Disconnect");
-                        break;
-                    /* start operate */
-                    case COMMAND.START_OPERATION_CMD:
-                        info_ack = Decode_Frame_ACK((byte)COMMAND.START_OPERATION_CMD, command_bytes);
-                        if (0x00 == info_ack)
-                        {
-                            Log_Raise("Inventory Mode");
-                        }
-                        else
-                            MessageBox.Show("Failed Start Operation");
-                        break;
-                    /* stop operate */
-                    case COMMAND.STOP_OPERATION_CMD:
-                        info_ack = Decode_Frame_ACK((byte)COMMAND.STOP_OPERATION_CMD, command_bytes);
-                        if (0x00 == info_ack)
-                        {
-                            Log_Raise("Stop Inventory");
-                        }
-                        else
-                            MessageBox.Show("Failed Stop Operation!");
-                        break;
-                    /*Tag ID */
-                    case COMMAND.REQUEST_TAG_ID_CMD:
-                        byte_bits = Decode_Frame((byte)COMMAND.REQUEST_TAG_ID_CMD, command_bytes);
-                        if (byte_bits != null && byte_bits.Length > 0)
-                            TagID_Raise(Encoding.ASCII.GetString(byte_bits, 0, byte_bits.Length));
-                        break;
-                    //Power RFID
-                    case COMMAND.GET_POWER_CMD:
-                        byte_bits = Decode_Frame((byte)COMMAND.GET_POWER_CMD, command_bytes);
-                        if (byte_bits != null)
-                        {
-                            if (0x00 == byte_bits[0])
-                                Cmd_Raise("Power RFID\n" + byte_bits[1].ToString() + "\n");
-                            else
-                                MessageBox.Show("Fail Get Power");
-                        }
-                        break;
-                    case COMMAND.SET_POWER_CMD:
-                        info_ack = Decode_Frame_ACK((byte)COMMAND.SET_POWER_CMD, command_bytes);
-                        if (0x00 == info_ack)
-                            Log_Raise("Set Power done");
-                        else
-                            MessageBox.Show("Failed Set Power");
-                        break;
-                    //Region Configuration
-                    case COMMAND.GET_REGION_CMD:
-                        byte_bits = Decode_Frame((byte)COMMAND.GET_REGION_CMD, command_bytes);
-                        if (byte_bits != null)
-                        {
-                            if (0x00 == byte_bits[0])
-                                Cmd_Raise("Region RFID\n" + byte_bits[1].ToString() + "\n");
-                            else
-                                MessageBox.Show("Fail Get Region");
-                        }
-                        break;
-                    case COMMAND.SET_REGION_CMD:
-                        info_ack = Decode_Frame_ACK((byte)COMMAND.SET_REGION_CMD, command_bytes);
-                        if (0x00 == info_ack)
-                            Log_Raise("Set Region done");
-                        else
-                            MessageBox.Show("Failed Set Region");
-                        break;
-                    //Power Mode Configuration
-                    case COMMAND.GET_POWER_MODE_CMD:
-                        byte_bits = Decode_Frame((byte)COMMAND.GET_POWER_MODE_CMD, command_bytes);
-                        if (byte_bits != null)
-                        {
-                            if (0x00 == byte_bits[0])
-                                Cmd_Raise("Power Mode RFID\n" + byte_bits[1].ToString() + "\n");
-                            else
-                                MessageBox.Show("Fail Get Power Mode");
-                        }
-                        break;
-                    case COMMAND.SET_POWER_MODE_CMD:
-                        info_ack = Decode_Frame_ACK((byte)COMMAND.SET_POWER_MODE_CMD, command_bytes);
-                        if (0x00 == info_ack)
-                            Log_Raise("Set Power Mode done");
-                        else
-                            MessageBox.Show("Failed Set Power Mode");
-                        break;
-                    // Change Connection Type
-                    case COMMAND.SET_CONN_TYPE_CMD:
-                        data_response = Get_Data(Decode_Frame((byte)COMMAND.SET_CONN_TYPE_CMD, command_bytes));
-                        if (data_response.Length > 0)
-                            Cmd_Raise("Change Protocol\n" + data_response + "\n");
-                        break;
-                    case COMMAND.GET_BLF_CMD:
-                        byte_bits = Decode_Frame((byte)COMMAND.GET_BLF_CMD, command_bytes);
-                        if (byte_bits != null)
-                        {
-                            if (0x00 == byte_bits[0])
-                                Cmd_Raise("BLF Setting\n" + byte_bits[1].ToString() + "\n");
-                            else
-                                Log_Raise("Fail Get BLF");
-                        }
-                        break;
-                    case COMMAND.SET_BLF_CMD:
-                        info_ack = Decode_Frame_ACK((byte)COMMAND.SET_BLF_CMD, command_bytes);
-                        if (0x00 == info_ack)
-                            Log_Raise("Set BLF done");
-                        else
-                            Log_Raise("Failed BLF");
-                        break;
-                    case COMMAND.REBOOT_CMD:
-                        info_ack = Decode_Frame_ACK((byte)COMMAND.REBOOT_CMD, command_bytes);
-                        if (0x00 == info_ack)
-                            Log_Raise("Rebooting ...");
-                        else
-                            MessageBox.Show("Failed Reboot");
-                        break;
-                    case COMMAND.ANTENA_CMD:
-                        data_response = Get_Data(Decode_Frame((byte)COMMAND.ANTENA_CMD, command_bytes));
-                        if (data_response.Length > 0)
-                            Cmd_Raise("Antena RFID\n" + data_response + "\n");
-                        break;
-                    case COMMAND.SET_PLAN_CMD:
-                        info_ack = Decode_Frame_ACK((byte)COMMAND.SET_PLAN_CMD, command_bytes);
-                        if (0x00 == info_ack)
-                            Log_Raise("Set Plan done");
-                        else
-                            MessageBox.Show("Failed Set Plan");
-                        break;
-                    case COMMAND.GET_PLAN_CMD:
-                        data_response = Get_Data(Decode_Frame((byte)COMMAND.GET_PLAN_CMD, command_bytes));
-                        if (data_response.Length > 0)
-                            Cmd_Raise("Get Plan\n" + data_response + "\n");
-                        break;
-                    case COMMAND.SETTING_SENSOR_CMD:
-                        info_ack = Decode_Frame_ACK((byte)COMMAND.SETTING_SENSOR_CMD, command_bytes);
-                        if (0x00 == info_ack)
-                            Log_Raise("Configure Sensor done");
-                        else
-                            MessageBox.Show("Failed Congfigure Sensor");
-                        break;
-                    default:
-                        break;
-                }
-            }
-            //command_bytes = new byte[0];
-        }
+        
         #endregion
     }
 }

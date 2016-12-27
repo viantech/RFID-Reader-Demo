@@ -66,7 +66,7 @@ namespace GatewayForm
             public string EPC;
             public string weight;
 
-            public Plan_Struct(string name , string antena = "1", FILTER filter_type = FILTER.EPC, string EPC = "AAAA", string weight = "1")
+            public Plan_Struct(string name , string antena, FILTER filter_type = FILTER.EPC, string EPC = "AAAA", string weight = "1")
             {
                 this.name = name;
                 this.antena = antena; 

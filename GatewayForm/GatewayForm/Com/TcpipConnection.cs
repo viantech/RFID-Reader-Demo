@@ -132,7 +132,7 @@ namespace GatewayForm
                                 MessageBox.Show("Failed start operation");
                         }
                         else
-                            CM.Data_Receive_Handler(result_data_byte);
+                            //Data_Receive_Handler(result_data_byte);
                         result_data_byte = new byte[0];
                         flag_arriveddata = false;
                     }

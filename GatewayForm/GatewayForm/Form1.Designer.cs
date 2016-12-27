@@ -64,6 +64,7 @@
             this.Ant2_ckb = new System.Windows.Forms.CheckBox();
             this.Ant3_ckb = new System.Windows.Forms.CheckBox();
             this.Ant4_ckb = new System.Windows.Forms.CheckBox();
+            this.get_anten_btn = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox17 = new System.Windows.Forms.GroupBox();
             this.Set_sensor_btn = new System.Windows.Forms.Button();
@@ -92,9 +93,17 @@
             this.MessageInterval_tx = new System.Windows.Forms.TextBox();
             this.label18 = new System.Windows.Forms.Label();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.Mode_pallet_pattern_cbx = new System.Windows.Forms.ComboBox();
+            this.mask_pallet_id_lb = new System.Windows.Forms.Label();
+            this.Invert_ckb = new System.Windows.Forms.CheckBox();
             this.PalletSupport_cbx = new System.Windows.Forms.CheckBox();
+            this.bit_length_tx = new System.Windows.Forms.TextBox();
+            this.bit_length_lb = new System.Windows.Forms.Label();
             this.PatternID_tx = new System.Windows.Forms.TextBox();
-            this.label17 = new System.Windows.Forms.Label();
+            this.bank_lb = new System.Windows.Forms.Label();
+            this.start_bit_tx = new System.Windows.Forms.TextBox();
+            this.start_bit_lb = new System.Windows.Forms.Label();
+            this.bank_cbx = new System.Windows.Forms.ComboBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.AudioSupport_cbx = new System.Windows.Forms.CheckBox();
             this.label9 = new System.Windows.Forms.Label();
@@ -550,6 +559,7 @@
             this.flowLayoutPanel1.Controls.Add(this.Ant2_ckb);
             this.flowLayoutPanel1.Controls.Add(this.Ant3_ckb);
             this.flowLayoutPanel1.Controls.Add(this.Ant4_ckb);
+            this.flowLayoutPanel1.Controls.Add(this.get_anten_btn);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 18);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
@@ -603,6 +613,17 @@
             this.Ant4_ckb.TabIndex = 6;
             this.Ant4_ckb.Text = "Ant.4";
             this.Ant4_ckb.UseVisualStyleBackColor = true;
+            // 
+            // get_anten_btn
+            // 
+            this.get_anten_btn.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.get_anten_btn.Location = new System.Drawing.Point(67, 29);
+            this.get_anten_btn.Name = "get_anten_btn";
+            this.get_anten_btn.Size = new System.Drawing.Size(75, 23);
+            this.get_anten_btn.TabIndex = 7;
+            this.get_anten_btn.Text = "Check";
+            this.get_anten_btn.UseVisualStyleBackColor = true;
+            this.get_anten_btn.Click += new System.EventHandler(this.get_anten_btn_Click);
             // 
             // tabPage2
             // 
@@ -733,7 +754,7 @@
             this.Sensor_EN_ckb.Checked = true;
             this.Sensor_EN_ckb.CheckState = System.Windows.Forms.CheckState.Checked;
             this.Sensor_EN_ckb.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Sensor_EN_ckb.Location = new System.Drawing.Point(8, -3);
+            this.Sensor_EN_ckb.Location = new System.Drawing.Point(8, -2);
             this.Sensor_EN_ckb.Name = "Sensor_EN_ckb";
             this.Sensor_EN_ckb.Size = new System.Drawing.Size(127, 20);
             this.Sensor_EN_ckb.TabIndex = 0;
@@ -751,6 +772,7 @@
             this.time_on_tx.Size = new System.Drawing.Size(61, 22);
             this.time_on_tx.TabIndex = 15;
             this.time_on_tx.Text = "0";
+            this.time_on_tx.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.time_on_tx_KeyPress);
             // 
             // time_off_tx
             // 
@@ -762,6 +784,7 @@
             this.time_off_tx.Size = new System.Drawing.Size(61, 22);
             this.time_off_tx.TabIndex = 15;
             this.time_off_tx.Text = "0";
+            this.time_off_tx.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.time_off_tx_KeyPress);
             // 
             // groupBox10
             // 
@@ -770,7 +793,7 @@
             this.groupBox10.Controls.Add(this.set_port_btn);
             this.groupBox10.Controls.Add(this.set_newconn_btn);
             this.groupBox10.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox10.Location = new System.Drawing.Point(25, 254);
+            this.groupBox10.Location = new System.Drawing.Point(25, 300);
             this.groupBox10.Name = "groupBox10";
             this.groupBox10.Size = new System.Drawing.Size(451, 65);
             this.groupBox10.TabIndex = 30;
@@ -844,7 +867,7 @@
             // 
             this.update_fw_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.update_fw_btn.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.update_fw_btn.Location = new System.Drawing.Point(30, 338);
+            this.update_fw_btn.Location = new System.Drawing.Point(30, 370);
             this.update_fw_btn.Name = "update_fw_btn";
             this.update_fw_btn.Size = new System.Drawing.Size(119, 27);
             this.update_fw_btn.TabIndex = 28;
@@ -941,16 +964,58 @@
             // 
             // groupBox6
             // 
+            this.groupBox6.Controls.Add(this.Mode_pallet_pattern_cbx);
+            this.groupBox6.Controls.Add(this.mask_pallet_id_lb);
+            this.groupBox6.Controls.Add(this.Invert_ckb);
             this.groupBox6.Controls.Add(this.PalletSupport_cbx);
+            this.groupBox6.Controls.Add(this.bit_length_tx);
+            this.groupBox6.Controls.Add(this.bit_length_lb);
             this.groupBox6.Controls.Add(this.PatternID_tx);
-            this.groupBox6.Controls.Add(this.label17);
+            this.groupBox6.Controls.Add(this.bank_lb);
+            this.groupBox6.Controls.Add(this.start_bit_tx);
+            this.groupBox6.Controls.Add(this.start_bit_lb);
+            this.groupBox6.Controls.Add(this.bank_cbx);
             this.groupBox6.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox6.Location = new System.Drawing.Point(25, 181);
+            this.groupBox6.Location = new System.Drawing.Point(25, 178);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(368, 67);
+            this.groupBox6.Size = new System.Drawing.Size(450, 120);
             this.groupBox6.TabIndex = 10;
             this.groupBox6.TabStop = false;
-            this.groupBox6.Visible = false;
+            // 
+            // Mode_pallet_pattern_cbx
+            // 
+            this.Mode_pallet_pattern_cbx.FormattingEnabled = true;
+            this.Mode_pallet_pattern_cbx.Items.AddRange(new object[] {
+            "Simple Mode",
+            "Extend Mode"});
+            this.Mode_pallet_pattern_cbx.Location = new System.Drawing.Point(24, 26);
+            this.Mode_pallet_pattern_cbx.Name = "Mode_pallet_pattern_cbx";
+            this.Mode_pallet_pattern_cbx.Size = new System.Drawing.Size(121, 24);
+            this.Mode_pallet_pattern_cbx.TabIndex = 34;
+            this.Mode_pallet_pattern_cbx.Text = "Simple Mode";
+            this.Mode_pallet_pattern_cbx.SelectedIndexChanged += new System.EventHandler(this.Mode_pallet_pattern_cbx_SelectedIndexChanged);
+            // 
+            // mask_pallet_id_lb
+            // 
+            this.mask_pallet_id_lb.AutoSize = true;
+            this.mask_pallet_id_lb.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.mask_pallet_id_lb.Location = new System.Drawing.Point(30, 65);
+            this.mask_pallet_id_lb.Name = "mask_pallet_id_lb";
+            this.mask_pallet_id_lb.Size = new System.Drawing.Size(108, 16);
+            this.mask_pallet_id_lb.TabIndex = 32;
+            this.mask_pallet_id_lb.Text = "Pallet Pattern ID:";
+            // 
+            // Invert_ckb
+            // 
+            this.Invert_ckb.AutoSize = true;
+            this.Invert_ckb.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Invert_ckb.Location = new System.Drawing.Point(30, 65);
+            this.Invert_ckb.Name = "Invert_ckb";
+            this.Invert_ckb.Size = new System.Drawing.Size(59, 20);
+            this.Invert_ckb.TabIndex = 29;
+            this.Invert_ckb.Text = "Invert";
+            this.Invert_ckb.UseVisualStyleBackColor = true;
+            this.Invert_ckb.Visible = false;
             // 
             // PalletSupport_cbx
             // 
@@ -958,7 +1023,7 @@
             this.PalletSupport_cbx.Checked = true;
             this.PalletSupport_cbx.CheckState = System.Windows.Forms.CheckState.Checked;
             this.PalletSupport_cbx.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PalletSupport_cbx.Location = new System.Drawing.Point(8, -3);
+            this.PalletSupport_cbx.Location = new System.Drawing.Point(11, -2);
             this.PalletSupport_cbx.Name = "PalletSupport_cbx";
             this.PalletSupport_cbx.Size = new System.Drawing.Size(176, 20);
             this.PalletSupport_cbx.TabIndex = 28;
@@ -966,29 +1031,91 @@
             this.PalletSupport_cbx.UseVisualStyleBackColor = true;
             this.PalletSupport_cbx.CheckedChanged += new System.EventHandler(this.PalletSupport_cbx_CheckedChanged);
             // 
+            // bit_length_tx
+            // 
+            this.bit_length_tx.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.bit_length_tx.BackColor = System.Drawing.SystemColors.HighlightText;
+            this.bit_length_tx.Font = new System.Drawing.Font("Arial", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.bit_length_tx.Location = new System.Drawing.Point(272, 100);
+            this.bit_length_tx.Name = "bit_length_tx";
+            this.bit_length_tx.Size = new System.Drawing.Size(47, 21);
+            this.bit_length_tx.TabIndex = 2;
+            this.bit_length_tx.Text = "0";
+            this.bit_length_tx.Visible = false;
+            // 
+            // bit_length_lb
+            // 
+            this.bit_length_lb.AutoSize = true;
+            this.bit_length_lb.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.bit_length_lb.Location = new System.Drawing.Point(183, 100);
+            this.bit_length_lb.Name = "bit_length_lb";
+            this.bit_length_lb.Size = new System.Drawing.Size(71, 16);
+            this.bit_length_lb.TabIndex = 33;
+            this.bit_length_lb.Text = "Bit Length:";
+            this.bit_length_lb.Visible = false;
+            // 
             // PatternID_tx
             // 
             this.PatternID_tx.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.PatternID_tx.BackColor = System.Drawing.SystemColors.HighlightText;
             this.PatternID_tx.Font = new System.Drawing.Font("Arial", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PatternID_tx.Location = new System.Drawing.Point(136, 26);
+            this.PatternID_tx.Location = new System.Drawing.Point(160, 60);
             this.PatternID_tx.Name = "PatternID_tx";
             this.PatternID_tx.Size = new System.Drawing.Size(212, 21);
             this.PatternID_tx.TabIndex = 2;
             this.PatternID_tx.Text = "010203040506070809101112";
+            this.PatternID_tx.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.PatternID_tx_KeyPress);
             // 
-            // label17
+            // bank_lb
             // 
-            this.label17.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.label17.AutoSize = true;
-            this.label17.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label17.Location = new System.Drawing.Point(25, 30);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(105, 16);
-            this.label17.TabIndex = 1;
-            this.label17.Text = "Pallet pattern ID:";
+            this.bank_lb.AutoSize = true;
+            this.bank_lb.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.bank_lb.Location = new System.Drawing.Point(155, 65);
+            this.bank_lb.Name = "bank_lb";
+            this.bank_lb.Size = new System.Drawing.Size(43, 16);
+            this.bank_lb.TabIndex = 31;
+            this.bank_lb.Text = "Bank:";
+            this.bank_lb.Visible = false;
+            // 
+            // start_bit_tx
+            // 
+            this.start_bit_tx.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.start_bit_tx.BackColor = System.Drawing.SystemColors.HighlightText;
+            this.start_bit_tx.Font = new System.Drawing.Font("Arial", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.start_bit_tx.Location = new System.Drawing.Point(109, 100);
+            this.start_bit_tx.Name = "start_bit_tx";
+            this.start_bit_tx.Size = new System.Drawing.Size(47, 21);
+            this.start_bit_tx.TabIndex = 2;
+            this.start_bit_tx.Text = "0";
+            this.start_bit_tx.Visible = false;
+            // 
+            // start_bit_lb
+            // 
+            this.start_bit_lb.AutoSize = true;
+            this.start_bit_lb.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.start_bit_lb.Location = new System.Drawing.Point(30, 100);
+            this.start_bit_lb.Name = "start_bit_lb";
+            this.start_bit_lb.Size = new System.Drawing.Size(60, 16);
+            this.start_bit_lb.TabIndex = 33;
+            this.start_bit_lb.Text = "Start Bit:";
+            this.start_bit_lb.Visible = false;
+            // 
+            // bank_cbx
+            // 
+            this.bank_cbx.FormattingEnabled = true;
+            this.bank_cbx.Items.AddRange(new object[] {
+            "EPC",
+            "User Memory",
+            "TID"});
+            this.bank_cbx.Location = new System.Drawing.Point(220, 60);
+            this.bank_cbx.Name = "bank_cbx";
+            this.bank_cbx.Size = new System.Drawing.Size(67, 24);
+            this.bank_cbx.TabIndex = 30;
+            this.bank_cbx.Text = "EPC";
+            this.bank_cbx.Visible = false;
             // 
             // groupBox5
             // 
@@ -1245,9 +1372,10 @@
             // tid_rbtn
             // 
             this.tid_rbtn.AutoSize = true;
+            this.tid_rbtn.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tid_rbtn.Location = new System.Drawing.Point(12, 95);
             this.tid_rbtn.Name = "tid_rbtn";
-            this.tid_rbtn.Size = new System.Drawing.Size(46, 20);
+            this.tid_rbtn.Size = new System.Drawing.Size(45, 20);
             this.tid_rbtn.TabIndex = 2;
             this.tid_rbtn.TabStop = true;
             this.tid_rbtn.Text = "TID";
@@ -1257,9 +1385,10 @@
             // Mem_rbtn
             // 
             this.Mem_rbtn.AutoSize = true;
+            this.Mem_rbtn.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Mem_rbtn.Location = new System.Drawing.Point(12, 64);
             this.Mem_rbtn.Name = "Mem_rbtn";
-            this.Mem_rbtn.Size = new System.Drawing.Size(77, 20);
+            this.Mem_rbtn.Size = new System.Drawing.Size(73, 20);
             this.Mem_rbtn.TabIndex = 2;
             this.Mem_rbtn.TabStop = true;
             this.Mem_rbtn.Text = "Memory";
@@ -1269,9 +1398,10 @@
             // EPC_rbtn
             // 
             this.EPC_rbtn.AutoSize = true;
+            this.EPC_rbtn.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.EPC_rbtn.Location = new System.Drawing.Point(12, 32);
             this.EPC_rbtn.Name = "EPC_rbtn";
-            this.EPC_rbtn.Size = new System.Drawing.Size(52, 20);
+            this.EPC_rbtn.Size = new System.Drawing.Size(53, 20);
             this.EPC_rbtn.TabIndex = 2;
             this.EPC_rbtn.TabStop = true;
             this.EPC_rbtn.Text = "EPC";
@@ -1346,7 +1476,6 @@
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
             this.flowLayoutPanel3.Size = new System.Drawing.Size(285, 45);
             this.flowLayoutPanel3.TabIndex = 0;
-            this.flowLayoutPanel3.Leave += new System.EventHandler(this.flowLayoutPanel3_Leave);
             // 
             // Ant1_plan_ckb
             // 
@@ -1358,6 +1487,7 @@
             this.Ant1_plan_ckb.TabIndex = 2;
             this.Ant1_plan_ckb.Text = "Ant.1";
             this.Ant1_plan_ckb.UseVisualStyleBackColor = true;
+            this.Ant1_plan_ckb.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Ant1_plan_ckb_MouseClick);
             // 
             // Ant2_plan_ckb
             // 
@@ -1369,6 +1499,7 @@
             this.Ant2_plan_ckb.TabIndex = 2;
             this.Ant2_plan_ckb.Text = "Ant.2";
             this.Ant2_plan_ckb.UseVisualStyleBackColor = true;
+            this.Ant2_plan_ckb.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Ant2_plan_ckb_MouseClick);
             // 
             // Ant3_plan_ckb
             // 
@@ -1380,6 +1511,7 @@
             this.Ant3_plan_ckb.TabIndex = 2;
             this.Ant3_plan_ckb.Text = "Ant.3";
             this.Ant3_plan_ckb.UseVisualStyleBackColor = true;
+            this.Ant3_plan_ckb.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Ant3_plan_ckb_MouseClick);
             // 
             // Ant4_plan_ckb
             // 
@@ -1391,6 +1523,7 @@
             this.Ant4_plan_ckb.TabIndex = 2;
             this.Ant4_plan_ckb.Text = "Ant.4";
             this.Ant4_plan_ckb.UseVisualStyleBackColor = true;
+            this.Ant4_plan_ckb.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Ant4_plan_ckb_MouseClick);
             // 
             // Remove_plan_btn
             // 
@@ -1443,6 +1576,7 @@
             this.Set_RFID_btn.TabIndex = 5;
             this.Set_RFID_btn.Text = "SET";
             this.Set_RFID_btn.UseVisualStyleBackColor = true;
+            this.Set_RFID_btn.Visible = false;
             this.Set_RFID_btn.Click += new System.EventHandler(this.Set_RFID_btn_Click);
             // 
             // Get_RFID_btn
@@ -2458,7 +2592,6 @@
         private System.Windows.Forms.TrackBar AudioVolume_trb;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.GroupBox groupBox6;
-        private System.Windows.Forms.Label label17;
         private System.Windows.Forms.TextBox PatternID_tx;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.TextBox MessageInterval_tx;
@@ -2600,6 +2733,16 @@
         private System.Windows.Forms.Label label41;
         private System.Windows.Forms.Label reader_type_lb;
         private System.Windows.Forms.Button Set_sensor_btn;
+        private System.Windows.Forms.CheckBox Invert_ckb;
+        private System.Windows.Forms.Label bank_lb;
+        private System.Windows.Forms.ComboBox bank_cbx;
+        private System.Windows.Forms.Label mask_pallet_id_lb;
+        private System.Windows.Forms.Label bit_length_lb;
+        private System.Windows.Forms.TextBox bit_length_tx;
+        private System.Windows.Forms.Label start_bit_lb;
+        private System.Windows.Forms.TextBox start_bit_tx;
+        private System.Windows.Forms.ComboBox Mode_pallet_pattern_cbx;
+        private System.Windows.Forms.Button get_anten_btn;
     }
 }
 

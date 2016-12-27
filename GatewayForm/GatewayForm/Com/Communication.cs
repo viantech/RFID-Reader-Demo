@@ -10,6 +10,9 @@ namespace GatewayForm
 {
     public class Communication
     {
+        public event SocketReceivedHandler TagID_Msg;
+        public event SocketReceivedHandler Config_Msg;
+
         private CM.TYPECONNECT type;
         private SocketClient zigbee;
         private TCP_Client tcp;
@@ -71,10 +74,13 @@ namespace GatewayForm
             {
                 case CM.TYPECONNECT.HDR_ZIGBEE:
                     zigbee.Connect(ip_addr, port);
+                    zigbee.Config_Msg += passed_config;
+                    zigbee.TagID_Msg += passed_event;
                     break;
                 case CM.TYPECONNECT.HDR_WIFI:
                     tcp.InitClient(ip_addr, port);
-                    
+                    tcp.Config_Msg += passed_config;
+                    tcp.TagID_Msg += passed_event;
                     /*if (pTcpipClient != null)
                     {
                         pTcpipClient.CreateSocketConnection(ip_addr, port);
@@ -92,7 +98,8 @@ namespace GatewayForm
                     break;
                 case CM.TYPECONNECT.HDR_ETHERNET:
                     tcp.InitClient(ip_addr, port);
-                    
+                    tcp.Config_Msg += passed_config;
+                    tcp.TagID_Msg += passed_event;
                     break;
                 case CM.TYPECONNECT.HDR_RS232:
                     break;
@@ -107,17 +114,26 @@ namespace GatewayForm
             {
                 case CM.TYPECONNECT.HDR_ZIGBEE:
                     zigbee.Free();
+                    zigbee.Config_Msg -= passed_config;
+                    zigbee.TagID_Msg -= passed_event;
                     zigbee = null;
+                    
                     break;
                 case CM.TYPECONNECT.HDR_WIFI:
                     tcp.Free();
+                    tcp.Config_Msg -= passed_config;
+                    tcp.TagID_Msg -= passed_event;
                     tcp = null;
+                    
                     break;
                 case CM.TYPECONNECT.HDR_BLUETOOTH:
                     break;
                 case CM.TYPECONNECT.HDR_ETHERNET:
                     tcp.Free();
+                    tcp.Config_Msg -= passed_config;
+                    tcp.TagID_Msg -= passed_event;
                     tcp = null;
+                    
                     /*pp.close();
                     pTcpipClient.MessageReceived -= passed_event; //chu y
                     pTcpipClient.ConfigMessage -= passed_config;
@@ -434,21 +450,21 @@ namespace GatewayForm
                 default:
                     break;
             }
-        }
+        }*/
 
         private void passed_event(string str_event)
         {
-            CM.SocketReceivedHandler recv_msg = TagID_Msg;
+            SocketReceivedHandler recv_msg = TagID_Msg;
             if (recv_msg != null)
                 recv_msg(str_event);
         }
         private void passed_config(string config_str)
         {
-            CM.SocketReceivedHandler get_msg = Config_Msg;
+            SocketReceivedHandler get_msg = Config_Msg;
             if (get_msg != null)
                 get_msg(config_str);
         }
-        private void passed_log(string log_str)
+        /*private void passed_log(string log_str)
         {
             CM.SocketReceivedHandler get_log = Log_Msg;
             if (get_log != null)
