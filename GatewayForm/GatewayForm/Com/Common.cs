@@ -148,6 +148,12 @@ namespace GatewayForm
             GET_PLAN_CMD = 0x19,
             FIRMWARE_UPDATE_CMD = 0x1B,
             SETTING_SENSOR_CMD = 0x1C,
+            GET_GPIO_STATUS_CMD = 0x1D,
+            SET_WRITE_POWER_PORT_CMD = 0x1E,
+            GET_WRITE_POWER_PORT_CMD = 0x1F,
+            SET_READ_POWER_PORT_CMD = 0x20,
+            GET_READ_POWER_PORT_CMD = 0x21,
+            SET_GPO_VALUE_CMD = 0x22,
         };
 
         public enum HEADER
@@ -189,7 +195,7 @@ namespace GatewayForm
             byte sum = 0;
             for (int i = 0; i < length; i++)
                 sum += data[i];
-            sum = (byte)(~sum + 1);
+            sum = (byte)((byte)~sum + 1);
 
             return sum;
         }
@@ -232,6 +238,13 @@ namespace GatewayForm
         #endregion
 
         #region API Decode byte stream receive to meta data
+        private static string ByteArrayToHexString(byte[] ba)
+        {
+            StringBuilder hex = new StringBuilder(ba.Length * 2);
+            foreach (byte b in ba)
+                hex.AppendFormat("{0:x2} ", b);
+            return hex.ToString();
+        }
         /// <summary>
         /// Decoding the SubFrameFormat is sent via TCP connection.
         /// </summary>
@@ -240,36 +253,42 @@ namespace GatewayForm
         /// <returns>Meta Data bytes</returns>
         public static byte[] Decode_SubFrame(byte[] buffer, int len)
         {
-            SubFrameFormat sub_fmt = new SubFrameFormat();
+            //SubFrameFormat sub_fmt = new SubFrameFormat();
             //int datalen_subfmt;
             /* Sub Frame Format*/
             // Header ignore
-            if (buffer == null || buffer.Length == 0)
-                return null;
-            sub_fmt.header = buffer[0];
-            if (buffer[0] != (byte)HEADER.RESP_PACKET_HDR)
-            {
-                MessageBox.Show("The TCP packet not send by RFID Gateway");
-                return null;
-            }
+            //if (buffer == null || buffer.Length == 0)
+                //return null;
+            //sub_fmt.header = buffer[0];
+            //if (buffer[0] != (byte)HEADER.RESP_PACKET_HDR)
+                //MessageBox.Show("The TCP packet not send by RFID Gateway");
+                //return null;
             //Length
-            sub_fmt.length = (ushort)(buffer[2] + (buffer[1] << 8)); // deduce 1 byte header
-            if (sub_fmt.length != len - 1)
+            /*sub_fmt.length = (ushort)(((buffer[1] << 8) & 0xFF00) | buffer[2]);//(ushort)(buffer[2] | ()(buffer[1] << 8)); // deduce 1 byte header
+            if (sub_fmt.length != (len - 1))
+            {
+                Console.WriteLine("wrong length {0} vs {1}", sub_fmt.length, len -1);
+                Console.WriteLine(ByteArrayToHexString(buffer));
                 return null;
+            }*/
 
             //Check CRC
-            sub_fmt.checksum = buffer[len - 1];
-            if (sub_fmt.checksum != Chcksum(buffer.Skip(1).ToArray(), sub_fmt.length - 1))
+            //sub_fmt.checksum = buffer[len - 1];
+            if (buffer[len - 1] != Chcksum(buffer.Skip(1).ToArray(), len - 2))
+            {
+                //Console.WriteLine("Wrong checksum {0} vs {1}", buffer[len - 1].ToString(), Chcksum(buffer.Skip(1).ToArray(), len - 2).ToString());
+                //Console.WriteLine(ByteArrayToHexString(buffer));
+                Log_Raise("Wrong Checksum");
                 return null;
-
+            }
             /*Data of TCP packet is part of Frame Format*/
-            sub_fmt.metal_data = new byte[len - 6];
-            Buffer.BlockCopy(buffer, 3, sub_fmt.metal_data, 0, len - 6);
+            byte[] meta_data = new byte[len - 6];
+            Buffer.BlockCopy(buffer, 3, meta_data, 0, len - 6);
             //Number of TCP packet be slpited in meta data
             //sub_fmt.truncate = (ushort)(buffer[len - 2] + (buffer[len - 3] << 8));
 
             //return sub_fmt.metal_data;
-            return sub_fmt.metal_data;
+            return meta_data;
         }
         /// <summary>
         /// Decoding FrameFormat is slpit by RFID gateway

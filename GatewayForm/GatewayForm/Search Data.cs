@@ -26,7 +26,22 @@ namespace GatewayForm
 
         private void btn_searchdate_Click(object sender, EventArgs e)
         {
-            loaddatasearch("TAG", txt_search_date.Text);
+            int day = txt_search_date.Value.Day;
+            int month = txt_search_date.Value.Month;
+            int year = txt_search_date.Value.Year;
+            int hour = txt_search_date.Value.Hour;
+            int minute = txt_search_date.Value.Minute;
+
+            String value = year + "-" + month + "-" + day + " " + hour + ":" + minute;
+
+
+            MessageBox.Show(value);
+            loaddatasearch("DATE",value);
+        }
+
+        private void txt_search_date_ValueChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

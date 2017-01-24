@@ -28,3 +28,19 @@ C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Release\Gatewa
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Release\GatewayForm.csprojResolveAssemblyReference.cache
 D:\GUI\guidesign\GatewayForm\GatewayForm\bin\Release\System.Data.SQLite.dll
 D:\GUI\guidesign\GatewayForm\GatewayForm\obj\Release\GatewayForm.SearchForm_Data.resources
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\GatewayForm\bin\Release\GatewayForm.exe.config
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\GatewayForm\obj\Release\GatewayForm.exe
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\GatewayForm\obj\Release\GatewayForm.pdb
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\GatewayForm\bin\Release\GatewayForm.exe
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\GatewayForm\bin\Release\GatewayForm.pdb
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\GatewayForm\bin\Release\Newtonsoft.Json.dll
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\GatewayForm\bin\Release\System.Data.SQLite.dll
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\GatewayForm\obj\Release\GatewayForm.csprojResolveAssemblyReference.cache
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\GatewayForm\obj\Release\GatewayForm.Form1.resources
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\GatewayForm\obj\Release\GatewayForm.SearchForm_Data.resources
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\GatewayForm\obj\Release\GatewayForm.Serial_pop.resources
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\GatewayForm\obj\Release\GatewayForm.Tcp_pop.resources
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\GatewayForm\obj\Release\GatewayForm.Wifi_pop.resources
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\GatewayForm\obj\Release\GatewayForm.Zigbee_pop.resources
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\GatewayForm\obj\Release\GatewayForm.Properties.Resources.resources
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\GatewayForm\obj\Release\GatewayForm.csproj.GenerateResource.Cache

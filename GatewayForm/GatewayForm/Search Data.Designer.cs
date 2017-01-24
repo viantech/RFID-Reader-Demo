@@ -93,6 +93,7 @@
             this.txt_search_date.Name = "txt_search_date";
             this.txt_search_date.Size = new System.Drawing.Size(200, 21);
             this.txt_search_date.TabIndex = 6;
+            this.txt_search_date.ValueChanged += new System.EventHandler(this.txt_search_date_ValueChanged);
             // 
             // SearchForm_Data
             // 

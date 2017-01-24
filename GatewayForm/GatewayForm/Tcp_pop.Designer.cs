@@ -265,6 +265,7 @@
             this.MaximizeBox = false;
             this.Name = "Tcp_pop";
             this.Text = "Ethernet Port";
+            this.Activated += new System.EventHandler(this.Tcp_pop_Activated);
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             this.groupBox3.ResumeLayout(false);

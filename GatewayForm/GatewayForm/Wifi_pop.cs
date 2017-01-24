@@ -68,5 +68,11 @@ namespace GatewayForm
             this.gateway_tx.Enabled = true;
         }
 
+        private void Wifi_pop_Activated(object sender, EventArgs e)
+        {
+            this.address_tx.Text = address;
+            this.port_tx.Text = port;
+        }
+
     }
 }

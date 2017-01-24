@@ -1,0 +1,16 @@
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\x64\x64\GatewayForm.exe.config
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\x64\x64\RobotManager.baml
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\x64\x64\RobotManager.g.cs
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\x64\x64\GatewayForm_MarkupCompile.cache
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\x64\x64\GatewayForm.g.resources
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\x64\x64\GatewayForm.Form1.resources
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\x64\x64\GatewayForm.ScanIP.resources
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\x64\x64\GatewayForm.SearchForm_Data.resources
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\x64\x64\GatewayForm.Serial_pop.resources
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\x64\x64\GatewayForm.setup_connect.resources
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\x64\x64\GatewayForm.Tcp_pop.resources
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\x64\x64\GatewayForm.Wifi_pop.resources
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\x64\x64\GatewayForm.Zigbee_pop.resources
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\x64\x64\GatewayForm.Properties.Resources.resources
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\x64\x64\GatewayForm.Zigbee_pop.en.resources
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\x64\x64\GatewayForm.csproj.GenerateResource.Cache

@@ -277,6 +277,7 @@
             this.MaximizeBox = false;
             this.Name = "Zigbee_pop";
             this.Text = "Zigbee Port";
+            this.Activated += new System.EventHandler(this.Zigbee_pop_Activated);
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.groupBox4.ResumeLayout(false);

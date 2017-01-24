@@ -14,7 +14,7 @@ namespace GatewayForm
     {
         public string ip_add;
         public string port;
-        public string PanID;
+        public string PanID = String.Empty;
         public string Device;
         public string Channel;
         public int Length;
@@ -39,7 +39,14 @@ namespace GatewayForm
 
         private void close_btn_Click(object sender, EventArgs e)
         {
+            this.PanID = String.Empty;
             this.Close();
+        }
+
+        private void Zigbee_pop_Activated(object sender, EventArgs e)
+        {
+            this.ZigbeeIP_tx.Text = ip_add;
+            this.ZigbeePort_tx.Text = port;
         }
     }
 }

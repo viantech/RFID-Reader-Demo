@@ -15,7 +15,7 @@ namespace GatewayForm
 
         private CM.TYPECONNECT type;
         private SocketClient zigbee;
-        private TCP_Client tcp;
+        private Eth_Client tcp;
         public Communication(CM.TYPECONNECT type_connect)
         {
             this.type = type_connect;
@@ -31,13 +31,13 @@ namespace GatewayForm
                     zigbee = new SocketClient();
                     break;
                 case CM.TYPECONNECT.HDR_WIFI:
-                    tcp = new TCP_Client();
+                    tcp = new Eth_Client();
                     break;
                 case CM.TYPECONNECT.HDR_BLUETOOTH:
                     break;
                 case CM.TYPECONNECT.HDR_ETHERNET:
                     //pTcpipClient = new TcpipConnection();
-                    tcp = new TCP_Client();
+                    tcp = new Eth_Client();
                     break;
                 case CM.TYPECONNECT.HDR_RS232:
                     break;
@@ -67,7 +67,7 @@ namespace GatewayForm
             else
                 return false;
         }
-       
+
         public void Connect(string ip_addr, int port)
         {
             switch (type)
@@ -117,14 +117,12 @@ namespace GatewayForm
                     zigbee.Config_Msg -= passed_config;
                     zigbee.TagID_Msg -= passed_event;
                     zigbee = null;
-                    
                     break;
                 case CM.TYPECONNECT.HDR_WIFI:
                     tcp.Free();
                     tcp.Config_Msg -= passed_config;
                     tcp.TagID_Msg -= passed_event;
                     tcp = null;
-                    
                     break;
                 case CM.TYPECONNECT.HDR_BLUETOOTH:
                     break;
@@ -133,7 +131,6 @@ namespace GatewayForm
                     tcp.Config_Msg -= passed_config;
                     tcp.TagID_Msg -= passed_event;
                     tcp = null;
-                    
                     /*pp.close();
                     pTcpipClient.MessageReceived -= passed_event; //chu y
                     pTcpipClient.ConfigMessage -= passed_config;

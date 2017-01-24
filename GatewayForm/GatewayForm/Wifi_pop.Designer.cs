@@ -307,6 +307,7 @@
             this.MaximizeBox = false;
             this.Name = "Wifi_pop";
             this.Text = "Wifi Port";
+            this.Activated += new System.EventHandler(this.Wifi_pop_Activated);
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             this.groupBox3.ResumeLayout(false);

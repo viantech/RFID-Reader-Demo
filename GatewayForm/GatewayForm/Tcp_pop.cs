@@ -12,13 +12,13 @@ namespace GatewayForm
 {
     public partial class Tcp_pop : Form
     {
-        public string address = String.Empty;
+        public string address;
         public string port;
         public bool automatic = true;
         public string Length;
         public string Timeout;
         public string netmask;
-        public string gateway;
+        public string gateway = String.Empty;
 
         public Tcp_pop()
         {
@@ -49,7 +49,7 @@ namespace GatewayForm
 
         private void close_btn_Click(object sender, EventArgs e)
         {
-            address = String.Empty;
+            this.gateway = String.Empty;
             this.Close();
         }
 
@@ -63,6 +63,12 @@ namespace GatewayForm
         {
             this.Subnet_tx.Enabled = true;
             this.gateway_tx.Enabled = true;
+        }
+
+        private void Tcp_pop_Activated(object sender, EventArgs e)
+        {
+            this.TcpIP_tx.Text = address;
+            this.TcpPort_tx.Text = port;
         }
 
     }

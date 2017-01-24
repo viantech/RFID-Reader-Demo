@@ -61,17 +61,85 @@ C:\Users\Quang Do\Downloads\seldatsoftwaredemo-luat - Copy\GatewayForm\GatewayFo
 C:\Users\Quang Do\Downloads\seldatsoftwaredemo-luat - Copy\GatewayForm\GatewayForm\obj\Debug\GatewayForm.csprojResolveAssemblyReference.cache
 D:\GUI\guidesign\GatewayForm\GatewayForm\bin\Debug\System.Data.SQLite.dll
 D:\GUI\guidesign\GatewayForm\GatewayForm\obj\Debug\GatewayForm.SearchForm_Data.resources
-C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Debug\GatewayForm.exe
-C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Debug\System.Data.SQLite.dll
+C:\Users\luat.tran\Downloads\GatewayForm\GatewayForm\bin\Debug\GatewayForm.exe.config
+C:\Users\luat.tran\Downloads\GatewayForm\GatewayForm\obj\Debug\GatewayForm.exe
+C:\Users\luat.tran\Downloads\GatewayForm\GatewayForm\obj\Debug\GatewayForm.pdb
+C:\Users\luat.tran\Downloads\GatewayForm\GatewayForm\bin\Debug\GatewayForm.exe
+C:\Users\luat.tran\Downloads\GatewayForm\GatewayForm\bin\Debug\GatewayForm.pdb
+C:\Users\luat.tran\Downloads\GatewayForm\GatewayForm\bin\Debug\en\GatewayForm.resources.dll
+C:\Users\luat.tran\Downloads\GatewayForm\GatewayForm\bin\Debug\Newtonsoft.Json.dll
+C:\Users\luat.tran\Downloads\GatewayForm\GatewayForm\bin\Debug\System.Data.SQLite.dll
+C:\Users\luat.tran\Downloads\GatewayForm\GatewayForm\obj\Debug\GatewayForm.csprojResolveAssemblyReference.cache
+C:\Users\luat.tran\Downloads\GatewayForm\GatewayForm\obj\Debug\GatewayForm_MarkupCompile.cache
+C:\Users\luat.tran\Downloads\GatewayForm\GatewayForm\obj\Debug\GatewayForm.g.resources
+C:\Users\luat.tran\Downloads\GatewayForm\GatewayForm\obj\Debug\GatewayForm.Form1.resources
+C:\Users\luat.tran\Downloads\GatewayForm\GatewayForm\obj\Debug\GatewayForm.SearchForm_Data.resources
+C:\Users\luat.tran\Downloads\GatewayForm\GatewayForm\obj\Debug\GatewayForm.Serial_pop.resources
+C:\Users\luat.tran\Downloads\GatewayForm\GatewayForm\obj\Debug\GatewayForm.setup_connect.resources
+C:\Users\luat.tran\Downloads\GatewayForm\GatewayForm\obj\Debug\GatewayForm.Tcp_pop.resources
+C:\Users\luat.tran\Downloads\GatewayForm\GatewayForm\obj\Debug\GatewayForm.Wifi_pop.resources
+C:\Users\luat.tran\Downloads\GatewayForm\GatewayForm\obj\Debug\GatewayForm.Zigbee_pop.resources
+C:\Users\luat.tran\Downloads\GatewayForm\GatewayForm\obj\Debug\GatewayForm.Properties.Resources.resources
+C:\Users\luat.tran\Downloads\GatewayForm\GatewayForm\obj\Debug\GatewayForm.Zigbee_pop.en.resources
+C:\Users\luat.tran\Downloads\GatewayForm\GatewayForm\obj\Debug\GatewayForm.csproj.GenerateResource.Cache
+C:\Users\luat.tran\Downloads\GatewayForm\GatewayForm\obj\Debug\en\GatewayForm.resources.dll
+C:\Users\luat.tran\Downloads\GatewayForm\GatewayForm\obj\Debug\RobotManager.baml
+C:\Users\luat.tran\Downloads\GatewayForm\GatewayForm\obj\Debug\RobotManager.g.cs
+D:\GUI\WAP\GatewayForm\GatewayForm\bin\Debug\GatewayForm.exe.config
+D:\GUI\WAP\GatewayForm\GatewayForm\obj\Debug\GatewayForm.exe
+D:\GUI\WAP\GatewayForm\GatewayForm\obj\Debug\GatewayForm.pdb
+D:\GUI\WAP\GatewayForm\GatewayForm\bin\Debug\GatewayForm.exe
+D:\GUI\WAP\GatewayForm\GatewayForm\bin\Debug\GatewayForm.pdb
+D:\GUI\WAP\GatewayForm\GatewayForm\bin\Debug\en\GatewayForm.resources.dll
+D:\GUI\WAP\GatewayForm\GatewayForm\bin\Debug\Newtonsoft.Json.dll
+D:\GUI\WAP\GatewayForm\GatewayForm\bin\Debug\System.Data.SQLite.dll
+D:\GUI\WAP\GatewayForm\GatewayForm\obj\Debug\GatewayForm.csprojResolveAssemblyReference.cache
+D:\GUI\WAP\GatewayForm\GatewayForm\obj\Debug\RobotManager.baml
+D:\GUI\WAP\GatewayForm\GatewayForm\obj\Debug\RobotManager.g.cs
+D:\GUI\WAP\GatewayForm\GatewayForm\obj\Debug\GatewayForm_MarkupCompile.cache
+D:\GUI\WAP\GatewayForm\GatewayForm\obj\Debug\GatewayForm.g.resources
+D:\GUI\WAP\GatewayForm\GatewayForm\obj\Debug\GatewayForm.Form1.resources
+D:\GUI\WAP\GatewayForm\GatewayForm\obj\Debug\GatewayForm.SearchForm_Data.resources
+D:\GUI\WAP\GatewayForm\GatewayForm\obj\Debug\GatewayForm.Serial_pop.resources
+D:\GUI\WAP\GatewayForm\GatewayForm\obj\Debug\GatewayForm.setup_connect.resources
+D:\GUI\WAP\GatewayForm\GatewayForm\obj\Debug\GatewayForm.Tcp_pop.resources
+D:\GUI\WAP\GatewayForm\GatewayForm\obj\Debug\GatewayForm.Wifi_pop.resources
+D:\GUI\WAP\GatewayForm\GatewayForm\obj\Debug\GatewayForm.Zigbee_pop.resources
+D:\GUI\WAP\GatewayForm\GatewayForm\obj\Debug\GatewayForm.Properties.Resources.resources
+D:\GUI\WAP\GatewayForm\GatewayForm\obj\Debug\GatewayForm.Zigbee_pop.en.resources
+D:\GUI\WAP\GatewayForm\GatewayForm\obj\Debug\GatewayForm.csproj.GenerateResource.Cache
+D:\GUI\WAP\GatewayForm\GatewayForm\obj\Debug\en\GatewayForm.resources.dll
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Debug\GatewayForm.exe.config
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Debug\GatewayForm.exe
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Debug\GatewayForm.pdb
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Debug\en\GatewayForm.resources.dll
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Debug\EntityFramework.dll
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Debug\IPAddressControlLib.dll
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Debug\System.Data.SQLite.dll
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Debug\System.Data.SQLite.EF6.dll
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Debug\System.Data.SQLite.Linq.dll
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Debug\EntityFramework.xml
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Debug\IPAddressControlLib.pdb
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Debug\System.Data.SQLite.xml
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\RobotManager.baml
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\RobotManager.g.cs
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\GatewayForm_MarkupCompile.cache
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\GatewayForm.g.resources
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\GatewayForm.Form1.resources
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\GatewayForm.ScanIP.resources
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\GatewayForm.SearchForm_Data.resources
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\GatewayForm.Serial_pop.resources
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\GatewayForm.setup_connect.resources
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\GatewayForm.Tcp_pop.resources
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\GatewayForm.Wifi_pop.resources
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\GatewayForm.Zigbee_pop.resources
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\GatewayForm.Properties.Resources.resources
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\GatewayForm.Zigbee_pop.en.resources
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\GatewayForm.csproj.GenerateResource.Cache
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\en\GatewayForm.resources.dll
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\GatewayForm.exe
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\GatewayForm.pdb
-C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Debug\GatewayForm.pdb
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\GatewayForm.csprojResolveAssemblyReference.cache

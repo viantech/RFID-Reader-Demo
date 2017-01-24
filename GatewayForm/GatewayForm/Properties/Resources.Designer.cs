@@ -109,9 +109,9 @@ namespace GatewayForm.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap green {
+        internal static System.Drawing.Bitmap green_led {
             get {
-                object obj = ResourceManager.GetObject("green", resourceCulture);
+                object obj = ResourceManager.GetObject("green_led", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -119,9 +119,19 @@ namespace GatewayForm.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap green_led {
+        internal static System.Drawing.Bitmap green_led2 {
             get {
-                object obj = ResourceManager.GetObject("green_led", resourceCulture);
+                object obj = ResourceManager.GetObject("green_led2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icon_seldat {
+            get {
+                object obj = ResourceManager.GetObject("icon_seldat", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -138,9 +148,9 @@ namespace GatewayForm.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap red {
+        internal static System.Drawing.Bitmap red_led {
             get {
-                object obj = ResourceManager.GetObject("red", resourceCulture);
+                object obj = ResourceManager.GetObject("red_led", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -148,9 +158,9 @@ namespace GatewayForm.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap red_led {
+        internal static System.Drawing.Bitmap red_led2 {
             get {
-                object obj = ResourceManager.GetObject("red_led", resourceCulture);
+                object obj = ResourceManager.GetObject("red_led2", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
