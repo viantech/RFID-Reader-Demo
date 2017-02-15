@@ -28,18 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.TcpTimeout_tx = new System.Windows.Forms.TextBox();
-            this.Tcp_len_tx = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.static_btn = new System.Windows.Forms.RadioButton();
             this.dhcp_btn = new System.Windows.Forms.RadioButton();
             this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
@@ -47,88 +39,18 @@
             this.ssid_name_tx = new System.Windows.Forms.TextBox();
             this.password_tx = new System.Windows.Forms.TextBox();
             this.gateway_tx = new System.Windows.Forms.TextBox();
-            this.port_tx = new System.Windows.Forms.TextBox();
             this.address_tx = new System.Windows.Forms.TextBox();
             this.Subnet_tx = new System.Windows.Forms.TextBox();
             this.close_btn = new System.Windows.Forms.Button();
             this.update_btn = new System.Windows.Forms.Button();
-            this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // groupBox4
-            // 
-            this.groupBox4.Controls.Add(this.label6);
-            this.groupBox4.Controls.Add(this.label4);
-            this.groupBox4.Controls.Add(this.TcpTimeout_tx);
-            this.groupBox4.Controls.Add(this.Tcp_len_tx);
-            this.groupBox4.Controls.Add(this.label5);
-            this.groupBox4.Controls.Add(this.label3);
-            this.groupBox4.Location = new System.Drawing.Point(14, 238);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(241, 100);
-            this.groupBox4.TabIndex = 9;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Packet Properties";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(203, 58);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(20, 13);
-            this.label6.TabIndex = 2;
-            this.label6.Text = "ms";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(203, 20);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(32, 13);
-            this.label4.TabIndex = 2;
-            this.label4.Text = "bytes";
-            // 
-            // TcpTimeout_tx
-            // 
-            this.TcpTimeout_tx.Location = new System.Drawing.Point(83, 55);
-            this.TcpTimeout_tx.Name = "TcpTimeout_tx";
-            this.TcpTimeout_tx.Size = new System.Drawing.Size(109, 20);
-            this.TcpTimeout_tx.TabIndex = 1;
-            this.TcpTimeout_tx.Text = "50";
-            // 
-            // Tcp_len_tx
-            // 
-            this.Tcp_len_tx.Location = new System.Drawing.Point(84, 20);
-            this.Tcp_len_tx.Name = "Tcp_len_tx";
-            this.Tcp_len_tx.Size = new System.Drawing.Size(108, 20);
-            this.Tcp_len_tx.TabIndex = 1;
-            this.Tcp_len_tx.Text = "1024";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(8, 58);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(45, 13);
-            this.label5.TabIndex = 0;
-            this.label5.Text = "Timeout";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(7, 23);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(59, 13);
-            this.label3.TabIndex = 0;
-            this.label3.Text = "Max length";
             // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.static_btn);
             this.groupBox3.Controls.Add(this.dhcp_btn);
             this.groupBox3.Controls.Add(this.label7);
-            this.groupBox3.Controls.Add(this.label8);
             this.groupBox3.Controls.Add(this.label1);
             this.groupBox3.Controls.Add(this.label2);
             this.groupBox3.Controls.Add(this.label10);
@@ -136,7 +58,6 @@
             this.groupBox3.Controls.Add(this.ssid_name_tx);
             this.groupBox3.Controls.Add(this.password_tx);
             this.groupBox3.Controls.Add(this.gateway_tx);
-            this.groupBox3.Controls.Add(this.port_tx);
             this.groupBox3.Controls.Add(this.address_tx);
             this.groupBox3.Controls.Add(this.Subnet_tx);
             this.groupBox3.Location = new System.Drawing.Point(12, 12);
@@ -149,7 +70,7 @@
             // static_btn
             // 
             this.static_btn.AutoSize = true;
-            this.static_btn.Location = new System.Drawing.Point(126, 134);
+            this.static_btn.Location = new System.Drawing.Point(131, 83);
             this.static_btn.Name = "static_btn";
             this.static_btn.Size = new System.Drawing.Size(52, 17);
             this.static_btn.TabIndex = 2;
@@ -161,7 +82,7 @@
             // dhcp_btn
             // 
             this.dhcp_btn.AutoSize = true;
-            this.dhcp_btn.Location = new System.Drawing.Point(11, 134);
+            this.dhcp_btn.Location = new System.Drawing.Point(11, 83);
             this.dhcp_btn.Name = "dhcp_btn";
             this.dhcp_btn.Size = new System.Drawing.Size(55, 17);
             this.dhcp_btn.TabIndex = 2;
@@ -179,19 +100,10 @@
             this.label7.TabIndex = 0;
             this.label7.Text = "Gateway";
             // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(9, 111);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(26, 13);
-            this.label8.TabIndex = 0;
-            this.label8.Text = "Port";
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(8, 81);
+            this.label1.Location = new System.Drawing.Point(8, 125);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(45, 13);
             this.label1.TabIndex = 0;
@@ -249,17 +161,9 @@
             this.gateway_tx.TabIndex = 1;
             this.gateway_tx.Text = "192.168.1.1";
             // 
-            // port_tx
-            // 
-            this.port_tx.Location = new System.Drawing.Point(77, 108);
-            this.port_tx.Name = "port_tx";
-            this.port_tx.Size = new System.Drawing.Size(124, 20);
-            this.port_tx.TabIndex = 1;
-            this.port_tx.Text = "5000";
-            // 
             // address_tx
             // 
-            this.address_tx.Location = new System.Drawing.Point(76, 78);
+            this.address_tx.Location = new System.Drawing.Point(76, 122);
             this.address_tx.Name = "address_tx";
             this.address_tx.Size = new System.Drawing.Size(124, 20);
             this.address_tx.TabIndex = 1;
@@ -276,7 +180,7 @@
             // 
             // close_btn
             // 
-            this.close_btn.Location = new System.Drawing.Point(193, 344);
+            this.close_btn.Location = new System.Drawing.Point(191, 238);
             this.close_btn.Name = "close_btn";
             this.close_btn.Size = new System.Drawing.Size(62, 23);
             this.close_btn.TabIndex = 11;
@@ -286,7 +190,7 @@
             // 
             // update_btn
             // 
-            this.update_btn.Location = new System.Drawing.Point(95, 344);
+            this.update_btn.Location = new System.Drawing.Point(104, 238);
             this.update_btn.Name = "update_btn";
             this.update_btn.Size = new System.Drawing.Size(75, 23);
             this.update_btn.TabIndex = 10;
@@ -299,17 +203,14 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(267, 379);
+            this.ClientSize = new System.Drawing.Size(267, 276);
             this.Controls.Add(this.close_btn);
             this.Controls.Add(this.update_btn);
-            this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.MaximizeBox = false;
             this.Name = "Wifi_pop";
             this.Text = "Wifi Port";
             this.Activated += new System.EventHandler(this.Wifi_pop_Activated);
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
@@ -318,13 +219,6 @@
 
         #endregion
 
-        private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox TcpTimeout_tx;
-        private System.Windows.Forms.TextBox Tcp_len_tx;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.RadioButton static_btn;
         private System.Windows.Forms.RadioButton dhcp_btn;
@@ -340,7 +234,5 @@
         private System.Windows.Forms.TextBox address_tx;
         private System.Windows.Forms.Button close_btn;
         private System.Windows.Forms.Button update_btn;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.TextBox port_tx;
     }
 }

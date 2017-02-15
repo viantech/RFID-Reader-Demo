@@ -97,6 +97,15 @@ namespace GatewayForm
                 }
             }
         }
+        public void AddRow2Sql(String[] cells)
+        {
+            if (_flag_TableSql)
+            {
+                string sqlcmd = "INSERT INTO " + SQLtablename + " (TAG,ANT,RSSI,CODE,DATE) values ('" + cells[0] + "','" + cells[1] + "','" + cells[2] + "','" + cells[3] + "','" + cells[4] + "')";
+                SQLiteCommand cmd = new SQLiteCommand(sqlcmd, sqlConnection);
+                cmd.ExecuteNonQuery();
+            }
+        }
         public void SearchDataINSql(String field, String inf)
         {
             try

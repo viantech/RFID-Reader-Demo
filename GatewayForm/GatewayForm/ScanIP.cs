@@ -178,10 +178,11 @@ namespace GatewayForm
             {
                 if (255 == endIP)
                 {
-                    System.Windows.Forms.DialogResult result = MessageBox.Show("Recommend to change the range lower. If \"Yes\" please limit the third octets. If \"No\" it will take a long time for scanning host.");
+                    System.Windows.Forms.DialogResult result = MessageBox.Show("It will take a very long time to scan IP.\nClick \"Yes\" to limit the range (set the third octes less than 255).\nClick \"No\" to continue scanning hosts.", 
+                        "Huge Range Scan IP", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (result == System.Windows.Forms.DialogResult.Yes)
                     {
-                        this.ipAddressControl2.Focus();
+                        //this.ipAddressControl2.Focus();
                         return;
                     }
                 }
@@ -222,7 +223,7 @@ namespace GatewayForm
             ThreadPool.QueueUserWorkItem(delegate(object state)
             {
                 Ping pingsender = new Ping();
-                if (pingsender.Send(hostIP, 50).Status == IPStatus.Success)
+                if (pingsender.Send(hostIP, 100).Status == IPStatus.Success)
                     lock (listLock) alivehost.Add(hostIP);
                 Interlocked.Increment(ref completedCounter);
                 double ratio = (double)completedCounter / total_host;
@@ -312,7 +313,7 @@ namespace GatewayForm
             //var dataGridView = sender as DataGridView;
             if (dataGridView1.Rows[e.RowIndex].Selected)
             {
-                if (!String.IsNullOrEmpty(dataGridView1[e.ColumnIndex, e.RowIndex].Value.ToString()))
+                if ((dataGridView1[e.ColumnIndex, e.RowIndex].Value != null) && (!String.IsNullOrEmpty(dataGridView1[e.ColumnIndex, e.RowIndex].Value.ToString())))
                 {
                     e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold | FontStyle.Italic);
                     // edit: to change the background color:

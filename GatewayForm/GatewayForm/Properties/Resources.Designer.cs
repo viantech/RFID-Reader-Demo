@@ -109,16 +109,6 @@ namespace GatewayForm.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap green_led {
-            get {
-                object obj = ResourceManager.GetObject("green_led", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap green_led2 {
             get {
                 object obj = ResourceManager.GetObject("green_led2", resourceCulture);
@@ -189,6 +179,16 @@ namespace GatewayForm.Properties {
         internal static string SELDAT_EXCEL_TITLE {
             get {
                 return ResourceManager.GetString("SELDAT_EXCEL_TITLE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap seldat_icon {
+            get {
+                object obj = ResourceManager.GetObject("seldat_icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

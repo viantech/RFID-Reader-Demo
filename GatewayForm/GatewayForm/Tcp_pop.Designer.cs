@@ -141,7 +141,7 @@
             // static_btn
             // 
             this.static_btn.AutoSize = true;
-            this.static_btn.Location = new System.Drawing.Point(123, 95);
+            this.static_btn.Location = new System.Drawing.Point(123, 28);
             this.static_btn.Name = "static_btn";
             this.static_btn.Size = new System.Drawing.Size(52, 17);
             this.static_btn.TabIndex = 2;
@@ -153,7 +153,7 @@
             // dhcp_btn
             // 
             this.dhcp_btn.AutoSize = true;
-            this.dhcp_btn.Location = new System.Drawing.Point(9, 95);
+            this.dhcp_btn.Location = new System.Drawing.Point(9, 28);
             this.dhcp_btn.Name = "dhcp_btn";
             this.dhcp_btn.Size = new System.Drawing.Size(55, 17);
             this.dhcp_btn.TabIndex = 2;
@@ -183,7 +183,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(7, 26);
+            this.label10.Location = new System.Drawing.Point(7, 58);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(45, 13);
             this.label10.TabIndex = 0;
@@ -192,7 +192,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(8, 66);
+            this.label9.Location = new System.Drawing.Point(8, 94);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(26, 13);
             this.label9.TabIndex = 0;
@@ -200,7 +200,7 @@
             // 
             // TcpIP_tx
             // 
-            this.TcpIP_tx.Location = new System.Drawing.Point(76, 23);
+            this.TcpIP_tx.Location = new System.Drawing.Point(76, 55);
             this.TcpIP_tx.Name = "TcpIP_tx";
             this.TcpIP_tx.Size = new System.Drawing.Size(124, 20);
             this.TcpIP_tx.TabIndex = 1;
@@ -208,8 +208,9 @@
             // 
             // TcpPort_tx
             // 
-            this.TcpPort_tx.Location = new System.Drawing.Point(75, 59);
+            this.TcpPort_tx.Location = new System.Drawing.Point(75, 91);
             this.TcpPort_tx.Name = "TcpPort_tx";
+            this.TcpPort_tx.ReadOnly = true;
             this.TcpPort_tx.Size = new System.Drawing.Size(124, 20);
             this.TcpPort_tx.TabIndex = 1;
             this.TcpPort_tx.Text = "5000";

@@ -238,13 +238,13 @@ namespace GatewayForm
         #endregion
 
         #region API Decode byte stream receive to meta data
-        private static string ByteArrayToHexString(byte[] ba)
+        /*private static string ByteArrayToHexString(byte[] ba)
         {
             StringBuilder hex = new StringBuilder(ba.Length * 2);
             foreach (byte b in ba)
                 hex.AppendFormat("{0:x2} ", b);
             return hex.ToString();
-        }
+        }*/
         /// <summary>
         /// Decoding the SubFrameFormat is sent via TCP connection.
         /// </summary>
@@ -276,9 +276,7 @@ namespace GatewayForm
             //sub_fmt.checksum = buffer[len - 1];
             if (buffer[len - 1] != Chcksum(buffer.Skip(1).ToArray(), len - 2))
             {
-                //Console.WriteLine("Wrong checksum {0} vs {1}", buffer[len - 1].ToString(), Chcksum(buffer.Skip(1).ToArray(), len - 2).ToString());
-                //Console.WriteLine(ByteArrayToHexString(buffer));
-                Log_Raise("Wrong Checksum");
+                MessageBox.Show("Wrong Checksum", "TCP Stream", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
             /*Data of TCP packet is part of Frame Format*/

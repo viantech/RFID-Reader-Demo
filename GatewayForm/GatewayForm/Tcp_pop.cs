@@ -32,6 +32,8 @@ namespace GatewayForm
                 this.static_btn.Checked = automatic;
                 this.Subnet_tx.Enabled = true;
                 this.gateway_tx.Enabled = true;
+                this.TcpIP_tx.Enabled = true;
+                this.TcpPort_tx.Enabled = true;
             }
         }
 
@@ -57,18 +59,22 @@ namespace GatewayForm
         {
             this.Subnet_tx.Enabled = false;
             this.gateway_tx.Enabled = false;
+            this.TcpIP_tx.Enabled = false;
+            this.TcpPort_tx.Enabled = false;
         }
 
         private void static_btn_CheckedChanged(object sender, EventArgs e)
         {
             this.Subnet_tx.Enabled = true;
             this.gateway_tx.Enabled = true;
+            this.TcpIP_tx.Enabled = true;
+            this.TcpPort_tx.Enabled = true;
         }
 
         private void Tcp_pop_Activated(object sender, EventArgs e)
         {
             this.TcpIP_tx.Text = address;
-            this.TcpPort_tx.Text = port;
+            //this.TcpPort_tx.Text = port;
         }
 
     }

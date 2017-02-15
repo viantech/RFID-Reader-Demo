@@ -15,12 +15,12 @@ namespace GatewayForm
         public string ssid_name = string.Empty;
         public string passwd;
         public string address;
-        public string port;
+        //public string port;
         public string netmask;
         public string gateway;
         public bool automatic = true;
-        public int Length;
-        public int Timeout;
+        //public int Length;
+        //public int Timeout;
         public Wifi_pop()
         {
             InitializeComponent();
@@ -33,6 +33,7 @@ namespace GatewayForm
                 this.static_btn.Checked = automatic;
                 this.Subnet_tx.Enabled = true;
                 this.gateway_tx.Enabled = true;
+                this.address_tx.Enabled = true;
             }
         }
 
@@ -41,12 +42,12 @@ namespace GatewayForm
             ssid_name = this.ssid_name_tx.Text;
             passwd = this.password_tx.Text;
             address = this.address_tx.Text;
-            port = this.port_tx.Text;
+            //port = this.port_tx.Text;
             automatic = this.dhcp_btn.Checked;
             netmask = this.Subnet_tx.Text;
             gateway = this.gateway_tx.Text;
-            Length = int.Parse(this.Tcp_len_tx.Text);
-            Timeout = int.Parse(this.TcpTimeout_tx.Text);
+            //Length = int.Parse(this.Tcp_len_tx.Text);
+            //Timeout = int.Parse(this.TcpTimeout_tx.Text);
             this.Close();
         }
 
@@ -60,18 +61,20 @@ namespace GatewayForm
         {
             this.Subnet_tx.Enabled = false;
             this.gateway_tx.Enabled = false;
+            this.address_tx.Enabled = false;
         }
 
         private void static_btn_CheckedChanged(object sender, EventArgs e)
         {
             this.Subnet_tx.Enabled = true;
             this.gateway_tx.Enabled = true;
+            this.address_tx.Enabled = true;
         }
 
         private void Wifi_pop_Activated(object sender, EventArgs e)
         {
             this.address_tx.Text = address;
-            this.port_tx.Text = port;
+            //this.port_tx.Text = port;
         }
 
     }

@@ -768,7 +768,7 @@ namespace GatewayForm
                         if (0x00 == info_ack)
                             CM.Log_Raise("Set BLF done");
                         else
-                            CM.Log_Raise("Failed BLF");
+                            CM.Log_Raise("Failed to set BLF");
                         break;
                     case CM.COMMAND.REBOOT_CMD:
                         info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.REBOOT_CMD, command_bytes);
@@ -884,7 +884,7 @@ namespace GatewayForm
                                     {
                                         length = (buffer[1] << 8) + buffer[2];
                                         if (length > 1023)
-                                            CM.Log_Raise("Wrong length");
+                                            buffer = new byte[1024];
                                         else
                                         {
                                             int desired_len = length - 2;
@@ -898,6 +898,7 @@ namespace GatewayForm
                                                     break;
                                             }
                                             Command_Sync(buffer, length + 1);
+                                            buffer = new byte[1024];
                                         }
                                     }
                                 }
@@ -913,20 +914,23 @@ namespace GatewayForm
                         {
                             if (connect_ok)
                             {
-                                if (ex.InnerException.Message.Contains("A connection attempt"))
+                                if (ex.InnerException.Message.Contains("did not properly respond"))
                                 {
                                     Cmd_Raise("Keep Alive Timeout\n");
+                                    break;
                                 }
                                 else
                                 {
                                     Free();
                                     MessageBox.Show("Connection Close", "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    break;
                                 }
                             }
                             else
                             {
                                 if (ex.InnerException.Message.Contains("blocking operation"))
                                     length = -1;
+                                break;
                             }
                         }
                         catch (ObjectDisposedException)

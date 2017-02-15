@@ -87,6 +87,7 @@
             // 
             // Cancel_btn
             // 
+            this.Cancel_btn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.Cancel_btn.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.Cancel_btn.Location = new System.Drawing.Point(231, 117);
             this.Cancel_btn.Name = "Cancel_btn";
@@ -112,7 +113,7 @@
             this.Controls.Add(this.label1);
             this.MaximizeBox = false;
             this.Name = "setup_connect";
-            this.Text = "Setup Connection";
+            this.Text = "Socket Form";
             this.Activated += new System.EventHandler(this.setup_connect_Activated);
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -53,10 +53,14 @@ namespace GatewayForm
                 return zigbee.connect_ok;
             else return false;
         }
-        public void setflagConnected_TCPIP(Boolean v)
+        public void resetflag()
         {
             if (tcp != null)
-                tcp.connect_ok = v;
+                tcp.receiveDone.Reset();
+            else if (zigbee != null)
+                zigbee.receiveDone.Reset();
+            else
+                return;
         }
         public Boolean waitflagRevTCP()
         {

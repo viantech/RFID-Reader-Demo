@@ -232,8 +232,15 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadProfileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveProfileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabPage6 = new System.Windows.Forms.TabPage();
             this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -286,6 +293,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tabControl2.SuspendLayout();
             this.tabPage4.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.tabPage6.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -307,7 +315,7 @@
             this.dataGridView1.Location = new System.Drawing.Point(3, 3);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersVisible = false;
-            this.dataGridView1.Size = new System.Drawing.Size(759, 474);
+            this.dataGridView1.Size = new System.Drawing.Size(759, 479);
             this.dataGridView1.TabIndex = 0;
             // 
             // Column1
@@ -351,7 +359,7 @@
             this.tabControl1.Location = new System.Drawing.Point(3, 88);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1035, 515);
+            this.tabControl1.Size = new System.Drawing.Size(1035, 520);
             this.tabControl1.TabIndex = 1;
             this.tabControl1.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabControl1_Selecting);
             // 
@@ -363,7 +371,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1027, 486);
+            this.tabPage1.Size = new System.Drawing.Size(1027, 491);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Tag read";
             // 
@@ -379,7 +387,7 @@
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1021, 480);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1021, 485);
             this.tableLayoutPanel1.TabIndex = 13;
             // 
             // tableLayoutPanel2
@@ -398,7 +406,7 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 19.10828F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 17.83439F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 43.3121F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(250, 474);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(250, 479);
             this.tableLayoutPanel2.TabIndex = 1;
             // 
             // groupBox7
@@ -408,9 +416,9 @@
             this.groupBox7.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.groupBox7.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox7.ForeColor = System.Drawing.Color.Navy;
-            this.groupBox7.Location = new System.Drawing.Point(3, 184);
+            this.groupBox7.Location = new System.Drawing.Point(3, 191);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(244, 78);
+            this.groupBox7.Size = new System.Drawing.Size(244, 74);
             this.groupBox7.TabIndex = 12;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "[GPO Set]";
@@ -426,7 +434,7 @@
             this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 18);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(238, 57);
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(238, 53);
             this.flowLayoutPanel2.TabIndex = 11;
             // 
             // GPO0_ckb
@@ -501,9 +509,9 @@
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox2.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox2.ForeColor = System.Drawing.Color.Navy;
-            this.groupBox2.Location = new System.Drawing.Point(3, 94);
+            this.groupBox2.Location = new System.Drawing.Point(3, 95);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(244, 84);
+            this.groupBox2.Size = new System.Drawing.Size(244, 80);
             this.groupBox2.TabIndex = 9;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "[Inventory Result]";
@@ -545,11 +553,11 @@
             // 
             this.time_duration_lb.AutoSize = true;
             this.time_duration_lb.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.time_duration_lb.Location = new System.Drawing.Point(59, 10);
+            this.time_duration_lb.Location = new System.Drawing.Point(64, 10);
             this.time_duration_lb.Name = "time_duration_lb";
-            this.time_duration_lb.Size = new System.Drawing.Size(40, 16);
+            this.time_duration_lb.Size = new System.Drawing.Size(58, 16);
             this.time_duration_lb.TabIndex = 6;
-            this.time_duration_lb.Text = "00:00";
+            this.time_duration_lb.Text = "00:00:00";
             // 
             // label2
             // 
@@ -565,7 +573,7 @@
             // 
             this.No_Tag_lb.AutoSize = true;
             this.No_Tag_lb.Font = new System.Drawing.Font("Arial", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.No_Tag_lb.Location = new System.Drawing.Point(105, 20);
+            this.No_Tag_lb.Location = new System.Drawing.Point(138, 21);
             this.No_Tag_lb.Name = "No_Tag_lb";
             this.No_Tag_lb.Size = new System.Drawing.Size(30, 32);
             this.No_Tag_lb.TabIndex = 8;
@@ -578,9 +586,9 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.groupBox1.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.ForeColor = System.Drawing.Color.Navy;
-            this.groupBox1.Location = new System.Drawing.Point(3, 268);
+            this.groupBox1.Location = new System.Drawing.Point(3, 285);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(244, 203);
+            this.groupBox1.Size = new System.Drawing.Size(244, 191);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "[Antenna Detected]";
@@ -596,7 +604,7 @@
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 18);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(238, 182);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(238, 170);
             this.flowLayoutPanel1.TabIndex = 8;
             // 
             // Ant1_ckb
@@ -669,7 +677,7 @@
             this.panel1.Controls.Add(this.Start_Operate_btn);
             this.panel1.Location = new System.Drawing.Point(3, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(244, 85);
+            this.panel1.Size = new System.Drawing.Size(244, 81);
             this.panel1.TabIndex = 13;
             // 
             // Start_Operate_btn
@@ -700,7 +708,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 25);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1027, 486);
+            this.tabPage2.Size = new System.Drawing.Size(1027, 491);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Reader configuration";
             // 
@@ -711,9 +719,9 @@
             this.groupBox12.Controls.Add(this.Change_conntype_cbx);
             this.groupBox12.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox12.ForeColor = System.Drawing.Color.Navy;
-            this.groupBox12.Location = new System.Drawing.Point(6, 169);
+            this.groupBox12.Location = new System.Drawing.Point(7, 111);
             this.groupBox12.Name = "groupBox12";
-            this.groupBox12.Size = new System.Drawing.Size(450, 58);
+            this.groupBox12.Size = new System.Drawing.Size(450, 52);
             this.groupBox12.TabIndex = 36;
             this.groupBox12.TabStop = false;
             this.groupBox12.Text = "[Change Connection]";
@@ -733,7 +741,7 @@
             this.set_port_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.set_port_btn.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.set_port_btn.ForeColor = System.Drawing.Color.Navy;
-            this.set_port_btn.Location = new System.Drawing.Point(374, 24);
+            this.set_port_btn.Location = new System.Drawing.Point(373, 21);
             this.set_port_btn.Name = "set_port_btn";
             this.set_port_btn.Size = new System.Drawing.Size(70, 25);
             this.set_port_btn.TabIndex = 28;
@@ -862,21 +870,19 @@
             // read_sensor_cb
             // 
             this.read_sensor_cb.AutoSize = true;
-            this.read_sensor_cb.Checked = true;
-            this.read_sensor_cb.CheckState = System.Windows.Forms.CheckState.Checked;
             this.read_sensor_cb.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.read_sensor_cb.ForeColor = System.Drawing.Color.Navy;
             this.read_sensor_cb.Location = new System.Drawing.Point(10, 44);
             this.read_sensor_cb.Name = "read_sensor_cb";
             this.read_sensor_cb.Size = new System.Drawing.Size(144, 20);
             this.read_sensor_cb.TabIndex = 47;
-            this.read_sensor_cb.Text = "Read continueosly";
+            this.read_sensor_cb.Text = "Read continuously";
             this.read_sensor_cb.UseVisualStyleBackColor = true;
             // 
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label15.Font = new System.Drawing.Font("Arial", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label15.Location = new System.Drawing.Point(246, 153);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(26, 16);
@@ -889,7 +895,7 @@
             this.Set_sensor_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Set_sensor_btn.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Set_sensor_btn.ForeColor = System.Drawing.Color.Navy;
-            this.Set_sensor_btn.Location = new System.Drawing.Point(288, 144);
+            this.Set_sensor_btn.Location = new System.Drawing.Point(288, 150);
             this.Set_sensor_btn.Name = "Set_sensor_btn";
             this.Set_sensor_btn.Size = new System.Drawing.Size(70, 25);
             this.Set_sensor_btn.TabIndex = 45;
@@ -911,8 +917,6 @@
             // Sensor_EN_ckb
             // 
             this.Sensor_EN_ckb.AutoSize = true;
-            this.Sensor_EN_ckb.Checked = true;
-            this.Sensor_EN_ckb.CheckState = System.Windows.Forms.CheckState.Checked;
             this.Sensor_EN_ckb.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Sensor_EN_ckb.ForeColor = System.Drawing.Color.Navy;
             this.Sensor_EN_ckb.Location = new System.Drawing.Point(10, 21);
@@ -932,6 +936,7 @@
             this.timeout_sensor_tx.Size = new System.Drawing.Size(61, 21);
             this.timeout_sensor_tx.TabIndex = 44;
             this.timeout_sensor_tx.Text = "0";
+            this.timeout_sensor_tx.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.timeout_sensor_tx_KeyPress);
             // 
             // panel8
             // 
@@ -1018,10 +1023,10 @@
             // LED_Support_ckb
             // 
             this.LED_Support_ckb.AutoSize = true;
-            this.LED_Support_ckb.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LED_Support_ckb.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LED_Support_ckb.Location = new System.Drawing.Point(10, 23);
             this.LED_Support_ckb.Name = "LED_Support_ckb";
-            this.LED_Support_ckb.Size = new System.Drawing.Size(174, 20);
+            this.LED_Support_ckb.Size = new System.Drawing.Size(164, 20);
             this.LED_Support_ckb.TabIndex = 22;
             this.LED_Support_ckb.Text = "LED7 Segment Support";
             this.LED_Support_ckb.UseVisualStyleBackColor = true;
@@ -1035,6 +1040,7 @@
             this.label18.Size = new System.Drawing.Size(163, 16);
             this.label18.TabIndex = 14;
             this.label18.Text = "Message queue interval:";
+            this.label18.Visible = false;
             // 
             // MessageInterval_tx
             // 
@@ -1042,28 +1048,31 @@
             this.MessageInterval_tx.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.MessageInterval_tx.Location = new System.Drawing.Point(183, 116);
             this.MessageInterval_tx.Name = "MessageInterval_tx";
-            this.MessageInterval_tx.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.MessageInterval_tx.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.MessageInterval_tx.Size = new System.Drawing.Size(61, 21);
             this.MessageInterval_tx.TabIndex = 15;
             this.MessageInterval_tx.Text = "1000";
+            this.MessageInterval_tx.Visible = false;
+            this.MessageInterval_tx.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.MessageInterval_tx_KeyPress);
             // 
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label19.Font = new System.Drawing.Font("Arial", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label19.Location = new System.Drawing.Point(246, 119);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(26, 16);
             this.label19.TabIndex = 16;
             this.label19.Text = "ms";
+            this.label19.Visible = false;
             // 
             // StackLight_ckb
             // 
             this.StackLight_ckb.AutoSize = true;
-            this.StackLight_ckb.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.StackLight_ckb.Location = new System.Drawing.Point(10, 91);
+            this.StackLight_ckb.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.StackLight_ckb.Location = new System.Drawing.Point(10, 67);
             this.StackLight_ckb.Name = "StackLight_ckb";
-            this.StackLight_ckb.Size = new System.Drawing.Size(152, 20);
+            this.StackLight_ckb.Size = new System.Drawing.Size(143, 20);
             this.StackLight_ckb.TabIndex = 25;
             this.StackLight_ckb.Text = "Stack Light Support";
             this.StackLight_ckb.UseVisualStyleBackColor = true;
@@ -1071,10 +1080,10 @@
             // Offline_ckb
             // 
             this.Offline_ckb.AutoSize = true;
-            this.Offline_ckb.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Offline_ckb.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Offline_ckb.Location = new System.Drawing.Point(10, 45);
             this.Offline_ckb.Name = "Offline_ckb";
-            this.Offline_ckb.Size = new System.Drawing.Size(108, 20);
+            this.Offline_ckb.Size = new System.Drawing.Size(100, 20);
             this.Offline_ckb.TabIndex = 23;
             this.Offline_ckb.Text = "Offline Mode";
             this.Offline_ckb.UseVisualStyleBackColor = true;
@@ -1082,13 +1091,14 @@
             // RFID_API_ckb
             // 
             this.RFID_API_ckb.AutoSize = true;
-            this.RFID_API_ckb.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RFID_API_ckb.Location = new System.Drawing.Point(10, 68);
+            this.RFID_API_ckb.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RFID_API_ckb.Location = new System.Drawing.Point(10, 90);
             this.RFID_API_ckb.Name = "RFID_API_ckb";
-            this.RFID_API_ckb.Size = new System.Drawing.Size(175, 20);
+            this.RFID_API_ckb.Size = new System.Drawing.Size(168, 20);
             this.RFID_API_ckb.TabIndex = 24;
             this.RFID_API_ckb.Text = "RFID API Support LLRP";
             this.RFID_API_ckb.UseVisualStyleBackColor = true;
+            this.RFID_API_ckb.Visible = false;
             // 
             // groupBox18
             // 
@@ -1102,7 +1112,7 @@
             this.groupBox18.ForeColor = System.Drawing.Color.Navy;
             this.groupBox18.Location = new System.Drawing.Point(6, 8);
             this.groupBox18.Name = "groupBox18";
-            this.groupBox18.Size = new System.Drawing.Size(451, 155);
+            this.groupBox18.Size = new System.Drawing.Size(451, 97);
             this.groupBox18.TabIndex = 32;
             this.groupBox18.TabStop = false;
             this.groupBox18.Text = "[Reader Info]";
@@ -1156,9 +1166,9 @@
             this.label14.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label14.Location = new System.Drawing.Point(8, 67);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(120, 16);
+            this.label14.Size = new System.Drawing.Size(124, 16);
             this.label14.TabIndex = 4;
-            this.label14.Text = "Software Version:";
+            this.label14.Text = "Firmware Version:";
             // 
             // SW_Version_tx
             // 
@@ -1182,9 +1192,9 @@
             this.groupBox6.Controls.Add(this.PatternID_tx);
             this.groupBox6.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox6.ForeColor = System.Drawing.Color.Navy;
-            this.groupBox6.Location = new System.Drawing.Point(6, 233);
+            this.groupBox6.Location = new System.Drawing.Point(6, 169);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(451, 247);
+            this.groupBox6.Size = new System.Drawing.Size(451, 311);
             this.groupBox6.TabIndex = 10;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "[Tag Filter]";
@@ -1194,7 +1204,7 @@
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button1.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button1.ForeColor = System.Drawing.Color.Navy;
-            this.button1.Location = new System.Drawing.Point(379, 216);
+            this.button1.Location = new System.Drawing.Point(374, 280);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(70, 25);
             this.button1.TabIndex = 36;
@@ -1238,6 +1248,7 @@
             this.start_bit_tx.Size = new System.Drawing.Size(68, 21);
             this.start_bit_tx.TabIndex = 2;
             this.start_bit_tx.Text = "0";
+            this.start_bit_tx.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.start_bit_tx_KeyPress);
             // 
             // Invert_ckb
             // 
@@ -1273,6 +1284,7 @@
             this.bit_length_tx.Size = new System.Drawing.Size(47, 21);
             this.bit_length_tx.TabIndex = 2;
             this.bit_length_tx.Text = "0";
+            this.bit_length_tx.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.bit_length_tx_KeyPress);
             // 
             // bank_lb
             // 
@@ -1354,12 +1366,13 @@
             this.PatternID_tx.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.PatternID_tx.BackColor = System.Drawing.SystemColors.HighlightText;
-            this.PatternID_tx.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.PatternID_tx.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.PatternID_tx.Font = new System.Drawing.Font("Arial", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PatternID_tx.Location = new System.Drawing.Point(87, 89);
             this.PatternID_tx.Name = "PatternID_tx";
             this.PatternID_tx.Size = new System.Drawing.Size(212, 21);
             this.PatternID_tx.TabIndex = 2;
-            this.PatternID_tx.Text = "010203040506070809101112";
+            this.PatternID_tx.Text = "01234567890";
             this.PatternID_tx.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.PatternID_tx_KeyPress);
             // 
             // groupBox5
@@ -1411,7 +1424,7 @@
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(251, 64);
+            this.label9.Location = new System.Drawing.Point(245, 63);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(18, 16);
             this.label9.TabIndex = 3;
@@ -1423,7 +1436,7 @@
             this.Audio_val.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Audio_val.Location = new System.Drawing.Point(214, 63);
             this.Audio_val.Name = "Audio_val";
-            this.Audio_val.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.Audio_val.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.Audio_val.Size = new System.Drawing.Size(16, 18);
             this.Audio_val.TabIndex = 3;
             this.Audio_val.Text = "0";
@@ -1463,7 +1476,7 @@
             this.tabPage3.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(1027, 486);
+            this.tabPage3.Size = new System.Drawing.Size(1027, 491);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "RFID configuration";
             // 
@@ -1507,6 +1520,7 @@
             this.weight_tx.Name = "weight_tx";
             this.weight_tx.Size = new System.Drawing.Size(116, 21);
             this.weight_tx.TabIndex = 1;
+            this.weight_tx.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.weight_tx_KeyPress);
             this.weight_tx.Leave += new System.EventHandler(this.weight_tx_Leave);
             // 
             // protocol_plan_tx
@@ -1601,29 +1615,35 @@
             // 
             // TID_filter_tx
             // 
+            this.TID_filter_tx.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.TID_filter_tx.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TID_filter_tx.Location = new System.Drawing.Point(95, 92);
             this.TID_filter_tx.Name = "TID_filter_tx";
             this.TID_filter_tx.Size = new System.Drawing.Size(176, 21);
             this.TID_filter_tx.TabIndex = 1;
+            this.TID_filter_tx.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TID_filter_tx_KeyPress);
             this.TID_filter_tx.Leave += new System.EventHandler(this.TID_filter_tx_Leave);
             // 
             // Memory_filter_tx
             // 
+            this.Memory_filter_tx.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.Memory_filter_tx.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Memory_filter_tx.Location = new System.Drawing.Point(95, 62);
             this.Memory_filter_tx.Name = "Memory_filter_tx";
             this.Memory_filter_tx.Size = new System.Drawing.Size(176, 21);
             this.Memory_filter_tx.TabIndex = 1;
+            this.Memory_filter_tx.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Memory_filter_tx_KeyPress);
             this.Memory_filter_tx.Leave += new System.EventHandler(this.Memory_filter_tx_Leave);
             // 
             // EPC_filter_tx
             // 
+            this.EPC_filter_tx.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.EPC_filter_tx.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.EPC_filter_tx.Location = new System.Drawing.Point(95, 31);
             this.EPC_filter_tx.Name = "EPC_filter_tx";
             this.EPC_filter_tx.Size = new System.Drawing.Size(176, 21);
             this.EPC_filter_tx.TabIndex = 1;
+            this.EPC_filter_tx.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.EPC_filter_tx_KeyPress);
             this.EPC_filter_tx.Leave += new System.EventHandler(this.EPC_filter_tx_Leave);
             // 
             // Remove_plan_btn
@@ -1774,7 +1794,7 @@
             // 
             this.Get_RFID_btn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.Get_RFID_btn.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Get_RFID_btn.Location = new System.Drawing.Point(809, 440);
+            this.Get_RFID_btn.Location = new System.Drawing.Point(809, 445);
             this.Get_RFID_btn.Name = "Get_RFID_btn";
             this.Get_RFID_btn.Size = new System.Drawing.Size(88, 37);
             this.Get_RFID_btn.TabIndex = 4;
@@ -1852,7 +1872,7 @@
             // 
             this.Set_RFID_btn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.Set_RFID_btn.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Set_RFID_btn.Location = new System.Drawing.Point(921, 440);
+            this.Set_RFID_btn.Location = new System.Drawing.Point(921, 445);
             this.Set_RFID_btn.Name = "Set_RFID_btn";
             this.Set_RFID_btn.Size = new System.Drawing.Size(88, 37);
             this.Set_RFID_btn.TabIndex = 5;
@@ -1953,7 +1973,7 @@
             this.groupBox20.Size = new System.Drawing.Size(441, 113);
             this.groupBox20.TabIndex = 12;
             this.groupBox20.TabStop = false;
-            this.groupBox20.Text = "[Antena Port]";
+            this.groupBox20.Text = "[Antenna Port]";
             // 
             // set_pw_antena_btn
             // 
@@ -2374,7 +2394,7 @@
             this.tabPage5.Controls.Add(this.groupBox13);
             this.tabPage5.Location = new System.Drawing.Point(4, 25);
             this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(1027, 486);
+            this.tabPage5.Size = new System.Drawing.Size(1027, 491);
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "Data Store";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -2514,13 +2534,13 @@
             // 
             // ViewConn_btn
             // 
-            this.ViewConn_btn.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.ViewConn_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ViewConn_btn.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ViewConn_btn.Location = new System.Drawing.Point(199, 40);
             this.ViewConn_btn.Name = "ViewConn_btn";
             this.ViewConn_btn.Size = new System.Drawing.Size(84, 24);
             this.ViewConn_btn.TabIndex = 3;
-            this.ViewConn_btn.Text = "Server IP";
+            this.ViewConn_btn.Text = "Socket";
             this.ViewConn_btn.UseVisualStyleBackColor = true;
             this.ViewConn_btn.Click += new System.EventHandler(this.ViewConn_btn_Click);
             // 
@@ -2656,13 +2676,13 @@
             this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel4, 0, 2);
             this.tableLayoutPanel3.Controls.Add(this.tableLayoutPanel4, 0, 0);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 27);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 3;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 85F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(1041, 626);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(1041, 631);
             this.tableLayoutPanel3.TabIndex = 12;
             // 
             // flowLayoutPanel4
@@ -2671,7 +2691,7 @@
             this.flowLayoutPanel4.Controls.Add(this.Log_lb);
             this.flowLayoutPanel4.Controls.Add(this.progressBar1);
             this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel4.Location = new System.Drawing.Point(3, 609);
+            this.flowLayoutPanel4.Location = new System.Drawing.Point(3, 614);
             this.flowLayoutPanel4.Name = "flowLayoutPanel4";
             this.flowLayoutPanel4.Size = new System.Drawing.Size(1035, 14);
             this.flowLayoutPanel4.TabIndex = 2;
@@ -2715,10 +2735,11 @@
             // pictureBox1
             // 
             this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox1.Image = global::GatewayForm.Properties.Resources.icon_seldat;
+            this.pictureBox1.Image = global::GatewayForm.Properties.Resources.seldat_icon;
             this.pictureBox1.Location = new System.Drawing.Point(454, 6);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(172, 61);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
@@ -2731,19 +2752,67 @@
             this.tabControl2.Location = new System.Drawing.Point(0, 0);
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(1055, 661);
+            this.tabControl2.Size = new System.Drawing.Size(1055, 690);
             this.tabControl2.TabIndex = 13;
             // 
             // tabPage4
             // 
             this.tabPage4.BackColor = System.Drawing.SystemColors.Control;
             this.tabPage4.Controls.Add(this.tableLayoutPanel3);
+            this.tabPage4.Controls.Add(this.menuStrip1);
             this.tabPage4.Location = new System.Drawing.Point(4, 25);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(1047, 632);
+            this.tabPage4.Size = new System.Drawing.Size(1047, 661);
             this.tabPage4.TabIndex = 0;
             this.tabPage4.Text = "READER";
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
+            this.aboutToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(3, 3);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(1041, 24);
+            this.menuStrip1.TabIndex = 0;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.loadProfileToolStripMenuItem,
+            this.saveProfileToolStripMenuItem,
+            this.exitToolStripMenuItem});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Text = "File";
+            // 
+            // loadProfileToolStripMenuItem
+            // 
+            this.loadProfileToolStripMenuItem.Name = "loadProfileToolStripMenuItem";
+            this.loadProfileToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
+            this.loadProfileToolStripMenuItem.Text = "Load Profile";
+            this.loadProfileToolStripMenuItem.Click += new System.EventHandler(this.loadProfileToolStripMenuItem_Click);
+            // 
+            // saveProfileToolStripMenuItem
+            // 
+            this.saveProfileToolStripMenuItem.Name = "saveProfileToolStripMenuItem";
+            this.saveProfileToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
+            this.saveProfileToolStripMenuItem.Text = "Save Profile";
+            this.saveProfileToolStripMenuItem.Click += new System.EventHandler(this.saveProfileToolStripMenuItem_Click);
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
+            this.exitToolStripMenuItem.Text = "Exit";
+            // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
+            this.aboutToolStripMenuItem.Text = "About";
             // 
             // tabPage6
             // 
@@ -2752,7 +2821,7 @@
             this.tabPage6.Location = new System.Drawing.Point(4, 25);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(1047, 632);
+            this.tabPage6.Size = new System.Drawing.Size(1047, 661);
             this.tabPage6.TabIndex = 1;
             this.tabPage6.Text = "ROBOT";
             // 
@@ -2765,13 +2834,18 @@
             this.elementHost1.Text = "elementHost1";
             this.elementHost1.Child = null;
             // 
+            // timer1
+            // 
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1055, 661);
+            this.ClientSize = new System.Drawing.Size(1055, 690);
             this.Controls.Add(this.tabControl2);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Seldat WAS GUI Management";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
@@ -2847,6 +2921,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tabControl2.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
+            this.tabPage4.PerformLayout();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.tabPage6.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -3054,6 +3131,13 @@
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.TrackBar trackBar3;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem loadProfileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveProfileToolStripMenuItem;
+        private System.Windows.Forms.Timer timer1;
     }
 }
 

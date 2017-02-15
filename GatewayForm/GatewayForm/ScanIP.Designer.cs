@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label1 = new System.Windows.Forms.Label();
             this.network_card_cbx = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -47,6 +48,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
+            this.label1.ForeColor = System.Drawing.Color.Navy;
             this.label1.Location = new System.Drawing.Point(12, 60);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(90, 13);
@@ -55,16 +57,18 @@
             // 
             // network_card_cbx
             // 
+            this.network_card_cbx.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.network_card_cbx.FormattingEnabled = true;
             this.network_card_cbx.Location = new System.Drawing.Point(109, 56);
             this.network_card_cbx.Name = "network_card_cbx";
-            this.network_card_cbx.Size = new System.Drawing.Size(104, 21);
+            this.network_card_cbx.Size = new System.Drawing.Size(104, 23);
             this.network_card_cbx.TabIndex = 0;
             this.network_card_cbx.SelectedIndexChanged += new System.EventHandler(this.network_card_cbx_SelectedIndexChanged);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
+            this.label2.ForeColor = System.Drawing.Color.Navy;
             this.label2.Location = new System.Drawing.Point(230, 60);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(42, 13);
@@ -74,6 +78,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
+            this.label3.ForeColor = System.Drawing.Color.Navy;
             this.label3.Location = new System.Drawing.Point(400, 59);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(19, 13);
@@ -87,7 +92,8 @@
             this.ipAddressControl1.BackColor = System.Drawing.SystemColors.Window;
             this.ipAddressControl1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.ipAddressControl1.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.ipAddressControl1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ipAddressControl1.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ipAddressControl1.ForeColor = System.Drawing.SystemColors.WindowText;
             this.ipAddressControl1.Location = new System.Drawing.Point(280, 56);
             this.ipAddressControl1.MinimumSize = new System.Drawing.Size(99, 21);
             this.ipAddressControl1.Name = "ipAddressControl1";
@@ -107,7 +113,8 @@
             this.ipAddressControl2.BackColor = System.Drawing.SystemColors.Window;
             this.ipAddressControl2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.ipAddressControl2.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.ipAddressControl2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ipAddressControl2.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ipAddressControl2.ForeColor = System.Drawing.SystemColors.WindowText;
             this.ipAddressControl2.Location = new System.Drawing.Point(420, 56);
             this.ipAddressControl2.MinimumSize = new System.Drawing.Size(99, 21);
             this.ipAddressControl2.Name = "ipAddressControl2";
@@ -123,16 +130,26 @@
             // button1
             // 
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button1.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.ForeColor = System.Drawing.Color.Navy;
             this.button1.Location = new System.Drawing.Point(25, 12);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(77, 30);
             this.button1.TabIndex = 13;
-            this.button1.Text = "Start";
+            this.button1.Text = "Scan";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // dataGridView1
             // 
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ip_col,
@@ -180,9 +197,11 @@
             // 
             this.button2.Enabled = false;
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button2.Location = new System.Drawing.Point(421, 12);
+            this.button2.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button2.ForeColor = System.Drawing.Color.Navy;
+            this.button2.Location = new System.Drawing.Point(469, 12);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 28);
+            this.button2.Size = new System.Drawing.Size(85, 30);
             this.button2.TabIndex = 16;
             this.button2.Text = "Connect";
             this.button2.UseVisualStyleBackColor = true;
@@ -205,7 +224,7 @@
             this.Controls.Add(this.ipAddressControl2);
             this.Controls.Add(this.ipAddressControl1);
             this.Name = "ScanIP";
-            this.Text = "ScanIP";
+            this.Text = "Finding Host";
             this.Load += new System.EventHandler(this.ScanIP_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
