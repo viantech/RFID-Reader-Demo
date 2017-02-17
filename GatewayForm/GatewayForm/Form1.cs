@@ -1126,9 +1126,9 @@ namespace GatewayForm
                     list_cell_0.Clear();
                     int time_out = int.Parse(time_on_tx.Text) + int.Parse(time_off_tx.Text);
                     if (time_out > 5000)
-                        ptimer_loghandle.Interval = time_out;
+                        ptimer_loghandle.Interval = time_out + 1000;
                     else
-                        ptimer_loghandle.Interval = 5000;
+                        ptimer_loghandle.Interval = 5000 ;
                     ptimer_loghandle.Start();
                 }
             }
@@ -1734,22 +1734,6 @@ namespace GatewayForm
             Table_dbbrowser_datagrid.Rows.Add(mgs[0], mgs[1], mgs[2], mgs[3], mgs[4]);
         }
 
-        private void button3_Click(object sender, EventArgs e)
-        {
-            string startupPath = System.IO.Directory.GetCurrentDirectory();
-            MessageBox.Show(startupPath + Properties.Resources.SELDAT_DATABASE, "Path", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            //  var folder = Directory.CreateDirectory("E://luatga"); 
-            // returns a DirectoryInfo object
-            // FolderBrowserDialog st_currentpath = new FolderBrowserDialog();
-            // st_currentpath.ShowDialog();
-            //txt_dbbrowser_selectedpath.Text = st_currentpath.SelectedPath;
-            //MessageBox.Show(pp.SelectedPath);
-
-        }
-        private void chk_dbbrowser_currentpath_CheckedChanged_1(object sender, EventArgs e)
-        {
-
-        }
         private void btn_downloadtabletoExcel_Click(object sender, EventArgs e)
         {
             if (plog != null)
@@ -3030,6 +3014,11 @@ namespace GatewayForm
             TimeSpan time = TimeSpan.FromSeconds(sec);
             time_duration_lb.Text = time.ToString(@"hh\:mm\:ss");
             
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

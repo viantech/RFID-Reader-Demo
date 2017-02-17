@@ -232,14 +232,16 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadProfileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveProfileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tabPage6 = new System.Windows.Forms.TabPage();
-            this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
+            this.readmeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hWSeldatTeamToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl1.SuspendLayout();
@@ -293,8 +295,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tabControl2.SuspendLayout();
             this.tabPage4.SuspendLayout();
-            this.menuStrip1.SuspendLayout();
             this.tabPage6.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // dataGridView1
@@ -2396,7 +2398,7 @@
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Size = new System.Drawing.Size(1027, 491);
             this.tabPage5.TabIndex = 4;
-            this.tabPage5.Text = "Data Store";
+            this.tabPage5.Text = "Data Logging";
             this.tabPage5.UseVisualStyleBackColor = true;
             // 
             // groupBox13
@@ -2413,9 +2415,9 @@
             // 
             // btn_dbbrowser_search
             // 
-            this.btn_dbbrowser_search.Location = new System.Drawing.Point(185, 301);
+            this.btn_dbbrowser_search.Location = new System.Drawing.Point(182, 326);
             this.btn_dbbrowser_search.Name = "btn_dbbrowser_search";
-            this.btn_dbbrowser_search.Size = new System.Drawing.Size(142, 51);
+            this.btn_dbbrowser_search.Size = new System.Drawing.Size(142, 42);
             this.btn_dbbrowser_search.TabIndex = 3;
             this.btn_dbbrowser_search.Text = "Search";
             this.btn_dbbrowser_search.UseVisualStyleBackColor = true;
@@ -2423,7 +2425,7 @@
             // 
             // btn_downloadtabletoExcel
             // 
-            this.btn_downloadtabletoExcel.Location = new System.Drawing.Point(350, 305);
+            this.btn_downloadtabletoExcel.Location = new System.Drawing.Point(352, 326);
             this.btn_downloadtabletoExcel.Name = "btn_downloadtabletoExcel";
             this.btn_downloadtabletoExcel.Size = new System.Drawing.Size(142, 42);
             this.btn_downloadtabletoExcel.TabIndex = 2;
@@ -2494,9 +2496,9 @@
             this.Connect_btn.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.Connect_btn.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.Connect_btn.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Connect_btn.Location = new System.Drawing.Point(296, 18);
+            this.Connect_btn.Location = new System.Drawing.Point(293, 19);
             this.Connect_btn.Name = "Connect_btn";
-            this.Connect_btn.Size = new System.Drawing.Size(91, 41);
+            this.Connect_btn.Size = new System.Drawing.Size(91, 24);
             this.Connect_btn.TabIndex = 2;
             this.Connect_btn.Text = "Connect";
             this.Connect_btn.UseVisualStyleBackColor = false;
@@ -2522,21 +2524,22 @@
             // 
             // scan_ip_btn
             // 
+            this.scan_ip_btn.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.scan_ip_btn.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.scan_ip_btn.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.scan_ip_btn.Location = new System.Drawing.Point(199, 12);
+            this.scan_ip_btn.Location = new System.Drawing.Point(203, 48);
             this.scan_ip_btn.Name = "scan_ip_btn";
-            this.scan_ip_btn.Size = new System.Drawing.Size(84, 24);
+            this.scan_ip_btn.Size = new System.Drawing.Size(181, 24);
             this.scan_ip_btn.TabIndex = 3;
-            this.scan_ip_btn.Text = "Scan";
-            this.scan_ip_btn.UseVisualStyleBackColor = true;
+            this.scan_ip_btn.Text = "Scan Network Reader";
+            this.scan_ip_btn.UseVisualStyleBackColor = false;
             this.scan_ip_btn.Click += new System.EventHandler(this.scan_ip_btn_Click);
             // 
             // ViewConn_btn
             // 
             this.ViewConn_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ViewConn_btn.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ViewConn_btn.Location = new System.Drawing.Point(199, 40);
+            this.ViewConn_btn.Location = new System.Drawing.Point(203, 18);
             this.ViewConn_btn.Name = "ViewConn_btn";
             this.ViewConn_btn.Size = new System.Drawing.Size(84, 24);
             this.ViewConn_btn.TabIndex = 3;
@@ -2554,7 +2557,7 @@
             "Bluetooth",
             "Ethernet",
             "RS485"});
-            this.ConnType_cbx.Location = new System.Drawing.Point(89, 26);
+            this.ConnType_cbx.Location = new System.Drawing.Point(89, 19);
             this.ConnType_cbx.Name = "ConnType_cbx";
             this.ConnType_cbx.Size = new System.Drawing.Size(91, 23);
             this.ConnType_cbx.TabIndex = 2;
@@ -2565,11 +2568,11 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(10, 28);
+            this.label5.Location = new System.Drawing.Point(10, 21);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(80, 19);
+            this.label5.Size = new System.Drawing.Size(81, 19);
             this.label5.TabIndex = 1;
-            this.label5.Text = "Protocol:";
+            this.label5.Text = "Interface:";
             // 
             // label6
             // 
@@ -2626,7 +2629,7 @@
             this.groupBox4.ForeColor = System.Drawing.Color.Navy;
             this.groupBox4.Location = new System.Drawing.Point(0, 0);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(427, 73);
+            this.groupBox4.Size = new System.Drawing.Size(414, 73);
             this.groupBox4.TabIndex = 9;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "[Connection Status]";
@@ -2676,7 +2679,7 @@
             this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel4, 0, 2);
             this.tableLayoutPanel3.Controls.Add(this.tableLayoutPanel4, 0, 0);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 27);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 3;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 85F));
@@ -2711,8 +2714,8 @@
             this.tableLayoutPanel4.ColumnCount = 2;
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 38.64734F));
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 61.35266F));
-            this.tableLayoutPanel4.Controls.Add(this.groupBox3, 0, 0);
             this.tableLayoutPanel4.Controls.Add(this.panel5, 1, 0);
+            this.tableLayoutPanel4.Controls.Add(this.groupBox3, 0, 0);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
@@ -2749,32 +2752,51 @@
             this.tabControl2.Controls.Add(this.tabPage6);
             this.tabControl2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl2.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tabControl2.Location = new System.Drawing.Point(0, 0);
+            this.tabControl2.Location = new System.Drawing.Point(0, 24);
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(1055, 690);
+            this.tabControl2.Size = new System.Drawing.Size(1055, 666);
             this.tabControl2.TabIndex = 13;
             // 
             // tabPage4
             // 
             this.tabPage4.BackColor = System.Drawing.SystemColors.Control;
             this.tabPage4.Controls.Add(this.tableLayoutPanel3);
-            this.tabPage4.Controls.Add(this.menuStrip1);
             this.tabPage4.Location = new System.Drawing.Point(4, 25);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(1047, 661);
+            this.tabPage4.Size = new System.Drawing.Size(1047, 637);
             this.tabPage4.TabIndex = 0;
             this.tabPage4.Text = "READER";
+            // 
+            // tabPage6
+            // 
+            this.tabPage6.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage6.Controls.Add(this.elementHost1);
+            this.tabPage6.Location = new System.Drawing.Point(4, 25);
+            this.tabPage6.Name = "tabPage6";
+            this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage6.Size = new System.Drawing.Size(1047, 637);
+            this.tabPage6.TabIndex = 1;
+            this.tabPage6.Text = "ROBOT";
+            // 
+            // elementHost1
+            // 
+            this.elementHost1.Location = new System.Drawing.Point(8, 6);
+            this.elementHost1.Name = "elementHost1";
+            this.elementHost1.Size = new System.Drawing.Size(1047, 632);
+            this.elementHost1.TabIndex = 0;
+            this.elementHost1.Text = "elementHost1";
+            this.elementHost1.Child = null;
             // 
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.aboutToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(3, 3);
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1041, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1055, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -2807,32 +2829,28 @@
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
             this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem
             // 
+            this.aboutToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.readmeToolStripMenuItem,
+            this.hWSeldatTeamToolStripMenuItem});
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
             this.aboutToolStripMenuItem.Text = "About";
             // 
-            // tabPage6
+            // readmeToolStripMenuItem
             // 
-            this.tabPage6.BackColor = System.Drawing.SystemColors.Control;
-            this.tabPage6.Controls.Add(this.elementHost1);
-            this.tabPage6.Location = new System.Drawing.Point(4, 25);
-            this.tabPage6.Name = "tabPage6";
-            this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(1047, 661);
-            this.tabPage6.TabIndex = 1;
-            this.tabPage6.Text = "ROBOT";
+            this.readmeToolStripMenuItem.Name = "readmeToolStripMenuItem";
+            this.readmeToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.readmeToolStripMenuItem.Text = "Version 1.0";
             // 
-            // elementHost1
+            // hWSeldatTeamToolStripMenuItem
             // 
-            this.elementHost1.Location = new System.Drawing.Point(8, 6);
-            this.elementHost1.Name = "elementHost1";
-            this.elementHost1.Size = new System.Drawing.Size(1047, 632);
-            this.elementHost1.TabIndex = 0;
-            this.elementHost1.Text = "elementHost1";
-            this.elementHost1.Child = null;
+            this.hWSeldatTeamToolStripMenuItem.Name = "hWSeldatTeamToolStripMenuItem";
+            this.hWSeldatTeamToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.hWSeldatTeamToolStripMenuItem.Text = "by @HW_Seldat_Team";
             // 
             // timer1
             // 
@@ -2844,10 +2862,11 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1055, 690);
             this.Controls.Add(this.tabControl2);
+            this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
-            this.Text = "Seldat WAS GUI Management";
+            this.Text = "Seldat Hardware Configuation Utility";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.tabControl1.ResumeLayout(false);
@@ -2921,11 +2940,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tabControl2.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
-            this.tabPage4.PerformLayout();
+            this.tabPage6.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.tabPage6.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -3138,6 +3157,8 @@
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveProfileToolStripMenuItem;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.ToolStripMenuItem readmeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem hWSeldatTeamToolStripMenuItem;
     }
 }
 

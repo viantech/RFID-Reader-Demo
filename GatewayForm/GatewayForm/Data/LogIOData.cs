@@ -74,8 +74,8 @@ namespace GatewayForm
                 _flag_TableSql = true;
             
             }
-            catch {
-                MessageBox.Show("Log ERROR");
+            catch  (Exception e){
+                MessageBox.Show(e.ToString());
             }
             return true;
 
