@@ -18,6 +18,9 @@ namespace GatewayForm
         public setup_connect()
         {
             InitializeComponent();
+            this.Icon = Properties.Resources.favicon__1_;
+            address = Properties.Settings.Default.save_address;
+            port = Properties.Settings.Default.save_port;
         }
 
         private void ok_btn_Click(object sender, EventArgs e)

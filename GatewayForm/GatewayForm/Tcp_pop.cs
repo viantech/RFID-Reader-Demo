@@ -23,6 +23,7 @@ namespace GatewayForm
         public Tcp_pop()
         {
             InitializeComponent();
+            this.Icon = Properties.Resources.favicon__1_;
             if(automatic)
             {
                 this.dhcp_btn.Checked = automatic;

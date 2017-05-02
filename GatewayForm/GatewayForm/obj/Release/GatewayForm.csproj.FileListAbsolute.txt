@@ -17,17 +17,10 @@ C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Release\Gatewa
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Release\GatewayForm.exe
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Release\GatewayForm.pdb
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Release\en\GatewayForm.resources.dll
-C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Release\EntityFramework.dll
-C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Release\EntityFramework.SqlServer.dll
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Release\IPAddressControlLib.dll
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Release\Newtonsoft.Json.dll
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Release\System.Data.SQLite.dll
-C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Release\System.Data.SQLite.EF6.dll
-C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Release\System.Data.SQLite.Linq.dll
-C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Release\EntityFramework.xml
-C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Release\EntityFramework.SqlServer.xml
-C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Release\IPAddressControlLib.pdb
-C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Release\System.Data.SQLite.xml
+C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Release\GatewayForm.csprojResolveAssemblyReference.cache
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Release\GatewayForm.Form1.resources
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Release\GatewayForm.ScanIP.resources
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Release\GatewayForm.SearchForm_Data.resources
@@ -42,4 +35,3 @@ C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Release\Gatewa
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Release\en\GatewayForm.resources.dll
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Release\GatewayForm.exe
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Release\GatewayForm.pdb
-C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Release\GatewayForm.csprojResolveAssemblyReference.cache

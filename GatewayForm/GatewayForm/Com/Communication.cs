@@ -62,12 +62,12 @@ namespace GatewayForm
             else
                 return;
         }
-        public Boolean waitflagRevTCP()
+        public Boolean waitflagRevTCP(int time = 2000)
         {
             if (tcp != null)
-                return tcp.receiveDone.WaitOne(2000);
+                return tcp.receiveDone.WaitOne(time);
             else if (zigbee != null)
-                return zigbee.receiveDone.WaitOne(2000);
+                return zigbee.receiveDone.WaitOne(time);
             else
                 return false;
         }
@@ -135,10 +135,6 @@ namespace GatewayForm
                     tcp.Config_Msg -= passed_config;
                     tcp.TagID_Msg -= passed_event;
                     tcp = null;
-                    /*pp.close();
-                    pTcpipClient.MessageReceived -= passed_event; //chu y
-                    pTcpipClient.ConfigMessage -= passed_config;
-                    pTcpipClient.Log_Msg -= passed_log;*/
                     break;
                 case CM.TYPECONNECT.HDR_RS232:
                     break;
@@ -174,11 +170,6 @@ namespace GatewayForm
                         else
                             tcp.Free();
                     }
-                    /*if (pTcpipClient != null)
-                    {
-                        if(pTcpipClient.isconnected)
-                            pTcpipClient.Get_Command_Send(command_type);
-                    }*/
                     break;
                 case CM.TYPECONNECT.HDR_RS232:
                     break;

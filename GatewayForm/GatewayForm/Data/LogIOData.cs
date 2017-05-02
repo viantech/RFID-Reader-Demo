@@ -81,21 +81,29 @@ namespace GatewayForm
 
         }
         public void InsertData2Sql(String[] mgs)
-        {        
-            if (_flag_TableSql)
+        {
+            try
             {
-                if (mgs.Length > 0)
+                if (_flag_TableSql)
                 {
-                    for (int i = 0; i < mgs.Length; i++)
+                    if (mgs.Length > 0)
                     {
-                        string[] cells;
-                        cells = mgs[i].Split(new string[] { "\t" }, StringSplitOptions.None);
-                        string sqlcmd = "INSERT INTO "+ SQLtablename + " (TAG,ANT,RSSI,CODE,DATE) values ('" + cells[0] + "','"+ cells[1] + "','"+ cells[2] + "','"+ cells[3] + "','"+ cells[4] + "')";
-                        SQLiteCommand cmd = new SQLiteCommand(sqlcmd, sqlConnection);
-                        cmd.ExecuteNonQuery();
+                        for (int i = 0; i < mgs.Length; i++)
+                        {
+                            string[] cells;
+                            cells = mgs[i].Split(new string[] { "\t" }, StringSplitOptions.None);
+                            string sqlcmd = "INSERT INTO " + SQLtablename + " (TAG,ANT,RSSI,CODE,DATE) values ('" + cells[0] + "','" + cells[1] + "','" + cells[2] + "','" + cells[3] + "','" + cells[4] + "')";
+                            SQLiteCommand cmd = new SQLiteCommand(sqlcmd, sqlConnection);
+                            cmd.ExecuteNonQuery();
+                        }
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+            
         }
         public void AddRow2Sql(String[] cells)
         {

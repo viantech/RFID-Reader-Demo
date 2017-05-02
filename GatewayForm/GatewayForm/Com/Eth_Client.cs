@@ -40,22 +40,16 @@ namespace GatewayForm
         public bool connect_ok = false;
         public event SocketReceivedHandler TagID_Msg;
         public event SocketReceivedHandler Config_Msg;
+        
+        private int retry_count = 3;
+        private volatile bool nak_file = false;
 
-        //private Thread p_read;
-        //Ping connection
-        //private System.Timers.Timer pingTimer = new System.Timers.Timer() { Interval = 10000 };
-        //private AutoResetEvent waiter = new AutoResetEvent(false);
-        //private bool File_Mode = false;
-        //private bool Muti_packets = false;
-        // Event Handler
-        //public bool recv_flag = false;
-        //public bool alive = true;
-        private static int retry_count = 3;
         // ManualResetEvent instances signal completion.
-        private AutoResetEvent connectDone = new AutoResetEvent(false);
-        private AutoResetEvent sendDone = new AutoResetEvent(false);
-        public AutoResetEvent receiveDone = new AutoResetEvent(false);
+        private ManualResetEvent connectDone = new ManualResetEvent(false);
+        private ManualResetEvent sendDone = new ManualResetEvent(false);
+        public ManualResetEvent receiveDone = new ManualResetEvent(false);
         private ManualResetEvent send_part = new ManualResetEvent(false);
+        
         // The response from the remote device.
         private List<byte> result_command_bytes = new List<byte>();
         private List<byte> raw_buffer = new List<byte>();
@@ -128,12 +122,16 @@ namespace GatewayForm
                 client = new TcpClient();
                 // Create a TCP/IP socket.
                 client.Client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                //client.NoDelay = true;
+                //client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.NoDelay);
                 client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
 
                 // Connect to the remote endpoint.
+                connectDone.Reset();
                 client.Client.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), client.Client);
                 if (connectDone.WaitOne(5000))
                 {
+                    connectDone.Reset();
                     CM.SetKeepAliveValues(client.Client, true, 2000, 1000);
                     connect_ok = true;
                     stream = client.GetStream();
@@ -207,8 +205,9 @@ namespace GatewayForm
                 }
                 else
                 {
-
-                    stream.BeginWrite(b_frame, 0, b_frame.Length, new AsyncCallback(SendCallback), null);
+                    client.Client.BeginSend(b_frame, 0, b_frame.Length, 0, new AsyncCallback(SendCallback), client.Client);
+                    //stream.BeginWrite(b_frame, 0, b_frame.Length, new AsyncCallback(SendCallback), null);
+                    //stream.Write(b_frame, 0, b_frame.Length);
                     sendDone.WaitOne(2000);
                     sendDone.Reset();
                 }
@@ -237,8 +236,8 @@ namespace GatewayForm
                 else
                 {
                     // Complete sending the data to the remote device.
-                    stream.EndWrite(ar);
-
+                    Socket tclient = (Socket)ar.AsyncState;
+                    tclient.EndSend(ar);
                     // Signal that all bytes have been sent.
                     sendDone.Set();
                 }
@@ -378,60 +377,78 @@ namespace GatewayForm
                 SendFrame(byte_tcp);
             }
         }
-
+        
         public void Send_File(byte[] file_stream, string info)
         {
             //Part 0 (Info)
             send_part.Reset();
             Set_Command_Send(CM.COMMAND.FIRMWARE_UPDATE_CMD, info);
-            if (send_part.WaitOne(3000))
+            if (send_part.WaitOne(2000)) //wait ack
             {
-                send_part.Reset();
-                //Part file
-                byte[] part_byte;
-                UInt16 num_part, len_last_part, len_part, percent;
-                int id = 0;
-                len_part = (ushort)CM.LENGTH.CHUNK_SIZE_FILE;
-                num_part = (ushort)(file_stream.Length / len_part);
-                len_last_part = (ushort)(file_stream.Length % len_part);
-                if (len_last_part > 0)
-                    num_part += 1;
-                for (int ip = 0; ip < num_part; ip++)
+                if (nak_file)
                 {
-                    percent = (ushort)((ip + 1) * (100 / num_part));
-                    if (ip == num_part - 1)
+                    nak_file = false;
+                    MessageBox.Show("Wrong File Info", "Update FW", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    //Part file
+                    byte[] part_byte;
+                    UInt16 num_part, len_last_part, len_part, percent;
+                    int ifile = 0;
+                    len_part = (ushort)CM.LENGTH.CHUNK_SIZE_FILE;
+                    num_part = (ushort)(file_stream.Length / len_part);
+                    len_last_part = (ushort)(file_stream.Length % len_part);
+                    if (len_last_part > 0)
+                        num_part += 1;
+                    for (int ipart = 0; ipart < num_part; ipart++)
                     {
-                        if (len_last_part > 0)
-                            len_part = (ushort)len_last_part;
-                        percent = 100;
-                    }
-                    part_byte = new byte[len_part];
-                    Buffer.BlockCopy(file_stream, id, part_byte, 0, len_part);
-                    id += len_part;
-                    CM.FrameFormat fmt_set = new CM.FrameFormat();
-                    fmt_set.command = (byte)CM.COMMAND.FIRMWARE_UPDATE_CMD;
-                    fmt_set.length = (ushort)((ushort)CM.LENGTH.FRAME_NON_DATA + len_part);
-                    fmt_set.metal_data = part_byte;
-                    /* Byte data of Frame Format*/
-                    byte[] sub_fmt_byte = CM.Encode_Frame(fmt_set);
-                    Send_Packets(sub_fmt_byte);
-                    if (!send_part.WaitOne(4000))
-                    {
-                        MessageBox.Show("Time out! Failed to update firmware.", "Sending Part Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        break;
-                    }
-                    else
-                    {
+                        percent = (ushort)((ipart + 1) * (100 / num_part));
+                        if (ipart == num_part - 1)
+                        {
+                            if (len_last_part > 0)
+                                len_part = (ushort)len_last_part;
+                            percent = 100;
+                        }
+                        part_byte = new byte[len_part];
+                        Buffer.BlockCopy(file_stream, ifile, part_byte, 0, len_part);
+                        ifile += len_part;
+                        CM.FrameFormat fmt_set = new CM.FrameFormat();
+                        fmt_set.command = (byte)CM.COMMAND.FIRMWARE_UPDATE_CMD;
+                        fmt_set.length = (ushort)((ushort)CM.LENGTH.FRAME_NON_DATA + len_part);
+                        fmt_set.metal_data = part_byte;
+                        /* Byte data of Frame Format*/
+                        byte[] sub_fmt_byte = CM.Encode_Frame(fmt_set);
                         send_part.Reset();
-                        Cmd_Raise("Update FW\n" + percent.ToString() + "\n");
+                        Send_Parts(sub_fmt_byte);
+                        
+                        if (send_part.WaitOne(30000))
+                        {
+                            if (!nak_file)
+                                CM.Log_Raise("Update " + percent.ToString() + "%...");
+                            else
+                            {
+                                // Receive NAK nak_file = true
+                                nak_file = false;
+                                MessageBox.Show("Update Wrong File Size\nPlease try again!", "Update FW", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("Time Out Error", "Update FW", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            break;
+                        }
                     }
                 }
             }
             else
-                MessageBox.Show("Wrong File Info", "Sending Part 0 Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            {
+                MessageBox.Show("Time Out Error", "Update FW", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
-        private void Send_Packets(byte[] frame_data_byte)
+        private void Send_Parts(byte[] frame_data_byte)
         {
             UInt16 num_packet, last_packet_byte, len_transmit;
             UInt16 idx, len_byte_fmt;
@@ -476,9 +493,22 @@ namespace GatewayForm
                 Get_Command_Send(CM.COMMAND.GET_CONFIGURATION_CMD);
                 receiveDone.WaitOne(2000);
                 receiveDone.Reset();
+                //Get GPO
+                Get_Command_Send(CM.COMMAND.GET_GPIO_STATUS_CMD);
+                receiveDone.WaitOne(2000);
+                receiveDone.Reset();
                 //Antena
                 Get_Command_Send(CM.COMMAND.ANTENA_CMD);
                 receiveDone.WaitOne(2000);
+                receiveDone.Reset();
+                
+            }
+            else if (CM.COMMAND.GET_RFID_CONFIGURATION_CMD == command)
+            {
+                receiveDone.Reset();
+                Get_Command_Send(CM.COMMAND.GET_RFID_CONFIGURATION_CMD);
+                receiveDone.WaitOne(2000);
+                receiveDone.Reset();
             }
             else if (CM.COMMAND.GET_BLF_CMD == command)
             {
@@ -491,6 +521,7 @@ namespace GatewayForm
                 receiveDone.Reset();
                 Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 2);
                 receiveDone.WaitOne(2000);
+                receiveDone.Reset();
             }
             else if (CM.COMMAND.GET_POWER_CMD == command)
             {
@@ -500,19 +531,7 @@ namespace GatewayForm
                 receiveDone.Reset();
                 Get_Command_Power(CM.COMMAND.GET_POWER_CMD, 1);
                 receiveDone.WaitOne(2000);
-            }
-            else if (CM.COMMAND.DIS_CONNECT_CMD == command)
-            {
                 receiveDone.Reset();
-                Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
-                receiveDone.WaitOne(2000);
-                Free();
-            }
-            else if (CM.COMMAND.GET_RFID_CONFIGURATION_CMD == command)
-            {
-                receiveDone.Reset();
-                Get_Command_Send(CM.COMMAND.GET_RFID_CONFIGURATION_CMD);
-                receiveDone.WaitOne(2000);
             }
             else if (CM.COMMAND.GET_READ_POWER_PORT_CMD == command)
             {
@@ -522,6 +541,27 @@ namespace GatewayForm
                 receiveDone.Reset();
                 Get_Command_Send(CM.COMMAND.GET_WRITE_POWER_PORT_CMD);
                 receiveDone.WaitOne(2000);
+                receiveDone.Reset();
+            }
+            else if (CM.COMMAND.GET_TAG_CONNECTION_CMD == command)
+            {
+                receiveDone.Reset();
+                Get_Command_Power(CM.COMMAND.GET_TAG_CONNECTION_CMD, 0);
+                receiveDone.WaitOne(2000);
+                receiveDone.Reset();
+                Get_Command_Power(CM.COMMAND.GET_TAG_CONNECTION_CMD, 1);
+                receiveDone.WaitOne(2000);
+                receiveDone.Reset();
+                Get_Command_Power(CM.COMMAND.GET_TAG_CONNECTION_CMD, 2);
+                receiveDone.WaitOne(2000);
+                receiveDone.Reset();
+            }
+            else if (CM.COMMAND.DIS_CONNECT_CMD == command)
+            {
+                receiveDone.Reset();
+                Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
+                receiveDone.WaitOne(2000);
+                Free();
             }
             else if (CM.COMMAND.GET_POWER_MODE_CMD == command)
             {
@@ -543,12 +583,14 @@ namespace GatewayForm
                 receiveDone.Reset();
                 Get_Command_Send(CM.COMMAND.GET_POWER_MODE_CMD);
                 receiveDone.WaitOne(2000);
+                receiveDone.Reset();
             }
             else if (CM.COMMAND.CONNECTION_REQUEST_CMD == command)
             {
                 receiveDone.Reset();
                 Send_ConnectionRequest();
                 receiveDone.WaitOne(2000);
+                receiveDone.Reset();
             }
             else
             {
@@ -760,7 +802,7 @@ namespace GatewayForm
                             if (0x00 == byte_bits[0])
                                 Cmd_Raise("BLF Setting\n" + byte_bits[1].ToString() + "\n");
                             else
-                                CM.Log_Raise("Fail Get BLF");
+                                MessageBox.Show("Fail Get BLF");
                         }
                         break;
                     case CM.COMMAND.SET_BLF_CMD:
@@ -806,7 +848,10 @@ namespace GatewayForm
                         if (0x00 == info_ack)
                             send_part.Set();
                         else
-                            CM.Log_Raise("Failed Part sent.");
+                        {
+                            nak_file = true;
+                            send_part.Set();
+                        }
                         break;
                     case CM.COMMAND.GET_READ_POWER_PORT_CMD:
                         data_response = CM.Get_Data(CM.Decode_Frame((byte)CM.COMMAND.GET_READ_POWER_PORT_CMD, command_bytes));
@@ -831,6 +876,48 @@ namespace GatewayForm
                             CM.Log_Raise("Set Port Write Power done");
                         else
                             MessageBox.Show("Setting Write Power Port", "Antena Write Power", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        break;
+                    case CM.COMMAND.SET_SEND_NULL_EPC_CMD:
+                        info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_SEND_NULL_EPC_CMD, command_bytes);
+                        if (0x00 != info_ack)
+                            MessageBox.Show("Failed to set Send Null");
+                        break;
+                    case CM.COMMAND.SET_GPO_VALUE_CMD:
+                        info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_GPO_VALUE_CMD, command_bytes);
+                        if (0x00 != info_ack)
+                            CM.Log_Raise("Failed to Set GPO");
+                        break;
+                    case CM.COMMAND.GET_GPIO_STATUS_CMD:
+                        data_response = CM.Get_Data(CM.Decode_Frame((byte)CM.COMMAND.GET_GPIO_STATUS_CMD, command_bytes));
+                        if (data_response != null)
+                            Cmd_Raise("Get GPI\n" + data_response + "\n");
+                        break;
+                    case CM.COMMAND.TEXT_TO_SPEECH_CMD:
+                        info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.TEXT_TO_SPEECH_CMD, command_bytes);
+                        if (0x00 == info_ack)
+                            CM.Log_Raise("Speak done!");
+                        else
+                            MessageBox.Show("Text to Voice Error", "Speaker Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        break;
+                    case CM.COMMAND.SET_TAG_CONNECTION_CMD:
+                        info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.SET_TAG_CONNECTION_CMD, command_bytes);
+                        if (0x00 == info_ack)
+                            CM.Log_Raise("Set Tag Connection done");
+                        else
+                            MessageBox.Show("Failed to set Tag Connection");
+                        break;
+                    case CM.COMMAND.GET_TAG_CONNECTION_CMD:
+                        byte_bits = CM.Decode_Frame((byte)CM.COMMAND.GET_TAG_CONNECTION_CMD, command_bytes);
+                        if (byte_bits != null)
+                        {
+                            if (0x00 == byte_bits[0])
+                                Cmd_Raise("Tag Setting\n" + Encoding.ASCII.GetString(byte_bits.Skip(1).ToArray()) + "\n");
+                            else
+                                MessageBox.Show("Fail Get Tag");
+                        }
+                        break;
+                    case CM.COMMAND.PING_TO_HOST_CMD:
+                        Cmd_Raise("Pinged\n");
                         break;
                     default:
                         break;
@@ -863,89 +950,92 @@ namespace GatewayForm
             }
         }
 
+        private void ReceiveThread()
+        {
+            int byteRead;
+            int length = 0;
+
+            byte[] buffer = new byte[1024];
+
+            while (this.IsConnected)
+            {
+                try
+                {
+                    if (this.stream.Read(buffer, 0, 1) > 0)
+                    {
+                        if (buffer[0] == (byte)CM.HEADER.RESP_PACKET_HDR)
+                        {
+                            if (this.stream.Read(buffer, 1, 2) > 0)
+                            {
+                                length = (buffer[1] << 8) + buffer[2];
+                                /*if (length > 1023)
+                                    buffer = new byte[1024];
+                                else
+                                {*/
+                                int desired_len = length - 2;
+                                int idx = 3;
+                                while ((byteRead = this.stream.Read(buffer, idx, desired_len)) > 0)
+                                {
+                                    desired_len = desired_len - byteRead;
+                                    idx += byteRead;
+                                    if (desired_len == 0)
+                                        break;
+                                }
+                                Command_Sync(buffer, length + 1);
+                                //buffer = new byte[1024];
+                                //}
+                            }
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Server closed connection", "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        Free();
+                        break;
+                    }
+                }
+                catch (IOException ex)
+                {
+                    if (connect_ok)
+                    {
+                        if (ex.InnerException.Message.Contains("did not properly respond"))
+                        {
+                            Cmd_Raise("Keep Alive Timeout\n");
+                            break;
+                        }
+                        else
+                        {
+                            Free();
+                            MessageBox.Show("Connection Close", "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        if (ex.InnerException.Message.Contains("blocking operation"))
+                            length = -1;
+                        break;
+                    }
+                }
+                catch (ObjectDisposedException)
+                {
+                    if (connect_ok)
+                        CM.Log_Raise("Abort due to close");
+                }
+                catch (ThreadAbortException)
+                {
+                    MessageBox.Show("Thread Aborted Exception", "Thread Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
         private void Receive_Command_Handler()
         {
             Task task_read = Task.Run(() =>
                 {
-                    int byteRead;
-                    int length = 0;
-
-                    byte[] buffer = new byte[1024];
-
-                    while (this.IsConnected)
-                    {
-                        try
-                        {
-                            if (this.stream.Read(buffer, 0, 1) > 0)
-                            {
-                                if (buffer[0] == (byte)CM.HEADER.RESP_PACKET_HDR)
-                                {
-                                    if (this.stream.Read(buffer, 1, 2) > 0)
-                                    {
-                                        length = (buffer[1] << 8) + buffer[2];
-                                        if (length > 1023)
-                                            buffer = new byte[1024];
-                                        else
-                                        {
-                                            int desired_len = length - 2;
-                                            int idx = 3;
-                                            while ((byteRead = this.stream.Read(buffer, idx, desired_len)) > 0)
-                                            {
-
-                                                desired_len = desired_len - byteRead;
-                                                idx += byteRead;
-                                                if (desired_len == 0)
-                                                    break;
-                                            }
-                                            Command_Sync(buffer, length + 1);
-                                            buffer = new byte[1024];
-                                        }
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                MessageBox.Show("Server closed connection", "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                Free();
-                                break;
-                            }
-                        }
-                        catch (IOException ex)
-                        {
-                            if (connect_ok)
-                            {
-                                if (ex.InnerException.Message.Contains("did not properly respond"))
-                                {
-                                    Cmd_Raise("Keep Alive Timeout\n");
-                                    break;
-                                }
-                                else
-                                {
-                                    Free();
-                                    MessageBox.Show("Connection Close", "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                    break;
-                                }
-                            }
-                            else
-                            {
-                                if (ex.InnerException.Message.Contains("blocking operation"))
-                                    length = -1;
-                                break;
-                            }
-                        }
-                        catch (ObjectDisposedException)
-                        {
-                            if (connect_ok)
-                                CM.Log_Raise("Abort due to close");
-                        }
-                        catch (ThreadAbortException)
-                        {
-                            MessageBox.Show("Thread Aborted Exception", "Thread Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                    }
+                    ReceiveThread();
                 }
                 );
-
         }
 
         private void Command_Sync(byte[] SubFrame, int bytesRead)
@@ -968,6 +1058,7 @@ namespace GatewayForm
                     byte[] last_meta_sub = CM.Decode_SubFrame(SubFrame, bytesRead);
                     if (last_meta_sub != null)
                     {
+                        //mut.WaitOne();
                         receiveDone.Set();
                         if (result_command_bytes.Count > 0)
                         {
@@ -985,6 +1076,12 @@ namespace GatewayForm
                                 result_command_bytes.Clear();
                                 Cmd_Raise(data_response);
                             }
+                            else if ((byte)CM.COMMAND.GET_CONFIGURATION_CMD == result_command_bytes[0])
+                            {
+                                string data_response = CM.Get_Data(CM.Decode_Frame((byte)CM.COMMAND.GET_CONFIGURATION_CMD, result_command_bytes.ToArray()));
+                                result_command_bytes.Clear();
+                                Cmd_Raise(data_response);
+                            }
                             else
                             {
                                 result_command_bytes.Clear();
@@ -999,7 +1096,7 @@ namespace GatewayForm
                             else
                                 Data_Receive_Handler(last_meta_sub);
                         }
-
+                       //mut.ReleaseMutex();
                     }
                     else
                     {

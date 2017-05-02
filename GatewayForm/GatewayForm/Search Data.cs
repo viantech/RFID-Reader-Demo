@@ -17,6 +17,7 @@ namespace GatewayForm
         public SearchForm_Data()
         {
             InitializeComponent();
+            this.Icon = Properties.Resources.favicon__1_;
            
         }
         private void btn_searchTag_Click(object sender, EventArgs e)

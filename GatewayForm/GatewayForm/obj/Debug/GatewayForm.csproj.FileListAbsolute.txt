@@ -113,21 +113,9 @@ C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Debug\GatewayF
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Debug\GatewayForm.exe
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Debug\GatewayForm.pdb
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Debug\en\GatewayForm.resources.dll
-C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Debug\EntityFramework.dll
-C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Debug\EntityFramework.SqlServer.dll
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Debug\IPAddressControlLib.dll
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Debug\Newtonsoft.Json.dll
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Debug\System.Data.SQLite.dll
-C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Debug\System.Data.SQLite.EF6.dll
-C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Debug\System.Data.SQLite.Linq.dll
-C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Debug\EntityFramework.xml
-C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Debug\EntityFramework.SqlServer.xml
-C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Debug\IPAddressControlLib.pdb
-C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\bin\Debug\System.Data.SQLite.xml
-C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\RobotManager.baml
-C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\RobotManager.g.cs
-C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\GatewayForm_MarkupCompile.cache
-C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\GatewayForm.g.resources
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\GatewayForm.Form1.resources
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\GatewayForm.ScanIP.resources
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\GatewayForm.SearchForm_Data.resources
@@ -142,4 +130,3 @@ C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\GatewayF
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\en\GatewayForm.resources.dll
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\GatewayForm.exe
 C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\GatewayForm.pdb
-C:\Users\Quang Do\Documents\guidesign\GatewayForm\GatewayForm\obj\Debug\GatewayForm.csprojResolveAssemblyReference.cache

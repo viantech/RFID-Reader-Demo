@@ -35,6 +35,7 @@ namespace GatewayForm
         public ScanIP()
         {
             InitializeComponent();
+            this.Icon = Properties.Resources.favicon__1_;
         }
 
         private string[] Decode_Info_NetCard(int index)
@@ -102,6 +103,7 @@ namespace GatewayForm
         private void button1_Click(object sender, EventArgs e)
         {
             computerList.Clear();
+            button2.Enabled = false;
             alivehost.Clear();
             completedCounter = 0;
             total_host = 0;
@@ -178,11 +180,15 @@ namespace GatewayForm
             {
                 if (255 == endIP)
                 {
-                    System.Windows.Forms.DialogResult result = MessageBox.Show("It will take a very long time to scan IP.\nClick \"Yes\" to limit the range (set the third octes less than 255).\nClick \"No\" to continue scanning hosts.", 
-                        "Huge Range Scan IP", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                    if (result == System.Windows.Forms.DialogResult.Yes)
+                    System.Windows.Forms.DialogResult result = MessageBox.Show("Scanning time will take long.\n\nDo you want to continue scanning hosts?",
+                        "Warning Scan IP", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    if (result == System.Windows.Forms.DialogResult.No)
                     {
-                        //this.ipAddressControl2.Focus();
+                        MessageBox.Show("Please set the third octes less than 255!", "Limit Range", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        this.Invoke((MethodInvoker)delegate
+                        {
+                            ipAddressControl2.SetFieldFocus(2);
+                        });
                         return;
                     }
                 }
@@ -223,7 +229,8 @@ namespace GatewayForm
             ThreadPool.QueueUserWorkItem(delegate(object state)
             {
                 Ping pingsender = new Ping();
-                if (pingsender.Send(hostIP, 100).Status == IPStatus.Success)
+                IPStatus status = pingsender.Send(hostIP, 300).Status;
+                if (status == IPStatus.Success)
                     lock (listLock) alivehost.Add(hostIP);
                 Interlocked.Increment(ref completedCounter);
                 double ratio = (double)completedCounter / total_host;
@@ -237,7 +244,22 @@ namespace GatewayForm
             this.Invoke((MethodInvoker)delegate
             {
                 foreach (KeyValuePair<string, string> host in computerList)
-                    this.dataGridView1.Rows.Add(host.Key, host.Value);
+                {
+                    if (!String.IsNullOrEmpty(host.Key))
+                    {
+                        int rowindex = dataGridView1.Rows.Add();
+                        this.dataGridView1.Rows[rowindex].Cells[0].Value = host.Key;
+                        this.dataGridView1.Rows[rowindex].Cells[1].Value = host.Value;
+                        if (host.Value.Contains("Seldat-"))
+                        {
+                            DataGridViewCellStyle style = new DataGridViewCellStyle();
+                            style.Font = new Font(this.dataGridView1.Font, FontStyle.Bold);
+                            style.BackColor = Color.Coral;
+                            this.dataGridView1.Rows[rowindex].DefaultCellStyle = style;
+                        }
+                    }
+                    //this.dataGridView1.Rows.Add(host.Key, host.Value);
+                }
                     //SetGrid(host.Key, host.Value);
             });
             Thread found = new Thread(() => SetLog("Found " + alivehost.Count.ToString() + " hosts"));
@@ -317,7 +339,10 @@ namespace GatewayForm
                 {
                     e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold | FontStyle.Italic);
                     // edit: to change the background color:
-                    e.CellStyle.SelectionBackColor = Color.Coral;
+                    if (dataGridView1[1, e.RowIndex].Value.ToString().Contains("Seldat-"))
+                        e.CellStyle.SelectionBackColor = Color.Coral;
+                    else
+                        e.CellStyle.SelectionBackColor = Color.Gray;
                     this.connect_ip = dataGridView1[0, e.RowIndex].Value.ToString();
                     button2.Enabled = true;
                 }

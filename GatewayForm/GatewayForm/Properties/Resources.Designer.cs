@@ -70,6 +70,16 @@ namespace GatewayForm.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap blind_led2 {
+            get {
+                object obj = ResourceManager.GetObject("blind_led2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to datastore.sqlite.
         /// </summary>
         internal static string DATABASE_NAME {
@@ -132,16 +142,6 @@ namespace GatewayForm.Properties {
         internal static string NODE_MAC {
             get {
                 return ResourceManager.GetString("NODE_MAC", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap red_led {
-            get {
-                object obj = ResourceManager.GetObject("red_led", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

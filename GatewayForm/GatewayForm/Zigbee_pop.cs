@@ -23,6 +23,7 @@ namespace GatewayForm
         public Zigbee_pop()
         {
             InitializeComponent();
+            this.Icon = Properties.Resources.favicon__1_;
         }
         
         private void update_btn_Click(object sender, EventArgs e)

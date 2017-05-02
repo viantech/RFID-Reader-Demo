@@ -154,6 +154,13 @@ namespace GatewayForm
             SET_READ_POWER_PORT_CMD = 0x20,
             GET_READ_POWER_PORT_CMD = 0x21,
             SET_GPO_VALUE_CMD = 0x22,
+            SET_SEND_NULL_EPC_CMD = 0x23,
+            SET_SEND_ERROR_CODE_CMD = 0x24,
+            TEXT_TO_SPEECH_CMD = 0x25,
+            SET_TAG_CONNECTION_CMD = 0x26,
+            GET_TAG_CONNECTION_CMD = 0x27,
+            RESET_FACTORY_CMD = 0x28,
+            PING_TO_HOST_CMD = 0x29,
         };
 
         public enum HEADER
@@ -170,16 +177,16 @@ namespace GatewayForm
             MAX_SIZE_TCP_META_DATA = 0x03FA, // 1024 - 6
             MAX_SIZE_ZIGBEE_META_DATA = 0x42, //72 -6
             MAX_SIZE_ZIGBEE_BLOCK = 0x66, //102
-            CHUNK_SIZE_FILE = 0xFFDC, //65500
+            CHUNK_SIZE_FILE = 0xC350, //65500
         };
 
         public enum TYPECONNECT
         {
-            HDR_ZIGBEE = 0,
-            HDR_WIFI = 1,
-            HDR_BLUETOOTH = 2,
-            HDR_ETHERNET = 3,
-            HDR_RS232 = 4
+            HDR_WIFI = 0,
+            HDR_BLUETOOTH = 1,
+            HDR_ETHERNET = 2,
+            HDR_RS232 = 3,
+            HDR_ZIGBEE = 4,
         };
 
         #region API Encode Data to byte stream
