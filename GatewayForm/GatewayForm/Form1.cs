@@ -33,7 +33,7 @@ namespace GatewayForm
         //List<string> list_same = new List<string>();
         Dictionary<int, int> antena_read_power_list = new Dictionary<int, int>();
         Dictionary<int, int> antena_write_power_list = new Dictionary<int, int>();
-        string[] RFID_fixed = new string[5];
+        //string[] RFID_fixed = new string[5];
 
         public Form1()
         {
@@ -81,6 +81,7 @@ namespace GatewayForm
             { ;}
 
         }
+        
         private void startcmdprocess(CM.COMMAND CMD)
         {
             Thread pThreadCmd = new Thread(() => cmdprocess(CMD));
@@ -88,11 +89,12 @@ namespace GatewayForm
         }
         private void cmdprocess(CM.COMMAND CMD)
         {
-            this.Invoke((MethodInvoker)delegate
+            this.BeginInvoke((MethodInvoker)delegate
             {
                 switch (CMD)
                 {
                     case CM.COMMAND.DIS_CONNECT_CMD:
+                        com_type.resetflag();
                         com_type.Get_Command_Send(CM.COMMAND.DIS_CONNECT_CMD);
                         com_type.waitflagRevTCP();
                         com_type.Close();
@@ -101,7 +103,7 @@ namespace GatewayForm
                         break;
                     case CM.COMMAND.SET_CONN_TYPE_CMD:
                         byte[] conn_type_byte = new byte[1];
-                        if (Change_conntype_cbx.SelectedIndex == (int)CM.TYPECONNECT.HDR_ZIGBEE)
+                        if ((int)CM.TYPECONNECT.HDR_ZIGBEE == Change_conntype_cbx.SelectedIndex )
                             //conn_type_byte[0] = (byte)0;
                             com_type.Get_Command_Power(CM.COMMAND.SET_CONN_TYPE_CMD, 0);
                         else
@@ -109,8 +111,20 @@ namespace GatewayForm
                             //conn_type_byte[0] = (byte)(Change_conntype_cbx.SelectedIndex + 1);
                         //com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_CONN_TYPE_CMD, conn_type_byte);
                         break;
+                    case CM.COMMAND.SET_PLAN_CMD:
+                        com_type.resetflag();
+                        com_type.Get_Command_Power(CM.COMMAND.SET_POWER_MODE_CMD, (byte)power_mode_cbx.SelectedIndex);
+                        com_type.waitflagRevTCP();
+                        com_type.resetflag();
+                        com_type.Get_Command_Power(CM.COMMAND.SET_REGION_CMD, (byte)region_lst.SelectedIndex);
+                        com_type.waitflagRevTCP();
+                        com_type.resetflag();
+                        com_type.Set_Command_Send(CM.COMMAND.SET_PLAN_CMD, Plans_ToString(all_plans));
+                        com_type.waitflagRevTCP();
+                        break;
                     case CM.COMMAND.REBOOT_CMD:
-                        if (Change_conntype_cbx.SelectedIndex == (int)CM.TYPECONNECT.HDR_WIFI)
+                        com_type.resetflag();
+                        if ((int)CM.TYPECONNECT.HDR_WIFI == Change_conntype_cbx.SelectedIndex)
                             com_type.Get_Command_Power(CM.COMMAND.REBOOT_CMD, 2);
                         else
                             com_type.Get_Command_Power(CM.COMMAND.REBOOT_CMD, 1);
@@ -118,54 +132,57 @@ namespace GatewayForm
                         com_type.Close();
                         Disconnect_Behavior();
                         com_type.Config_Msg -= GetConfig_Handler;
-                        ConnType_cbx.SelectedIndex = Change_conntype_cbx.SelectedIndex;
+                        ///ConnType_cbx.SelectedIndex = Change_conntype_cbx.SelectedIndex;
                         break;
                     case CM.COMMAND.SET_POWER_CMD:
+                        com_type.resetflag();
                         byte[] power_bytes = new byte[2];
                         power_bytes[0] = 0;
                         power_bytes[1] = (byte)trackBar2.Value;
                         com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_POWER_CMD, power_bytes);
                         com_type.waitflagRevTCP();
-
+                        com_type.resetflag();
                         power_bytes[0] = 1;
                         power_bytes[1] = (byte)trackBar3.Value;
                         com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_POWER_CMD, power_bytes);
                         com_type.waitflagRevTCP();
                         break;
                     case CM.COMMAND.GET_POWER_MODE_CMD:
+                        com_type.resetflag();
                         com_type.Get_Command_Send(CM.COMMAND.GET_POWER_MODE_CMD);
                         com_type.waitflagRevTCP();
                         break;
                     case CM.COMMAND.GET_BLF_CMD:
+                        com_type.resetflag();
                         com_type.Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 0);
                         com_type.waitflagRevTCP();
+                        com_type.resetflag();
                         com_type.Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 1);
                         com_type.waitflagRevTCP();
+                        com_type.resetflag();
                         com_type.Get_Command_Power(CM.COMMAND.GET_BLF_CMD, 2);
                         com_type.waitflagRevTCP();
                         break;
                     case CM.COMMAND.SET_BLF_CMD:
+                        com_type.resetflag();
                         byte[] freq_bytes = new byte[2];
                         com_type.resetflag();
                         freq_bytes[0] = 0;
                         freq_bytes[1] = (byte)(2 * freq_cbx.SelectedIndex);
                         com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_BLF_CMD, freq_bytes);
                         com_type.waitflagRevTCP();
-                        //Thread.Sleep(3000);
 
                         com_type.resetflag();
                         freq_bytes[0] = 1;
                         freq_bytes[1] = (byte)(coding_cbx.SelectedIndex);
                         com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_BLF_CMD, freq_bytes);
                         com_type.waitflagRevTCP();
-                        //Thread.Sleep(3000);
 
                         com_type.resetflag();
                         freq_bytes[0] = 2;
                         freq_bytes[1] = (byte)(tari_cbx.SelectedIndex);
                         com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_BLF_CMD, freq_bytes);
                         com_type.waitflagRevTCP();
-                        //Thread.Sleep(1000);
                         break;
                     case CM.COMMAND.SET_TAG_CONNECTION_CMD:
                         com_type.resetflag();
@@ -173,10 +190,8 @@ namespace GatewayForm
                         byte[] newArray = new byte[sd.Length + 1];
                         sd.CopyTo(newArray, 1);
                         newArray[0] = 0;
-                        //freq_bytes[1] = (byte)(2 * freq_cbx.SelectedIndex);
                         com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_TAG_CONNECTION_CMD, newArray);
                         com_type.waitflagRevTCP();
-                        //Thread.Sleep(3000);
 
                         com_type.resetflag();
                         sd = Encoding.ASCII.GetBytes(Session_cbx.Text);
@@ -185,7 +200,6 @@ namespace GatewayForm
                         newArray[0] = 1;
                         com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_TAG_CONNECTION_CMD, newArray);
                         com_type.waitflagRevTCP();
-                        //Thread.Sleep(3000);
 
                         com_type.resetflag();
                         sd = Encoding.ASCII.GetBytes(target_cbx.Text);
@@ -194,7 +208,6 @@ namespace GatewayForm
                         newArray[0] = 2;
                         com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_TAG_CONNECTION_CMD, newArray);
                         com_type.waitflagRevTCP();
-                        //Thread.Sleep(1000);
                         break;
                     case CM.COMMAND.CHECK_READER_STT_CMD:
                         com_type.Close();
@@ -212,8 +225,10 @@ namespace GatewayForm
                         }
                         break;
                     case CM.COMMAND.SET_READ_POWER_PORT_CMD:
+                        com_type.resetflag();
                         com_type.Set_Command_Send(CM.COMMAND.SET_READ_POWER_PORT_CMD, Port_Power_ToString(antena_read_power_list));
                         com_type.waitflagRevTCP();
+                        com_type.resetflag();
                         com_type.Set_Command_Send(CM.COMMAND.SET_WRITE_POWER_PORT_CMD, Port_Power_ToString(antena_write_power_list));
                         com_type.waitflagRevTCP();
                         break;
@@ -221,8 +236,10 @@ namespace GatewayForm
                         antena_read_power_list.Clear();
                         antena_write_power_list.Clear();
                         Populate_Antena_Power();
+                        com_type.resetflag();
                         com_type.Set_Command_Send(CM.COMMAND.SET_READ_POWER_PORT_CMD, "[[1,0],[2,0],[3,0],[4,0]]");
                         com_type.waitflagRevTCP();
+                        com_type.resetflag();
                         com_type.Set_Command_Send(CM.COMMAND.SET_WRITE_POWER_PORT_CMD, "[[1,0],[2,0],[3,0],[4,0]]");
                         com_type.waitflagRevTCP();
                         break;
@@ -259,8 +276,10 @@ namespace GatewayForm
                         sensor_data += timeout_sensor_tx.Text;
                         if (com_type != null && com_type.getflagConnected_TCPIP())
                         {
+                            com_type.resetflag();
                             com_type.Set_Command_Send(CM.COMMAND.SETTING_SENSOR_CMD, sensor_data);
                             com_type.waitflagRevTCP();
+                            com_type.resetflag();
                             com_type.Set_Command_Send(CM.COMMAND.SET_SEND_NULL_EPC_CMD, sensor_data = (sendnull_ckb.Checked) ? "1" : "0");
                             com_type.waitflagRevTCP();
                         }
@@ -273,6 +292,7 @@ namespace GatewayForm
                     case CM.COMMAND.SET_GPO_VALUE_CMD:
                         foreach (CheckBox gpo_ckb in flowLayoutPanel2.Controls.OfType<CheckBox>())
                         {
+                            com_type.resetflag();
                             if (gpo_ckb.Checked)
                                 com_type.Set_Command_Send(CM.COMMAND.SET_GPO_VALUE_CMD, gpo_ckb.Text.ToLower() + ":on");
                             else
@@ -292,7 +312,7 @@ namespace GatewayForm
                         Start_Operate_btn.Enabled = true;
                         break;
                     case CM.COMMAND.PING_TO_HOST_CMD:
-                        status_led.Image = global::GatewayForm.Properties.Resources.blind_led2;
+                        //status_led.Image = global::GatewayForm.Properties.Resources.blind_led2;
                         //Thread.Sleep(3000);
                         //status_led.Image = global::GatewayForm.Properties.Resources.green_led2;
                         break;
@@ -725,7 +745,7 @@ namespace GatewayForm
                         Title_TreeView();
                         Add_plan_btn.Focus();
                     }
-                    Array.Clear(RFID_fixed, 0, RFID_fixed.Length);
+                    /*Array.Clear(RFID_fixed, 0, RFID_fixed.Length);
                     for (int i = 0; i < 4; i++)
                         RFID_fixed[0] += config_str[i] + "\n";
                     for (int i = 5; i < 12; i++)
@@ -735,7 +755,7 @@ namespace GatewayForm
                     for (int i = 25; i < 32; i++)
                         RFID_fixed[3] += config_str[i] + "\n";
                     for (int i = 33; i < 39; i++)
-                        RFID_fixed[4] += config_str[i] + "\n";
+                        RFID_fixed[4] += config_str[i] + "\n";*/
                     Log_Handler("Get RFID Configuration done");
                 });
             }
@@ -1446,8 +1466,8 @@ namespace GatewayForm
         {
             Start_Operate_btn.Text = "Stop inventory";
             //GW Config
-            set_gpo_btn.Enabled = false;
-            get_gpi_btn.Enabled = false;
+            //set_gpo_btn.Enabled = false;
+            //get_gpi_btn.Enabled = false;
             Set_GW_Config_btn.Enabled = false;
             Get_GW_Config_btn.Enabled = false;
             Get_RFID_btn.Enabled = false;
@@ -1715,15 +1735,6 @@ namespace GatewayForm
         {
             if (com_type != null && com_type.getflagConnected_TCPIP())
             {
-                /*byte[] power_bytes = new byte[2];
-                power_bytes[0] = 0;
-                power_bytes[1] = (byte)trackBar2.Value;
-                com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_POWER_CMD, power_bytes);
-                com_type.waitflagRevTCP();
-                power_bytes[0] = 1;
-                power_bytes[1] = (byte)trackBar3.Value;
-                com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_POWER_CMD, power_bytes);
-                com_type.waitflagRevTCP();*/
                 startcmdprocess(CM.COMMAND.SET_POWER_CMD);
             }
             else
@@ -1840,21 +1851,6 @@ namespace GatewayForm
         {
             if (com_type != null && com_type.getflagConnected_TCPIP())
             {
-                /*byte[] freq_bytes = new byte[2];
-                freq_bytes[0] = 0;
-                freq_bytes[1] = (byte)(2 * freq_cbx.SelectedIndex);
-                com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_BLF_CMD, freq_bytes);
-                com_type.waitflagRevTCP();
-
-                freq_bytes[0] = 1;
-                freq_bytes[1] = (byte)(coding_cbx.SelectedIndex);
-                com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_BLF_CMD, freq_bytes);
-                com_type.waitflagRevTCP();
-
-                freq_bytes[0] = 2;
-                freq_bytes[1] = (byte)(tari_cbx.SelectedIndex);
-                com_type.Set_Command_Send_Bytes(CM.COMMAND.SET_BLF_CMD, freq_bytes);
-                com_type.waitflagRevTCP();*/
                 startcmdprocess(CM.COMMAND.SET_BLF_CMD);
             }
             else
@@ -1995,15 +1991,26 @@ namespace GatewayForm
                 plog.InsertData2Sql(rows);
             });
         }
-
+        private void updateProgress(int percent)
+        {
+            Thread thread_update = new Thread(() =>
+                {
+                    this.Invoke((MethodInvoker)delegate
+                    {
+                        progressBar1.Value = percent;
+                    });
+                }
+            );
+            thread_update.Start();
+        }
         private void Set_RFID_btn_Click(object sender, EventArgs e)
         {
             if (com_type.getflagConnected_TCPIP())
             {
                 //String RFID_Config = String.Empty;
-                StringBuilder rfid_config = new StringBuilder();
+                /*StringBuilder rfid_config = new StringBuilder();
                 rfid_config.Append(RFID_fixed[0]);
-                rfid_config.Append("/reader/powerMode=" + power_mode_cbx.Text + "\n");
+                rfid_config.Append("/reader/powerMode=" + power_mode_cbx.Text.Substring(0, power_mode_cbx.Text.IndexOf(" ") + 1) + "\n");
                 rfid_config.Append(RFID_fixed[1]);
                 rfid_config.Append("/reader/gen2/q=" + Conver_Q() + "\n");
                 rfid_config.Append("/reader/gen2/tagEncoding=" + coding_cbx.Text + "\n");
@@ -2057,7 +2064,45 @@ namespace GatewayForm
                     //+ "/reader/status/antennaEnable=false\n/reader/status/frequencyEnable=false\n/reader/status/temperatureEnable=false\n"
                     //+ "/reader/tagReadData/enableReadFilter=true\n/reader/tagReadData/readFilterTimeout=0\n/reader/tagReadData/uniqueByProtocol=true\n";
                 */
-                com_type.Set_Command_Send(CM.COMMAND.SET_RFID_CONFIGURATION_CMD, rfid_config.ToString());
+                //com_type.Set_Command_Send(CM.COMMAND.SET_RFID_CONFIGURATION_CMD, rfid_config.ToString());
+                progressBar1.Visible = true;
+                progressBar1.Value = 0;
+                Log_lb.Text = "Setting RFID...";
+                Block_RFID_Tab();
+                Thread blf_process = new Thread(() => cmdprocess(CM.COMMAND.SET_BLF_CMD));
+                blf_process.Start();
+                blf_process.Join();
+                //startcmdprocess(CM.COMMAND.SET_BLF_CMD); //3
+                //pThreadCmd.Join(10000);
+                updateProgress(25);
+                Thread tag_process = new Thread(() => cmdprocess(CM.COMMAND.SET_TAG_CONNECTION_CMD));
+                tag_process.Start();
+                tag_process.Join();
+                //startcmdprocess(CM.COMMAND.SET_TAG_CONNECTION_CMD);//3
+                //pThreadCmd.Join(7000);
+                updateProgress(50);
+                Thread power_process = new Thread(() => cmdprocess(CM.COMMAND.SET_POWER_CMD));
+                power_process.Start();
+                power_process.Join();
+                //startcmdprocess(CM.COMMAND.SET_POWER_CMD);//2
+                //pThreadCmd.Join(4000);
+                updateProgress(65);
+                Thread port_process = new Thread(() => cmdprocess(CM.COMMAND.SET_READ_POWER_PORT_CMD));
+                port_process.Start();
+                port_process.Join();
+                //startcmdprocess(CM.COMMAND.SET_READ_POWER_PORT_CMD);//2
+                //pThreadCmd.Join(4000);
+                updateProgress(80);
+                Thread gernale = new Thread(() => cmdprocess(CM.COMMAND.SET_PLAN_CMD));
+                gernale.Start();
+                gernale.Join();
+                //startcmdprocess(CM.COMMAND.SET_PLAN_CMD);//3
+                //pThreadCmd.Join();
+                updateProgress(100);
+                
+                //something wrong here
+                Enable_RFID();
+                progressBar1.Visible = false;
             }
             else
             {
@@ -2080,7 +2125,7 @@ namespace GatewayForm
         private string Convert_Tari(string tari)
         {
             StringBuilder sb = new StringBuilder(tari);
-            int idx = tari.IndexOf(',');
+            int idx = tari.IndexOf('.');
             if (idx != -1)
             {
                 sb[idx] = '_';
@@ -3575,7 +3620,8 @@ namespace GatewayForm
 
         private void request_TagID_btn_Click(object sender, EventArgs e)
         {
-            startcmdprocess(CM.COMMAND.REQUEST_TAG_ID_CMD);
+            //startcmdprocess(CM.COMMAND.REQUEST_TAG_ID_CMD);
+            com_type.Get_Command_Send(CM.COMMAND.STOP_OPERATION_CMD);
         }
     }
 }

@@ -810,7 +810,7 @@ namespace GatewayForm
                         if (0x00 == info_ack)
                             CM.Log_Raise("Set BLF done");
                         else
-                            CM.Log_Raise("Failed to set BLF");
+                            MessageBox.Show("Failed to set BLF");
                         break;
                     case CM.COMMAND.REBOOT_CMD:
                         info_ack = CM.Decode_Frame_ACK((byte)CM.COMMAND.REBOOT_CMD, command_bytes);

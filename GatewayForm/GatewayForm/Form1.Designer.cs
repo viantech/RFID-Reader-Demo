@@ -232,15 +232,16 @@
             this.freq_cbx = new System.Windows.Forms.ComboBox();
             this.label20 = new System.Windows.Forms.Label();
             this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.groupBox13 = new System.Windows.Forms.GroupBox();
-            this.btn_dbbrowser_search = new System.Windows.Forms.Button();
-            this.btn_downloadtabletoExcel = new System.Windows.Forms.Button();
+            this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
             this.Table_dbbrowser_datagrid = new System.Windows.Forms.DataGridView();
             this.txt_browser_TagID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.txt_browser_readAntenna = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.txt_browser_RSSI = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.txt_browser_readcount = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.txt_browser_datetime = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.groupBox13 = new System.Windows.Forms.GroupBox();
+            this.btn_dbbrowser_search = new System.Windows.Forms.Button();
+            this.btn_downloadtabletoExcel = new System.Windows.Forms.Button();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.Connect_btn = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -324,8 +325,9 @@
             this.groupBox8.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar5)).BeginInit();
             this.tabPage5.SuspendLayout();
-            this.groupBox13.SuspendLayout();
+            this.tableLayoutPanel6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Table_dbbrowser_datagrid)).BeginInit();
+            this.groupBox13.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -574,7 +576,7 @@
             this.request_TagID_btn.Name = "request_TagID_btn";
             this.request_TagID_btn.Size = new System.Drawing.Size(131, 24);
             this.request_TagID_btn.TabIndex = 3;
-            this.request_TagID_btn.Text = "Request Tag ID";
+            this.request_TagID_btn.Text = "Stop Inventory";
             this.request_TagID_btn.UseVisualStyleBackColor = true;
             this.request_TagID_btn.Visible = false;
             this.request_TagID_btn.Click += new System.EventHandler(this.request_TagID_btn_Click);
@@ -2979,7 +2981,7 @@
             // 
             // tabPage5
             // 
-            this.tabPage5.Controls.Add(this.groupBox13);
+            this.tabPage5.Controls.Add(this.tableLayoutPanel6);
             this.tabPage5.Location = new System.Drawing.Point(4, 25);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Size = new System.Drawing.Size(1027, 535);
@@ -2987,37 +2989,22 @@
             this.tabPage5.Text = "Data Logging";
             this.tabPage5.UseVisualStyleBackColor = true;
             // 
-            // groupBox13
+            // tableLayoutPanel6
             // 
-            this.groupBox13.Controls.Add(this.btn_dbbrowser_search);
-            this.groupBox13.Controls.Add(this.btn_downloadtabletoExcel);
-            this.groupBox13.Controls.Add(this.Table_dbbrowser_datagrid);
-            this.groupBox13.Location = new System.Drawing.Point(16, 14);
-            this.groupBox13.Name = "groupBox13";
-            this.groupBox13.Size = new System.Drawing.Size(1002, 456);
-            this.groupBox13.TabIndex = 10;
-            this.groupBox13.TabStop = false;
-            this.groupBox13.Text = "Data";
-            // 
-            // btn_dbbrowser_search
-            // 
-            this.btn_dbbrowser_search.Location = new System.Drawing.Point(182, 326);
-            this.btn_dbbrowser_search.Name = "btn_dbbrowser_search";
-            this.btn_dbbrowser_search.Size = new System.Drawing.Size(142, 42);
-            this.btn_dbbrowser_search.TabIndex = 3;
-            this.btn_dbbrowser_search.Text = "Search";
-            this.btn_dbbrowser_search.UseVisualStyleBackColor = true;
-            this.btn_dbbrowser_search.Click += new System.EventHandler(this.btn_dbbrowser_search_Click);
-            // 
-            // btn_downloadtabletoExcel
-            // 
-            this.btn_downloadtabletoExcel.Location = new System.Drawing.Point(352, 326);
-            this.btn_downloadtabletoExcel.Name = "btn_downloadtabletoExcel";
-            this.btn_downloadtabletoExcel.Size = new System.Drawing.Size(142, 42);
-            this.btn_downloadtabletoExcel.TabIndex = 2;
-            this.btn_downloadtabletoExcel.Text = "Download";
-            this.btn_downloadtabletoExcel.UseVisualStyleBackColor = true;
-            this.btn_downloadtabletoExcel.Click += new System.EventHandler(this.btn_downloadtabletoExcel_Click);
+            this.tableLayoutPanel6.AutoSize = true;
+            this.tableLayoutPanel6.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tableLayoutPanel6.ColumnCount = 2;
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 170F));
+            this.tableLayoutPanel6.Controls.Add(this.Table_dbbrowser_datagrid, 0, 0);
+            this.tableLayoutPanel6.Controls.Add(this.groupBox13, 1, 0);
+            this.tableLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel6.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel6.Name = "tableLayoutPanel6";
+            this.tableLayoutPanel6.RowCount = 1;
+            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel6.Size = new System.Drawing.Size(1027, 535);
+            this.tableLayoutPanel6.TabIndex = 11;
             // 
             // Table_dbbrowser_datagrid
             // 
@@ -3028,20 +3015,23 @@
             this.txt_browser_RSSI,
             this.txt_browser_readcount,
             this.txt_browser_datetime});
-            this.Table_dbbrowser_datagrid.Location = new System.Drawing.Point(19, 21);
+            this.Table_dbbrowser_datagrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Table_dbbrowser_datagrid.Location = new System.Drawing.Point(3, 3);
             this.Table_dbbrowser_datagrid.Name = "Table_dbbrowser_datagrid";
-            this.Table_dbbrowser_datagrid.Size = new System.Drawing.Size(977, 278);
+            this.Table_dbbrowser_datagrid.Size = new System.Drawing.Size(851, 529);
             this.Table_dbbrowser_datagrid.TabIndex = 1;
             // 
             // txt_browser_TagID
             // 
             this.txt_browser_TagID.HeaderText = "Tag ID";
             this.txt_browser_TagID.Name = "txt_browser_TagID";
+            this.txt_browser_TagID.Width = 250;
             // 
             // txt_browser_readAntenna
             // 
             this.txt_browser_readAntenna.HeaderText = "Read Antenna";
             this.txt_browser_readAntenna.Name = "txt_browser_readAntenna";
+            this.txt_browser_readAntenna.Width = 125;
             // 
             // txt_browser_RSSI
             // 
@@ -3052,11 +3042,46 @@
             // 
             this.txt_browser_readcount.HeaderText = "Read Count";
             this.txt_browser_readcount.Name = "txt_browser_readcount";
+            this.txt_browser_readcount.Width = 150;
             // 
             // txt_browser_datetime
             // 
             this.txt_browser_datetime.HeaderText = "Date/Time";
             this.txt_browser_datetime.Name = "txt_browser_datetime";
+            this.txt_browser_datetime.Width = 175;
+            // 
+            // groupBox13
+            // 
+            this.groupBox13.AutoSize = true;
+            this.groupBox13.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.groupBox13.Controls.Add(this.btn_dbbrowser_search);
+            this.groupBox13.Controls.Add(this.btn_downloadtabletoExcel);
+            this.groupBox13.Location = new System.Drawing.Point(860, 3);
+            this.groupBox13.Name = "groupBox13";
+            this.groupBox13.Size = new System.Drawing.Size(154, 148);
+            this.groupBox13.TabIndex = 10;
+            this.groupBox13.TabStop = false;
+            this.groupBox13.Text = "Logger";
+            // 
+            // btn_dbbrowser_search
+            // 
+            this.btn_dbbrowser_search.Location = new System.Drawing.Point(6, 21);
+            this.btn_dbbrowser_search.Name = "btn_dbbrowser_search";
+            this.btn_dbbrowser_search.Size = new System.Drawing.Size(142, 42);
+            this.btn_dbbrowser_search.TabIndex = 3;
+            this.btn_dbbrowser_search.Text = "Search";
+            this.btn_dbbrowser_search.UseVisualStyleBackColor = true;
+            this.btn_dbbrowser_search.Click += new System.EventHandler(this.btn_dbbrowser_search_Click);
+            // 
+            // btn_downloadtabletoExcel
+            // 
+            this.btn_downloadtabletoExcel.Location = new System.Drawing.Point(6, 85);
+            this.btn_downloadtabletoExcel.Name = "btn_downloadtabletoExcel";
+            this.btn_downloadtabletoExcel.Size = new System.Drawing.Size(142, 42);
+            this.btn_downloadtabletoExcel.TabIndex = 2;
+            this.btn_downloadtabletoExcel.Text = "Download";
+            this.btn_downloadtabletoExcel.UseVisualStyleBackColor = true;
+            this.btn_downloadtabletoExcel.Click += new System.EventHandler(this.btn_downloadtabletoExcel_Click);
             // 
             // chart1
             // 
@@ -3455,7 +3480,7 @@
             // 
             this.readmeToolStripMenuItem.Name = "readmeToolStripMenuItem";
             this.readmeToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
-            this.readmeToolStripMenuItem.Text = "Version 1.0";
+            this.readmeToolStripMenuItem.Text = "Version 1.3";
             // 
             // hWSeldatTeamToolStripMenuItem
             // 
@@ -3551,8 +3576,11 @@
             this.groupBox8.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar5)).EndInit();
             this.tabPage5.ResumeLayout(false);
-            this.groupBox13.ResumeLayout(false);
+            this.tabPage5.PerformLayout();
+            this.tableLayoutPanel6.ResumeLayout(false);
+            this.tableLayoutPanel6.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Table_dbbrowser_datagrid)).EndInit();
+            this.groupBox13.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
@@ -3655,11 +3683,6 @@
         private System.Windows.Forms.DataGridView Table_dbbrowser_datagrid;
         private System.Windows.Forms.GroupBox groupBox13;
         private System.Windows.Forms.Button btn_dbbrowser_search;
-        private System.Windows.Forms.DataGridViewTextBoxColumn txt_browser_TagID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn txt_browser_readAntenna;
-        private System.Windows.Forms.DataGridViewTextBoxColumn txt_browser_RSSI;
-        private System.Windows.Forms.DataGridViewTextBoxColumn txt_browser_readcount;
-        private System.Windows.Forms.DataGridViewTextBoxColumn txt_browser_datetime;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
         private System.Windows.Forms.Timer ptimer_loghandle;
         private System.Windows.Forms.Button set_port_btn;
@@ -3821,6 +3844,12 @@
         private System.Windows.Forms.GroupBox groupBox25;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.Button request_TagID_btn;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel6;
+        private System.Windows.Forms.DataGridViewTextBoxColumn txt_browser_TagID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn txt_browser_readAntenna;
+        private System.Windows.Forms.DataGridViewTextBoxColumn txt_browser_RSSI;
+        private System.Windows.Forms.DataGridViewTextBoxColumn txt_browser_readcount;
+        private System.Windows.Forms.DataGridViewTextBoxColumn txt_browser_datetime;
     }
 }
 
